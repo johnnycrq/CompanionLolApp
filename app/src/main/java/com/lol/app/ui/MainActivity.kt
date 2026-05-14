@@ -12,13 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +22,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
+import com.lol.app.navigation.BottomNavSceneStrategy
 import com.lol.app.navigation.ChampionListKey
 import com.lol.app.navigation.InitialScreenKey
 import com.lol.app.navigation.LoginKey
@@ -58,46 +54,28 @@ class MainActivity : ComponentActivity() {
         // viewModel not stable because it is read from outside
         val backStack = remember(viewModel) { viewModel.backStack }
 
-        Scaffold(
-          bottomBar = {
-            val currentKey = backStack.current
-
-            if (currentKey is MainBottomNavScreen) {
-              NavigationBar {
-                NavigationBarItem(
-                  icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
-                  label = { Text("Feature") },
-                  selected = currentKey is ChampionListKey,
-                  onClick = { backStack.goTo(ChampionListKey) },
-                )
-
-                NavigationBarItem(
-                  icon = { Icon(Icons.Filled.Settings, contentDescription = null) },
-                  label = { Text("Settings") },
-                  selected = currentKey is SettingsKey,
-                  onClick = { backStack.goTo(SettingsKey) },
-                )
-              }
-            }
-          }
-        ) { contentPadding ->
+        Scaffold { contentPadding ->
           val modifier = Modifier.padding(contentPadding)
 
           NavDisplay(
             backStack = backStack.history,
             onBack = backStack::goBack,
+            // required otherwise hiltViewModel is scoped to activity not NavEntry
             entryDecorators =
               listOf(
-                // Required for saving Compose state per entry
                 rememberSaveableStateHolderNavEntryDecorator(),
-                // Required for ViewModel scoping per entry
                 rememberViewModelStoreNavEntryDecorator(),
+              ),
+            sceneStrategies =
+              listOf(
+                remember(backStack) { BottomNavSceneStrategy(backStack::goTo) },
+                SinglePaneSceneStrategy(),
               ),
             transitionSpec = { contentTransformScreenTransition },
             popTransitionSpec = { contentTransformScreenTransition },
             predictivePopTransitionSpec = { contentTransformScreenTransition },
           ) { key: ScreenKey ->
-            NavEntry(key) {
+            NavEntry(key, metadata = mapOf("screen_key" to key)) {
               when (key) {
                 InitialScreenKey -> PlaceHolderScreen(modifier = modifier)
                 LoginKey ->

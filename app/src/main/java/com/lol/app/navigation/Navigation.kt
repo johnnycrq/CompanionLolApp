@@ -38,7 +38,7 @@ interface BackStack<S : ScreenKey> {
 
     override fun goTo(key: S) {
       Snapshot.withMutableSnapshot {
-        if (_history.lastOrNull() == key) return
+        if (_history.lastOrNull() == key) return@withMutableSnapshot
 
         val index = _history.indexOf(key)
         if (index != -1) {
