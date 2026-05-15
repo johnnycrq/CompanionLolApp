@@ -1,4 +1,4 @@
-package com.lol.app.ui.theme
+package com.lol.app.base.theme
 
 import androidx.compose.ui.graphics.Color
 

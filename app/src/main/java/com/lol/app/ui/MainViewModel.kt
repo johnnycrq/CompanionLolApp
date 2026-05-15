@@ -24,7 +24,7 @@ import kotlinx.serialization.encoding.Encoder
 @HiltViewModel
 class MainViewModel
 @Inject
-constructor(private val preferencesStore: PreferencesStore, savedStateHandle: SavedStateHandle) :
+constructor(savedStateHandle: SavedStateHandle, private val preferencesStore: PreferencesStore) :
   ViewModel() {
 
   val backStack: BackStack<ScreenKey> by

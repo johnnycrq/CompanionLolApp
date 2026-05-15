@@ -10,20 +10,22 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import com.lol.app.navigation.BottomNavSceneStrategy
+import com.lol.app.base.theme.CompanionAppTheme
 import com.lol.app.navigation.ChampionListKey
 import com.lol.app.navigation.InitialScreenKey
 import com.lol.app.navigation.LoginKey
@@ -32,8 +34,9 @@ import com.lol.app.navigation.SettingsKey
 import com.lol.app.ui.screens.championList.ChampionListScreen
 import com.lol.app.ui.screens.login.LoginScreen
 import com.lol.app.ui.screens.settings.SettingsScreen
-import com.lol.app.ui.theme.CompanionAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+
+val LocalContentPadding = compositionLocalOf { PaddingValues.Zero }
 
 private val contentTransformScreenTransition =
   ContentTransform(EnterTransition.None, ExitTransition.None)
@@ -52,35 +55,33 @@ class MainActivity : ComponentActivity() {
         // viewModel not stable because it is read from outside
         val backStack = remember(viewModel) { viewModel.backStack }
 
-        Scaffold { contentPadding ->
-          val modifier = Modifier.padding(contentPadding)
-
-          NavDisplay(
-            backStack = backStack.history,
-            onBack = backStack::goBack,
-            // required otherwise hiltViewModel is scoped to activity not NavEntry
-            entryDecorators =
-              listOf(
-                rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator(),
-              ),
-            sceneStrategies =
-              listOf(
-                remember(backStack) { BottomNavSceneStrategy(backStack::goTo) },
-                SinglePaneSceneStrategy(),
-              ),
-            transitionSpec = { contentTransformScreenTransition },
-            popTransitionSpec = { contentTransformScreenTransition },
-            predictivePopTransitionSpec = { contentTransformScreenTransition },
-          ) { key: ScreenKey ->
-            NavEntry(key, metadata = mapOf("screen_key" to key)) {
-              when (key) {
-                InitialScreenKey -> PlaceHolderScreen(modifier = modifier)
-                LoginKey ->
-                  LoginScreen(modifier = modifier, onLoginClicked = viewModel::onLoginClicked)
-                ChampionListKey -> ChampionListScreen(modifier = modifier)
-                SettingsKey ->
-                  SettingsScreen(modifier = modifier, onLogoutClicked = viewModel::onLogoutClicked)
+        Scaffold(
+          containerColor = Transparent,
+          contentColor = MaterialTheme.colorScheme.onSurface,
+        ) { contentPadding ->
+          CompositionLocalProvider(LocalContentPadding provides contentPadding) {
+            NavDisplay(
+              backStack = backStack.history,
+              onBack = backStack::goBack,
+              entryDecorators =
+                listOf(
+                  // required otherwise savedState is scoped to activity not NavEntry
+                  rememberSaveableStateHolderNavEntryDecorator(),
+                  // required otherwise hiltViewModel is scoped to activity not NavEntry
+                  rememberViewModelStoreNavEntryDecorator(),
+                  rememberBottomNavEntryDecorator(backStack),
+                ),
+              transitionSpec = { contentTransformScreenTransition },
+              popTransitionSpec = { contentTransformScreenTransition },
+              predictivePopTransitionSpec = { contentTransformScreenTransition },
+            ) { key: ScreenKey ->
+              NavEntry(key = key, metadata = mapOf("screen_key" to key)) {
+                when (key) {
+                  InitialScreenKey -> PlaceHolderScreen()
+                  LoginKey -> LoginScreen(onLoginClicked = viewModel::onLoginClicked)
+                  ChampionListKey -> ChampionListScreen()
+                  SettingsKey -> SettingsScreen(onLogoutClicked = viewModel::onLogoutClicked)
+                }
               }
             }
           }
@@ -90,7 +91,7 @@ class MainActivity : ComponentActivity() {
   }
 
   @Composable
-  private fun PlaceHolderScreen(modifier: Modifier) {
-    Box(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary))
+  private fun PlaceHolderScreen() {
+    Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary))
   }
 }

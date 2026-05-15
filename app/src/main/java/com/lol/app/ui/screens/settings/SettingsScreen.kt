@@ -7,19 +7,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.lol.app.base.material3.CompanionAppSurface
 
 @Composable
-fun SettingsScreen(modifier: Modifier, onLogoutClicked: () -> Unit) {
+fun SettingsScreen(onLogoutClicked: () -> Unit) {
   val viewModel: SettingsViewModel = hiltViewModel()
 
-  Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primary) {
+  CompanionAppSurface(modifier = Modifier.fillMaxSize()) {
     Box(
       modifier = Modifier.fillMaxSize().padding(bottom = 32.dp),
       contentAlignment = Alignment.BottomCenter,
@@ -29,8 +29,8 @@ fun SettingsScreen(modifier: Modifier, onLogoutClicked: () -> Unit) {
         onClick = onLogoutClicked,
         colors =
           ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.onSecondary,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onBackground,
           ),
       ) {
         Text(text = "LOGOUT")
