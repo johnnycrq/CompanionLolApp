@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.stability.analyzer)
 }
 
 android {
@@ -16,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.companion.lol.app"
-        minSdk = 24
+        minSdk = 33
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -43,17 +44,20 @@ android {
     }
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions {
-        freeCompilerArgs.addAll(
-           "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=${project.rootDir}/config/compose-stability-config.txt",
-            "-XXLanguage:+ExplicitBackingFields"
-        )
-    }
+composeCompiler {
+    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("config/compose-stability-config.txt"))
+}
+
+tasks.withType<KotlinCompile> {
+    compilerOptions.freeCompilerArgs.addAll(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:featureFlag=StrongSkipping",
+        "-XXLanguage:+ExplicitBackingFields"
+    )
 }
 
 dependencies {
-    implementation(project(":storage:impl"))
+    implementation(project(":data"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.animation.core)
@@ -66,10 +70,15 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.splashscreen)
 
+    implementation(libs.io.coil)
+    implementation(libs.io.coil.okhttp)
+    implementation(libs.io.palette)
+
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization)
 
     implementation(libs.android.hilt)
     ksp(libs.android.hilt.compiler)

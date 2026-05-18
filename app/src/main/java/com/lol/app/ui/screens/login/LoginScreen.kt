@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,8 +37,8 @@ import com.lol.app.base.material3.CompanionAppSurface
 @Composable
 fun LoginScreen(onLoginClicked: (emailAddress: String) -> Unit) {
   val viewModel: LoginViewModel = hiltViewModel()
-
   val state by viewModel.state.collectAsState()
+
   LoginScreen(
     state = state,
     onEmailChanged = viewModel::onEmailChanged,
@@ -50,6 +52,7 @@ fun LoginScreen(
   onEmailChanged: (String) -> Unit,
   onLoginClicked: () -> Unit,
 ) {
+
   CompanionAppSurface(modifier = Modifier.fillMaxSize()) {
     Column(modifier = Modifier.fillMaxSize()) {
       Column(
@@ -100,12 +103,14 @@ fun LoginScreen(
       Button(
         onClick = onLoginClicked,
         enabled = state.isEmailValid,
-        modifier = Modifier.padding(32.dp).fillMaxWidth().height(64.dp),
+        modifier = Modifier
+          .imePadding()
+          .padding(32.dp).fillMaxWidth().height(64.dp),
         shape = RoundedCornerShape(16.dp),
         colors =
           ButtonDefaults.buttonColors(
             containerColor = Color.White,
-            contentColor = MaterialTheme.colorScheme.primary,
+            contentColor = Color.Black,
             disabledContainerColor = Color.White.copy(alpha = 0.3f),
             disabledContentColor = Color.White.copy(alpha = 0.5f),
           ),

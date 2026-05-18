@@ -12,7 +12,7 @@ private val LightColorScheme =
   lightColorScheme(
     primary = PremiumGreen,
     secondary = PremiumGreenLight,
-    tertiary = PremiumGreenDark,
+    tertiary = PremiumOrange,
     onPrimary = OnPremiumGreen,
     background = PremiumGreenLight,
     surface = Color.White,

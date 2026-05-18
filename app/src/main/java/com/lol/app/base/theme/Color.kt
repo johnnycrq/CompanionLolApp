@@ -10,7 +10,8 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
+val FavoriteColor = Color(0xFFFCC201)
 val PremiumGreen = Color(0xFF00C853) // More vibrant green
 val PremiumGreenLight = Color(0xFFE8F5E9)
-val PremiumGreenDark = Color(0xFF009624)
+val PremiumOrange = Color(0xFFFF5722)
 val OnPremiumGreen = Color.White

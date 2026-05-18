@@ -1,0 +1,17 @@
+import com.companion.lol.storage.impl.model.ids.SessionId;
+
+
+CREATE TABLE SessionTable (
+  id INTEGER AS SessionId PRIMARY KEY NOT NULL,
+  emailAddress TEXT
+);
+
+insert:
+INSERT INTO SessionTable
+VALUES ?;
+
+get:
+SELECT * FROM SessionTable LIMIT 1;
+
+delete:
+DELETE FROM SessionTable;

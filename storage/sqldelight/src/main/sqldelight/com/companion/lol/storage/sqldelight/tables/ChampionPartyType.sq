@@ -1,0 +1,10 @@
+import com.companion.lol.storage.impl.model.ids.PartyTypeId;
+import com.companion.lol.storage.impl.model.other.PartyType;
+
+CREATE TABLE ChampionPartyTypeTable (
+  id INTEGER AS PartyTypeId PRIMARY KEY NOT NULL,
+  partyType TEXT AS PartyType NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO ChampionPartyTypeTable VALUES ?;

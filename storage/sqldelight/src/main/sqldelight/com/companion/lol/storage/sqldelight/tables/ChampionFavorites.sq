@@ -1,0 +1,13 @@
+import com.companion.lol.storage.impl.model.ids.ChampionId;
+import kotlin.Boolean;
+
+CREATE TABLE ChampionFavoritesTable (
+  id INTEGER AS ChampionId PRIMARY KEY NOT NULL,
+  isFavorite INTEGER AS Boolean NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO ChampionFavoritesTable VALUES ?;
+
+clearAll:
+DELETE FROM ChampionFavoritesTable;

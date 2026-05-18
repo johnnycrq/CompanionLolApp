@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.spotless) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.stability.analyzer) apply false
 }
 
 subprojects {

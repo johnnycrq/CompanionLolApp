@@ -2,42 +2,40 @@
 
 package com.lol.app.ui
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.serialization.saved
 import androidx.lifecycle.viewModelScope
-import com.companion.lol.impl.store.PreferencesStore
+import com.companion.lol.data.usecase.SessionUseCase
 import com.lol.app.navigation.BackStack
 import com.lol.app.navigation.ChampionListKey
 import com.lol.app.navigation.InitialScreenKey
 import com.lol.app.navigation.LoginKey
 import com.lol.app.navigation.ScreenKey
-import com.lol.storage.tables.PreferencesEntity
+import com.lol.app.ui.screens.NavigationActions
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.launch
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
-@HiltViewModel
+@HiltViewModel(assistedFactory = MainViewModel.Factory::class)
 class MainViewModel
-@Inject
-constructor(savedStateHandle: SavedStateHandle, private val preferencesStore: PreferencesStore) :
-  ViewModel() {
+@AssistedInject
+constructor(
+  private val sessionUseCase: SessionUseCase,
+  @Assisted private val backStack: BackStack<ScreenKey>,
+) : ViewModel(), NavigationActions {
 
-  val backStack: BackStack<ScreenKey> by
-    savedStateHandle.saved(serializer = HISTORY_SERIALIZER) {
-      BackStack.Impl(initialHistory = listOf(InitialScreenKey))
-    }
+  @AssistedFactory
+  interface Factory {
+    fun create(backStack: BackStack<ScreenKey>): MainViewModel
+  }
 
   init {
     if (backStack.history.contains(InitialScreenKey)) {
       viewModelScope.launch {
-        val preferences = preferencesStore.get()
+        val emailAddress = sessionUseCase.getEmailAddress()
         backStack.setHistory(
-          if (preferences?.emailAddress == null) {
+          if (emailAddress == null) {
             LoginKey
           } else {
             ChampionListKey
@@ -47,32 +45,17 @@ constructor(savedStateHandle: SavedStateHandle, private val preferencesStore: Pr
     }
   }
 
-  fun onLoginClicked(emailAddress: String) {
+  override fun onLoginClicked(emailAddress: String) {
     viewModelScope.launch {
-      preferencesStore.insert(PreferencesEntity(id = 0L, emailAddress = emailAddress))
+      sessionUseCase.updateEmailAddress(emailAddress)
       backStack.setHistory(ChampionListKey)
     }
   }
 
-  fun onLogoutClicked() {
+  override fun onLogoutClicked() {
     viewModelScope.launch {
-      preferencesStore.delete()
+      sessionUseCase.clear()
       backStack.setHistory(LoginKey)
     }
   }
 }
-
-private val HISTORY_SERIALIZER =
-  object : KSerializer<BackStack<ScreenKey>> {
-    private val delegate = ListSerializer(ScreenKey.serializer())
-
-    override val descriptor = delegate.descriptor
-
-    override fun serialize(encoder: Encoder, value: BackStack<ScreenKey>) {
-      encoder.encodeSerializableValue(delegate, value.history.toList())
-    }
-
-    override fun deserialize(decoder: Decoder): BackStack<ScreenKey> {
-      return BackStack.Impl(initialHistory = decoder.decodeSerializableValue(delegate))
-    }
-  }

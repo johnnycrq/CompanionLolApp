@@ -1,0 +1,15 @@
+import com.companion.lol.storage.impl.model.ids.SettingsId;
+import com.companion.lol.storage.impl.model.other.SortOrder;
+import kotlin.Int;
+
+CREATE TABLE SettingsTable (
+  id INTEGER AS SettingsId NOT NULL PRIMARY KEY,
+  championRotationGridSize INTEGER AS Int NOT NULL,
+  championRotationSortOrder TEXT AS SortOrder NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO SettingsTable VALUES ?;
+
+findAll:
+SELECT * FROM SettingsTable;
