@@ -80,7 +80,8 @@ fun ChampionListScreen(
     ) {
       items(items = state.champions, key = { it.id.value }) { item ->
         ChampionCard(
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth()
+            .animateItem(),
           champion = item,
           onCardClick = onCardClick,
           gridSize = state.gridSize,

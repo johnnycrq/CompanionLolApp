@@ -64,6 +64,7 @@ composeCompiler {
 tasks.withType<KotlinCompile> {
     compilerOptions.freeCompilerArgs.addAll(
         "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:featureFlag=StrongSkipping",
         "-XXLanguage:+ExplicitBackingFields"
     )
 }
