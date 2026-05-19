@@ -6,18 +6,22 @@ import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.companion.lol.storage.impl.adapter.ChampionIdAdapter
+import com.companion.lol.storage.impl.adapter.ChampionTagAdapter
 import com.companion.lol.storage.impl.adapter.OffsetDateTimeAdapter
 import com.companion.lol.storage.impl.adapter.PartyTypeIdAdapter
 import com.companion.lol.storage.impl.adapter.SessionIdAdapter
 import com.companion.lol.storage.impl.adapter.SettingsIdAdapter
+import com.companion.lol.storage.impl.adapter.SkinIdAdapter
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.model.other.SortOrder
 import com.companion.lol.storage.sqldelight.LolAppDb
+import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
 import com.companion.lol.storage.sqldelight.tables.ChampionFavoritesTable
 import com.companion.lol.storage.sqldelight.tables.ChampionPartyTypeTable
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
 import com.companion.lol.storage.sqldelight.tables.SessionTable
 import com.companion.lol.storage.sqldelight.tables.SettingsTable
+import com.companion.lol.storage.sqldelight.tables.SkinTable
 import com.companion.lol.storage.sqldelight.tables.UpdatesTable
 import dagger.Module
 import dagger.Provides
@@ -49,5 +53,11 @@ internal object StorageModule {
       SettingsTableAdapter =
         SettingsTable.Adapter(SettingsIdAdapter, IntColumnAdapter, EnumColumnAdapter<SortOrder>()),
       SessionTableAdapter = SessionTable.Adapter(SessionIdAdapter),
+      SkinTableAdapter = SkinTable.Adapter(ChampionIdAdapter, SkinIdAdapter, IntColumnAdapter),
+      ChampionDetailsTableAdapter = ChampionDetailsTable.Adapter(
+        idAdapter = ChampionIdAdapter,
+        tagsAdapter = ChampionTagAdapter,
+        partyTypeIdAdapter = PartyTypeIdAdapter
+      ),
     )
 }

@@ -1,20 +1,19 @@
 package com.lol.app.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.SavedStateHandle
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
+
+private const val SAVED_KEY = "BackStack.KEY"
+
 @Stable
-interface BackStack<S : ScreenKey> {
+interface BackStack<S: Any> {
   val history: List<S>
 
   val current: S
@@ -26,12 +25,22 @@ interface BackStack<S : ScreenKey> {
   fun setHistory(newHistory: List<S>)
 
   fun goBack(): Boolean
+
+  companion object {
+    @Suppress("FunctionName")
+    inline fun <reified S: Any> Impl(savedStateHandle: SavedStateHandle, initialHistory: List<S>): BackStack<S> {
+      val saver = BackStackSaver.Impl(savedStateHandle, serializer<S>())
+
+      return Impl(
+        saver = saver,
+        initialHistory = saver.get() ?: initialHistory
+      )
+    }
+  }
 }
 
-@Serializable
-private class Impl<S : ScreenKey>(private val initialHistory: List<S>) : BackStack<S> {
-
-  @Serializable(SnapshotStateListSerializable::class)
+class Impl<S: Any>(private val saver: BackStackSaver<S>, private val initialHistory: List<S>) :
+  BackStack<S> {
   private val _history: SnapshotStateList<S> =
     SnapshotStateList<S>().apply { addAll(initialHistory) }
 
@@ -41,12 +50,16 @@ private class Impl<S : ScreenKey>(private val initialHistory: List<S>) : BackSta
   override val current: S
     get() = _history.last()
 
-  override fun setHistory(singleKey: S) = setHistory(listOf(singleKey))
+  override fun setHistory(singleKey: S) {
+    setHistory(listOf(singleKey))
+    saver.save(history)
+  }
 
   override fun setHistory(newHistory: List<S>) {
     Snapshot.withMutableSnapshot {
       _history.clear()
       _history.addAll(newHistory)
+      saver.save(history)
     }
   }
 
@@ -62,37 +75,38 @@ private class Impl<S : ScreenKey>(private val initialHistory: List<S>) : BackSta
       } else {
         _history.add(key)
       }
+      saver.save(history)
     }
   }
 
   override fun goBack(): Boolean {
     if (_history.size > 1) {
       _history.removeAt(_history.size - 1)
+      saver.save(history)
       return true
     }
     return false
   }
 }
 
-@Composable
-fun rememberCompanionAppBackstack(elements: List<ScreenKey>): BackStack<ScreenKey> =
-  rememberSerializable(serializer = serializer()) {
-    Impl(elements)
-  }
+interface BackStackSaver<S: Any> {
+  fun get(): List<S>?
 
-private class SnapshotStateListSerializable<S : ScreenKey>(
-  elementSerializer: KSerializer<S>
-) : KSerializer<SnapshotStateList<S>> {
-  private val delegate = ListSerializer(elementSerializer)
+  fun save(newHistory: List<S>)
 
-  override val descriptor: SerialDescriptor = delegate.descriptor
+  class Impl<S: Any>(
+    private val savedStateHandle: SavedStateHandle,
+    private val serializer: KSerializer<S>
+  ) : BackStackSaver<S> {
+    override fun get(): List<S>? {
+      return savedStateHandle.get<String>(SAVED_KEY)?.let {
+        Json.decodeFromString(ListSerializer(serializer), it)
+      }
+    }
 
-  override fun serialize(encoder: Encoder, value: SnapshotStateList<S>) {
-    encoder.encodeSerializableValue(delegate, value.toList())
-  }
-
-  override fun deserialize(decoder: Decoder): SnapshotStateList<S> {
-    val list = decoder.decodeSerializableValue(delegate)
-    return SnapshotStateList<S>().apply { addAll(list) }
+    override fun save(newHistory: List<S>) {
+      savedStateHandle[SAVED_KEY] =
+        Json.encodeToString(ListSerializer(serializer), newHistory)
+    }
   }
 }

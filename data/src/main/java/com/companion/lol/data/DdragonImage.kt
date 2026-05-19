@@ -13,7 +13,9 @@ sealed interface DdragonImage {
     val championId: ChampionId
 
     companion object {
-        val EMPTY: DdragonImage = Impl(ChampionId(0), "")
+        fun EMPTY(
+            championId: ChampionId
+        ): DdragonImage = Impl(championId, "")
         @Stable
         fun championSquareImage(championId: ChampionId, image: String): DdragonImage = Impl(
             championId = championId,

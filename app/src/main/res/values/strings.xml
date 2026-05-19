@@ -7,7 +7,7 @@
     <string name="champion_rotation_sort_favorites">Sort by Favorites</string>
     <string name="champion_rotation_sort_alphabetically">Sort Alphabetically</string>
     <string name="champion_rotation_clear_favorites">Clear Favorites</string>
-<!--    <string name="champion_details_class">Class:</string>-->
-<!--    <string name="champion_details_lore">Lore:</string>-->
-<!--    <string name="champion_details_party_type">Party Type:</string>-->
+    <string name="champion_details_party_type">Party Type:</string>
+    <string name="champion_details_class">Class:</string>
+    <string name="champion_details_lore">Lore:</string>
 </resources>

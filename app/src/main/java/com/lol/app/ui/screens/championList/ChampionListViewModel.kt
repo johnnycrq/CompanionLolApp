@@ -2,13 +2,13 @@ package com.lol.app.ui.screens.championList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.companion.lol.data.model.ChampionModel
 import com.companion.lol.data.usecase.ChampionUseCase
 import com.companion.lol.data.usecase.SettingsUseCase
-import com.companion.lol.storage.impl.model.ids.ChampionId
-import com.lol.app.util.ChampionColorCache
+import com.companion.lol.storage.impl.model.other.SortOrder
+import com.lol.app.util.toggle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -19,19 +19,17 @@ import kotlinx.coroutines.launch
 class ChampionListViewModel
 @Inject
 constructor(
-  private val championStore: ChampionUseCase,
-  private val settingsStore: SettingsUseCase,
+  private val settingsUseCase: SettingsUseCase,
+  private val championUseCase: ChampionUseCase
 ) : ViewModel() {
 
-  val championColorCache: ChampionColorCache
-    = ChampionColorCache.Impl(viewModelScope)
   val state: StateFlow<ChampionListState> =
     combine(
-        flow = championStore.observeAllWithFavorites(),
-        flow2 = settingsStore.observe(),
+        flow = championUseCase.observeAllWithFavorites(),
+        flow2 = settingsUseCase.observe(),
         transform = { champion, settings ->
           ChampionListState(
-            champions = champion,
+            champions = champion.sortBy(settings.championRotationSortOrder),
             gridSize = settings.championRotationGridSize,
             sortOrder = settings.championRotationSortOrder,
           )
@@ -39,11 +37,9 @@ constructor(
       )
       .stateIn(viewModelScope, SharingStarted.Eagerly, ChampionListState())
 
-  fun onCardClick(championId: ChampionId) {}
-
   fun changeGridSize() {
     viewModelScope.launch {
-      settingsStore.updateChampionRotationGridSize(
+      settingsUseCase.updateChampionGridSize(
         when (val value = state.value.gridSize) {
           5 -> 3
           else -> value + 1
@@ -52,11 +48,35 @@ constructor(
     }
   }
 
-  fun onFavoritesToggled(championId: ChampionId) {
-    val champion = state.value.champions.first { it.id == championId }
-
+  fun onSortMenuItemClicked(){
     viewModelScope.launch {
-      championStore.markFavourite(championId = champion.id, isFavourite = champion.isFavorite.not())
+      settingsUseCase.updateChampionSortOrder(
+        state.value.sortOrder.toggle()
+      )
+    }
+  }
+
+  fun onFavoritesClearClicked(){
+    viewModelScope.launch {
+      championUseCase.clearFavorites()
+    }
+  }
+
+  private fun List<ChampionModel>.sortBy(order: SortOrder): List<ChampionModel> {
+    return when (order) {
+      SortOrder.FAVORITES -> this.sortedWith(
+        compareBy(
+          {
+            when (it.isFavorite) {
+              true -> 1
+              else -> 2
+            }
+          },
+          { it.name }
+        )
+      )
+
+      SortOrder.ASC -> this.sortedBy { it.name }
     }
   }
 }

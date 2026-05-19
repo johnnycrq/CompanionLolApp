@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil3.Bitmap
-import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.transformations
@@ -30,6 +29,7 @@ fun DominantColorCoilImage(
   image: DdragonImage,
   championColorCache: ChampionColorCache,
   imageModifier: Modifier = Modifier,
+  skipUpdateColorCache: Boolean,
 ) {
   val context = LocalContext.current
 
@@ -42,22 +42,17 @@ fun DominantColorCoilImage(
             DominantColorTransformation(
               championId = image.championId,
               championColorCache = championColorCache,
+              skipUpdateColorCache = skipUpdateColorCache,
             )
           )
           .build()
     )
 
-  val painterState by painter.state.collectAsState()
-
   val animatedColor: State<Color> =
     animateColorAsState(
-      targetValue =
-        when (painterState) {
-          is AsyncImagePainter.State.Success -> Color.Transparent
-          else -> championColorCache.getColor(image.championId)
-        },
+      targetValue = championColorCache.getColor(image.championId),
       label = "",
-      animationSpec = tween(350),
+      animationSpec = tween(250),
     )
 
   Box(modifier = modifier.drawBehind { drawRect(animatedColor.value) }) {
@@ -73,11 +68,14 @@ fun DominantColorCoilImage(
 private class DominantColorTransformation(
   private val championId: ChampionId,
   private val championColorCache: ChampionColorCache,
+  private val skipUpdateColorCache: Boolean,
 ) : Transformation() {
   override val cacheKey: String = championId.value.toString()
 
   override suspend fun transform(input: Bitmap, size: Size): Bitmap {
-    championColorCache.extractColor(input, championId)
+    if (!skipUpdateColorCache) {
+      championColorCache.extractColor(input, championId)
+    }
     return input
   }
 }

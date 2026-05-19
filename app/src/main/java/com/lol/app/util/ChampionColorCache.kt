@@ -2,6 +2,7 @@ package com.lol.app.util
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
@@ -11,9 +12,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import timber.log.Timber
+
+val LocalChampionColorCache =
+  compositionLocalOf<ChampionColorCache> { error("Not initialized yet") }
 
 @Stable
 interface ChampionColorCache {
+
+  val defaultColor: Color
+
   fun getColor(id: ChampionId): Color
 
   fun isDefaultColor(id: ChampionId): Boolean
@@ -22,21 +30,22 @@ interface ChampionColorCache {
 
   fun extractColor(input: coil3.Bitmap, championId: ChampionId)
 
-  class Impl(scope: CoroutineScope, private val defaultColor: Color = PremiumGreen) :
+  class Impl(scope: CoroutineScope, override val defaultColor: Color = PremiumGreen) :
     ChampionColorCache {
     private val cache = hashMapOf<ChampionId, MutableState<Color>>()
-    private val extractChannel = Channel<Pair<ChampionId, coil3.Bitmap>>(
-      capacity = Channel.UNLIMITED
-    )
+    private val extractChannel =
+      Channel<Pair<ChampionId, coil3.Bitmap>>(capacity = Channel.UNLIMITED)
 
     init {
       scope.launch(Dispatchers.IO) {
-        for((championId, input) in extractChannel){
+        for ((championId, input) in extractChannel) {
           Palette.from(input).generate().let {
             putColor(
               id = championId,
               color =
-                Color(it.getVibrantColor(0).takeIf { color -> color != 0 } ?: it.getDominantColor(0)),
+                Color(
+                  it.getVibrantColor(0).takeIf { color -> color != 0 } ?: it.getDominantColor(0)
+                ),
             )
           }
         }
@@ -47,7 +56,10 @@ interface ChampionColorCache {
     private fun getColorState(id: ChampionId): MutableState<Color> =
       cache.getOrPut(id) { mutableStateOf(defaultColor) }
 
-    @Stable override fun getColor(id: ChampionId): Color = getColorState(id).value
+    @Stable
+    override fun getColor(id: ChampionId): Color {
+      return getColorState(id).value
+    }
 
     override fun putColor(id: ChampionId, color: Color) {
       getColorState(id).value = color
@@ -56,6 +68,8 @@ interface ChampionColorCache {
     override fun isDefaultColor(id: ChampionId): Boolean = getColor(id) == defaultColor
 
     override fun extractColor(input: coil3.Bitmap, championId: ChampionId) {
+      if (!isDefaultColor(championId)) return
+
       extractChannel.trySend(championId to input)
     }
   }

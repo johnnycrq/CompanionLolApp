@@ -31,7 +31,16 @@ class CompanionLolApplication : Application(), SingletonImageLoader.Factory {
 
     if (BuildConfig.DEBUG) {
       StrictMode.setThreadPolicy(
-        StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().penaltyLog().build()
+        StrictMode.ThreadPolicy.Builder()
+          .detectAll()
+          .apply {
+            if (android.os.Build.VERSION.SDK_INT >= 34) {
+              permitExplicitGc()
+            }
+          }
+          .penaltyDialog()
+          .penaltyLog()
+          .build()
       )
       StrictMode.setVmPolicy(
         StrictMode.VmPolicy.Builder()

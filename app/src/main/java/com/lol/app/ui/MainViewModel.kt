@@ -2,33 +2,35 @@
 
 package com.lol.app.ui
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.data.usecase.SessionUseCase
+import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.lol.app.base.theme.PremiumGreen
 import com.lol.app.navigation.BackStack
+import com.lol.app.navigation.ChampionDetailsKey
 import com.lol.app.navigation.ChampionListKey
 import com.lol.app.navigation.InitialScreenKey
 import com.lol.app.navigation.LoginKey
 import com.lol.app.navigation.ScreenKey
-import com.lol.app.ui.screens.NavigationActions
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import com.lol.app.util.ChampionColorCache
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
-@HiltViewModel(assistedFactory = MainViewModel.Factory::class)
+@HiltViewModel
 class MainViewModel
-@AssistedInject
-constructor(
-  private val sessionUseCase: SessionUseCase,
-  @Assisted private val backStack: BackStack<ScreenKey>,
-) : ViewModel(), NavigationActions {
+@Inject
+constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedStateHandle) :
+  ViewModel() {
 
-  @AssistedFactory
-  interface Factory {
-    fun create(backStack: BackStack<ScreenKey>): MainViewModel
-  }
+  val backStack: BackStack<ScreenKey> = BackStack.Impl(
+    savedStateHandle = savedStateHandle,
+    initialHistory = listOf(InitialScreenKey)
+  )
+  val colorCache: ChampionColorCache =
+    ChampionColorCache.Impl(scope = viewModelScope, defaultColor = PremiumGreen)
 
   init {
     if (backStack.history.contains(InitialScreenKey)) {
@@ -45,14 +47,20 @@ constructor(
     }
   }
 
-  override fun onLoginClicked(emailAddress: String) {
+  fun goToChampionDetails(championId: ChampionId){
+    backStack.goTo(
+      ChampionDetailsKey(championId)
+    )
+  }
+
+  fun onLoginClicked(emailAddress: String) {
     viewModelScope.launch {
       sessionUseCase.updateEmailAddress(emailAddress)
       backStack.setHistory(ChampionListKey)
     }
   }
 
-  override fun onLogoutClicked() {
+  fun onLogoutClicked() {
     viewModelScope.launch {
       sessionUseCase.clear()
       backStack.setHistory(LoginKey)

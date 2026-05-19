@@ -10,6 +10,8 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
+val DarkPlatinium = Color(0xFF1D1D1D)
+val SharpNight = Color(0xFF333333)
 val FavoriteColor = Color(0xFFFCC201)
 val PremiumGreen = Color(0xFF00C853) // More vibrant green
 val PremiumGreenLight = Color(0xFFE8F5E9)

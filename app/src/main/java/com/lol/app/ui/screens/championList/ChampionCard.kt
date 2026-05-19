@@ -43,6 +43,7 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.lol.app.base.theme.FavoriteColor
 import com.lol.app.util.ChampionColorCache
 import com.lol.app.util.DominantColorCoilImage
+import com.lol.app.util.LocalChampionColorCache
 import timber.log.Timber
 
 private val favoriteBorderBrush =
@@ -67,9 +68,10 @@ fun ChampionCard(
   modifier: Modifier,
   champion: ChampionModel,
   gridSize: Int,
-  championColorCache: ChampionColorCache,
   onCardClick: (ChampionId) -> Unit,
 ) {
+
+  val championColorCache: ChampionColorCache = LocalChampionColorCache.current
 
   val small =
     MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, fontWeight = FontWeight.Light)
@@ -152,6 +154,7 @@ fun ChampionCard(
                     Modifier.border(BorderStroke(2.dp, favoriteBorderBrush), RectangleShape)
                   else Modifier
                 ),
+            skipUpdateColorCache = false
           )
         }
       },

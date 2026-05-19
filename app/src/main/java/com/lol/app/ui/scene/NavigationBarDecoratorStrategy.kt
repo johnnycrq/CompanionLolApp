@@ -1,4 +1,4 @@
-package com.lol.app.ui.bottom_nav
+package com.lol.app.ui.scene
 
 import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.SharedTransitionScope
@@ -11,12 +11,13 @@ import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
-import com.lol.app.navigation.MainBottomNavScreen
-import com.lol.app.navigation.ScreenKey
+import androidx.navigation3.runtime.get
+import com.lol.app.ui.screens.NavigationBarScreen
 import com.lol.app.util.cacheSize
 
 data class NavigationBarDecoratorScene<T : Any>(
@@ -69,9 +70,11 @@ class NavigationBarDecoratorStrategy<T : Any>(
 ) : SceneDecoratorStrategy<T> {
 
   override fun SceneDecoratorStrategyScope<T>.decorateScene(scene: Scene<T>): Scene<T> {
-    val screenKey = scene.entries.first().metadata["screen_key"] as? ScreenKey
+    val lastEntry: NavEntry<T> = scene.entries.firstOrNull() ?: return scene
 
-    return if (screenKey is MainBottomNavScreen) {
+    val isNavBarScreen: Boolean = lastEntry.metadata[NavigationBarScreen] ?: false
+
+    return if (isNavBarScreen) {
       NavigationBarDecoratorScene(scene, sharedTransitionScope, navBarContent)
     } else (scene)
   }

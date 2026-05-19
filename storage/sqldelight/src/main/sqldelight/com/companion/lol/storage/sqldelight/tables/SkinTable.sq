@@ -1,0 +1,19 @@
+import com.companion.lol.storage.impl.model.ids.ChampionId;
+import com.companion.lol.storage.impl.model.ids.SkinId;
+import kotlin.Boolean;
+import kotlin.Int;
+
+CREATE TABLE SkinTable (
+  id INTEGER AS ChampionId NOT NULL,
+  skinId INTEGER AS SkinId NOT NULL,
+  number INTEGER AS Int NOT NULL,
+  name TEXT NOT NULL,
+  isChroma INTEGER AS Boolean  NOT NULL,
+  PRIMARY KEY (id, skinId)
+);
+
+insert:
+INSERT OR REPLACE INTO SkinTable VALUES ?;
+
+findByChampionId:
+SELECT * FROM SkinTable WHERE id = :championId;

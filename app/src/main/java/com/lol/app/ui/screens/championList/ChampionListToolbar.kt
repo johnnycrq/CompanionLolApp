@@ -37,8 +37,8 @@ fun ChampionListToolbar(
     modifier: Modifier,
     sortOrder: SortOrder,
     onGridSizeItemMenuClicked: () -> Unit,
-    onOrderItemMenuClicked: () -> Unit,
-    onFavoritesItemMenuClicked: () -> Unit
+    onSortMenuItemClicked: () -> Unit,
+    onClearFavoritesMenuItemClicked: () -> Unit
 ) {
 
     CompanionLolTopAppbar(
@@ -82,7 +82,7 @@ fun ChampionListToolbar(
                         SortOrder.FAVORITES -> Icons.Default.KeyboardArrowDown
                     },
                     onClick = {
-                        onOrderItemMenuClicked()
+                        onSortMenuItemClicked()
                         expanded = false
                     }
                 )
@@ -91,7 +91,7 @@ fun ChampionListToolbar(
                     title = R.string.champion_rotation_clear_favorites,
                     icon = Icons.Rounded.Delete,
                     onClick = {
-                        onFavoritesItemMenuClicked()
+                        onClearFavoritesMenuItemClicked()
                         expanded = false
                     }
                 )
