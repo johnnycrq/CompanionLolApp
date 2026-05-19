@@ -1,6 +1,5 @@
 package com.companion.lol.data.usecase
 
-import app.cash.sqldelight.Transacter
 import com.companion.lol.network.DDragonApi
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.ids.SkinId

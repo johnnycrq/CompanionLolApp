@@ -10,6 +10,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -26,15 +28,20 @@ object NetworkModule {
     @Provides
     @Singleton
     internal fun baseRetrofit(): Retrofit {
+        // This is an ugly hack
+        // But StrictMode identifies violation here
+        // somewhere in the initialization
         @Suppress("JSON_FORMAT_REDUNDANT")
-        return Retrofit.Builder()
-            .addConverterFactory(
-                Json {
-                    ignoreUnknownKeys = true
-                }.asConverterFactory("application/json".toMediaType())
-            )
-            .baseUrl("http://www.google.com") // we replace this later
-            .build()
+        return runBlocking(Dispatchers.IO) {
+            Retrofit.Builder()
+                .addConverterFactory(
+                    Json {
+                        ignoreUnknownKeys = true
+                    }.asConverterFactory("application/json".toMediaType())
+                )
+                .baseUrl("http://www.google.com") // we replace this later
+                .build()
+        }
     }
 
     @Provides

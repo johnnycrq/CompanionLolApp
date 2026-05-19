@@ -94,7 +94,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization)
 
+    implementation(libs.androidx.workmanager)
+    implementation(libs.androidx.hilt.work)
     implementation(libs.android.hilt)
+    ksp(libs.androidx.hilt.work.compiler)
     ksp(libs.android.hilt.compiler)
 
     implementation(libs.android.navigation.compose)

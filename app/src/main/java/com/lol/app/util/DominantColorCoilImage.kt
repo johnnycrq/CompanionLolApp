@@ -7,11 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil3.Bitmap
@@ -23,34 +24,39 @@ import coil3.transform.Transformation
 import com.companion.lol.data.DdragonImage
 import com.companion.lol.storage.impl.model.ids.ChampionId
 
+private val noPainter = ColorPainter(Color.Transparent)
 @Composable
 fun DominantColorCoilImage(
   modifier: Modifier,
-  image: DdragonImage,
+  championId: ChampionId,
+  image: DdragonImage?,
   championColorCache: ChampionColorCache,
   imageModifier: Modifier = Modifier,
   skipUpdateColorCache: Boolean,
 ) {
   val context = LocalContext.current
 
-  val painter =
-    rememberAsyncImagePainter(
-      model =
-        ImageRequest.Builder(context)
-          .data(image.imageUrl)
-          .transformations(
-            DominantColorTransformation(
-              championId = image.championId,
-              championColorCache = championColorCache,
-              skipUpdateColorCache = skipUpdateColorCache,
+    val painter = if (image == null) {
+      noPainter
+    } else {
+      rememberAsyncImagePainter(
+        model =
+          ImageRequest.Builder(context)
+            .data(image.imageUrl)
+            .transformations(
+              DominantColorTransformation(
+                championId = image.championId,
+                championColorCache = championColorCache,
+                skipUpdateColorCache = skipUpdateColorCache,
+              )
             )
-          )
-          .build()
-    )
+            .build()
+      )
+    }
 
   val animatedColor: State<Color> =
     animateColorAsState(
-      targetValue = championColorCache.getColor(image.championId),
+      targetValue = championColorCache.getColor(championId),
       label = "",
       animationSpec = tween(250),
     )

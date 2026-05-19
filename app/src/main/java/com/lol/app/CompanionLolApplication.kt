@@ -3,22 +3,24 @@ package com.lol.app
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
-import coil3.network.okhttp.OkHttpNetworkFetcherFactory
-import coil3.request.crossfade
-import coil3.util.Logger
 import com.companion.lol.app.BuildConfig
-import com.lol.app.io.initializer.Initializers
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 @HiltAndroidApp
-class CompanionLolApplication : Application(), SingletonImageLoader.Factory {
-
-  @Inject lateinit var initializers: Initializers
+class CompanionLolApplication : Application(), SingletonImageLoader.Factory, Configuration.Provider {
   @Inject lateinit var coilImageLoader: ImageLoader
+  @Inject lateinit var workerFactory: HiltWorkerFactory
+
+  override val workManagerConfiguration: Configuration
+    get() = Configuration.Builder()
+      .setWorkerFactory(workerFactory)
+      .build()
 
   override fun onCreate() {
     super.onCreate()
@@ -26,8 +28,6 @@ class CompanionLolApplication : Application(), SingletonImageLoader.Factory {
     if (BuildConfig.DEBUG) {
       (Timber.plant(Timber.DebugTree()))
     }
-
-    initializers.initialize()
 
     if (BuildConfig.DEBUG) {
       StrictMode.setThreadPolicy(
@@ -53,6 +53,8 @@ class CompanionLolApplication : Application(), SingletonImageLoader.Factory {
           .build()
       )
     }
+
+    SyncWorker.initialSync(this)
   }
 
   override fun newImageLoader(context: Context): ImageLoader {

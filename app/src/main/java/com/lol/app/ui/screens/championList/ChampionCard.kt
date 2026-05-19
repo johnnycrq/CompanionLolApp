@@ -140,6 +140,7 @@ fun ChampionCard(
         Box(modifier = Modifier.fillMaxWidth().aspectRatio(1f)) {
           DominantColorCoilImage(
             modifier = Modifier.fillMaxSize(),
+            championId = championId,
             image = championImage,
             championColorCache = championColorCache,
             imageModifier =

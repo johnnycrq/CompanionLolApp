@@ -13,20 +13,17 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 
 @Stable
 interface ChampionSkinImagesProvider {
-    val image: DdragonImage
+    val image: DdragonImage?
 
     fun toggleSkin()
 }
 
-private class Impl(
-    private val noImage: DdragonImage,
-): ChampionSkinImagesProvider{
+private class Impl: ChampionSkinImagesProvider{
     private var currentIndex by mutableIntStateOf(0)
     val skins = mutableStateOf<List<DdragonImage>>(emptyList())
 
-    override val image: DdragonImage
+    override val image: DdragonImage?
         get() = skins.value.getOrNull(currentIndex)
-            ?: noImage
 
     override fun toggleSkin() {
         currentIndex = nextIndex()
@@ -47,9 +44,7 @@ fun rememberChampionSkinImageProvider(
     skins: List<ChampionSkin>?
 ): ChampionSkinImagesProvider{
     return remember(championId) {
-        Impl(
-            noImage = DdragonImage.EMPTY(championId)
-        )
+        Impl()
     }.apply {
         this.skins.value = skins?.map { it.image } ?: emptyList()
     }

@@ -2,11 +2,9 @@ package com.companion.lol.data.usecase
 
 import com.companion.lol.network.DDragonApi
 import com.companion.lol.storage.impl.model.ids.ChampionId
-import com.companion.lol.storage.impl.model.model.OffsetDateTime
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.PartyTypeStore
-import com.companion.lol.storage.impl.store.UpdatesStore
 import com.companion.lol.storage.impl.util.CompanionLolTransactor
 import com.companion.lol.storage.impl.util.withDbContext
 import com.companion.lol.storage.sqldelight.tables.ChampionPartyTypeTable
@@ -23,21 +21,13 @@ class RefreshChampionsUseCase
 constructor(
     private val championStore: ChampionStore,
     private val partyTypeStore: PartyTypeStore,
-    private val updatesStore: UpdatesStore,
     private val api: DDragonApi,
     private val transacter: CompanionLolTransactor,
 ) {
   private val updateDuration: Duration = 7.days
 
   suspend fun refresh() = withDbContext {
-    val championDate: OffsetDateTime? = updatesStore.find()?.champion
-
-    if (championDate != null && (OffsetDateTime.now() - championDate) < updateDuration) {
-      return@withDbContext
-    }
-
     val champions = api.getChampionList()
-
       transacter.transaction {
           champions.champions
               .map {
@@ -59,7 +49,6 @@ constructor(
                           .map { item -> PartyType.from(item.partTypeId) }
                           .map { partyType -> ChampionPartyTypeTable(id = partyType.dbId, partyType) }
                   )
-                  updatesStore.insert(champion = OffsetDateTime.now())
               }
       }
   }

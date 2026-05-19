@@ -7,7 +7,6 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.companion.lol.storage.impl.adapter.ChampionIdAdapter
 import com.companion.lol.storage.impl.adapter.ChampionTagAdapter
-import com.companion.lol.storage.impl.adapter.OffsetDateTimeAdapter
 import com.companion.lol.storage.impl.adapter.PartyTypeIdAdapter
 import com.companion.lol.storage.impl.adapter.SessionIdAdapter
 import com.companion.lol.storage.impl.adapter.SettingsIdAdapter
@@ -22,7 +21,6 @@ import com.companion.lol.storage.sqldelight.tables.ChampionTable
 import com.companion.lol.storage.sqldelight.tables.SessionTable
 import com.companion.lol.storage.sqldelight.tables.SettingsTable
 import com.companion.lol.storage.sqldelight.tables.SkinTable
-import com.companion.lol.storage.sqldelight.tables.UpdatesTable
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,8 +46,6 @@ internal object StorageModule {
       ChampionFavoritesTableAdapter = ChampionFavoritesTable.Adapter(ChampionIdAdapter),
       ChampionPartyTypeTableAdapter =
         ChampionPartyTypeTable.Adapter(PartyTypeIdAdapter, EnumColumnAdapter<PartyType>()),
-      UpdatesTableAdapter =
-        UpdatesTable.Adapter(SettingsIdAdapter, OffsetDateTimeAdapter, OffsetDateTimeAdapter),
       SettingsTableAdapter =
         SettingsTable.Adapter(SettingsIdAdapter, IntColumnAdapter, EnumColumnAdapter<SortOrder>()),
       SessionTableAdapter = SessionTable.Adapter(SessionIdAdapter),

@@ -156,9 +156,10 @@ private fun ImageHeader(
   Box(modifier = Modifier.fillMaxWidth().aspectRatio(1215f / 717f)) {
     DominantColorCoilImage(
       modifier = Modifier.fillMaxSize(),
+      championId = championId,
       image = championSkins.image,
       championColorCache = championColorCache,
-      skipUpdateColorCache = true,
+      skipUpdateColorCache = true
     )
 
     Icon(
