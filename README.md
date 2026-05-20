@@ -33,10 +33,10 @@ To build and run the application, you must provide a Riot Games API key.
 ## 📸 Screenshots
 The following screenshots demonstrate the core functionality and design of the app:
 
-| Champion List | Champion Details |                           Search & Filter                           |
-| :---: | :---: |:-------------------------------------------------------------------:|
+| Login & Logout |                         Champion List                           |                       Champion Details                        |
+| :---: |:---------------------------------------------------------------:|:-------------------------------------------------------------:|
 | ![Champion List](screenshots/Screenshot_20260520_104534.png) | ![Champion Details](screenshots/Screenshot_20260520_104555.png) | ![Login & Logout](screenshots/Screenshot_20260520_104641.png) |
-| *Browsing all available champions with a smooth scrolling experience.* | *Detailed view of champion stats, lore, and abilities.* |   *Basic Login Logout feature.*   |
+| *Basic Login Logout feature.* |     *Browsing all available champions with a smooth scrolling experience.*     |                 *Detailed view of champion stats, lore, and abilities.*                 |
 
 --- 
 
