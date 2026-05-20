@@ -6,8 +6,8 @@ import com.companion.lol.storage.impl.model.other.ChampionTag
 
 @Stable
 data class ChampionDetailsModel(
-    val lore: String,
-    val blurb: String,
-    val tags: List<ChampionTag>,
-    val skins: List<ChampionSkin>
+  val lore: String,
+  val blurb: String,
+  val tags: List<ChampionTag>,
+  val skins: List<ChampionSkin>,
 )

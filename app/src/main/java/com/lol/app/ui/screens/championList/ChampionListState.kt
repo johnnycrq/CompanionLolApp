@@ -7,7 +7,7 @@ import com.lol.app.base.ComposeState
 
 @Stable
 data class ChampionListState(
-    val champions: List<ChampionModel> = emptyList(),
-    val gridSize: Int = 4,
-    val sortOrder: SortOrder = SortOrder.ASC
-): ComposeState
+  val champions: List<ChampionModel> = emptyList(),
+  val gridSize: Int = 4,
+  val sortOrder: SortOrder = SortOrder.ASC,
+) : ComposeState

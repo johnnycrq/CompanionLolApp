@@ -35,7 +35,6 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntryDecorator
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.Scene
@@ -50,6 +49,7 @@ import com.lol.app.navigation.InitialScreenKey
 import com.lol.app.navigation.LoginKey
 import com.lol.app.navigation.ScreenKey
 import com.lol.app.navigation.SettingsKey
+import com.lol.app.navigation.entryScreenKey
 import com.lol.app.ui.scene.BottomSheetSceneStrategy
 import com.lol.app.ui.scene.rememberBottomSheetSceneStrategy
 import com.lol.app.ui.scene.rememberNavigationBarDecoratorStrategy
@@ -133,20 +133,20 @@ private fun MainScreen() {
             predictivePopTransitionSpec = predictiveBack(),
             entryProvider =
               entryProvider {
-                entry<InitialScreenKey> { PlaceHolderScreen() }
-                entry<LoginKey> { LoginScreen(onLoginClicked = viewModel::onLoginClicked) }
-                entry<ChampionListKey>(metadata = NavigationBarScreen.metadata()) {
-                  ChampionListScreen(
-                    onCardClick = viewModel::goToChampionDetails
-                  )
+                entryScreenKey<InitialScreenKey> { PlaceHolderScreen() }
+                entryScreenKey<LoginKey> { LoginScreen(onLoginClicked = viewModel::onLoginClicked) }
+                entryScreenKey<ChampionListKey>(metadata = NavigationBarScreen.metadata()) {
+                  ChampionListScreen(onCardClick = viewModel::goToChampionDetails)
                 }
-                entry<SettingsKey>(metadata = NavigationBarScreen.metadata()) {
+                entryScreenKey<SettingsKey>(metadata = NavigationBarScreen.metadata()) {
                   SettingsScreen(onLogoutClicked = viewModel::onLogoutClicked)
                 }
 
-                entry<ChampionDetailsKey>(
+                entryScreenKey<ChampionDetailsKey>(
                   metadata = BottomSheetSceneStrategy.bottomSheet()
-                ) { ChampionDetailsScreen(it.championId) }
+                ) {
+                  ChampionDetailsScreen(it.championId)
+                }
               },
           )
         }

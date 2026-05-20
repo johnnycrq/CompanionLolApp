@@ -16,14 +16,10 @@ class SettingsUseCase @Inject constructor(private val settingsStore: SettingsSto
   fun observe(): Flow<SettingsModel> = settingsStore.observe().map(SettingsTable::model)
 
   suspend fun updateChampionGridSize(value: Int) = withDbContext {
-    settingsStore.insert(
-      championRotationGridSize = value
-    )
+    settingsStore.insert(championRotationGridSize = value)
   }
 
   suspend fun updateChampionSortOrder(sortOrder: SortOrder) = withDbContext {
-    settingsStore.insert(
-      championRotationSortOrder = sortOrder
-    )
+    settingsStore.insert(championRotationSortOrder = sortOrder)
   }
 }

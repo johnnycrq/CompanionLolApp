@@ -19,37 +19,36 @@ import kotlin.time.Duration.Companion.days
 class RefreshChampionsUseCase
 @Inject
 constructor(
-    private val championStore: ChampionStore,
-    private val partyTypeStore: PartyTypeStore,
-    private val api: DDragonApi,
-    private val transacter: CompanionLolTransactor,
+  private val championStore: ChampionStore,
+  private val partyTypeStore: PartyTypeStore,
+  private val api: DDragonApi,
+  private val transacter: CompanionLolTransactor,
 ) {
   private val updateDuration: Duration = 7.days
 
   suspend fun refresh() = withDbContext {
     val champions = api.getChampionList()
-      transacter.transaction {
-          champions.champions
-              .map {
-                  ChampionTable(
-                      id = ChampionId(it.championKey),
-                      keyName = it.id,
-                      name = it.name,
-                      title = it.title.capitalizeWords(),
-                      squareImageName = it.image.full,
-                      partTypeId = PartyType.from(it.partType)
-                          .dbId,
-                  )
-              }
-              .also {
-                  championStore.insertAll(it)
-                  partyTypeStore.insertAll(
-                      it
-                          .distinctBy { item -> item.partTypeId }
-                          .map { item -> PartyType.from(item.partTypeId) }
-                          .map { partyType -> ChampionPartyTypeTable(id = partyType.dbId, partyType) }
-                  )
-              }
-      }
+    transacter.transaction {
+      champions.champions
+        .map {
+          ChampionTable(
+            id = ChampionId(it.championKey),
+            keyName = it.id,
+            name = it.name,
+            title = it.title.capitalizeWords(),
+            squareImageName = it.image.full,
+            partTypeId = PartyType.from(it.partType).dbId,
+          )
+        }
+        .also {
+          championStore.insertAll(it)
+          partyTypeStore.insertAll(
+            it
+              .distinctBy { item -> item.partTypeId }
+              .map { item -> PartyType.from(item.partTypeId) }
+              .map { partyType -> ChampionPartyTypeTable(id = partyType.dbId, partyType) }
+          )
+        }
+    }
   }
 }

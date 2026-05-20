@@ -8,9 +8,9 @@ import com.companion.lol.storage.impl.util.dbDispatcher
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionDetailsQueries
 import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
 
 @Singleton
 class ChampionDetailsStore @Inject constructor(database: LolAppDb) :

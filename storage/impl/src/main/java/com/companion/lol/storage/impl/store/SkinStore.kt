@@ -8,22 +8,16 @@ import com.companion.lol.storage.impl.util.dbDispatcher
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.SkinTable
 import com.companion.lol.storage.sqldelight.tables.SkinTableQueries
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
 
 @Singleton
-class SkinStore @Inject constructor(
-    private val database: LolAppDb
-): SqldelightStore<SkinTableQueries>(database.skinTableQueries) {
-    fun observeByChampionId(championId: ChampionId): Flow<List<SkinTable>> {
-        return queries.findByChampionId(championId)
-            .asFlow().mapToList(dbDispatcher)
-    }
+class SkinStore @Inject constructor(private val database: LolAppDb) :
+  SqldelightStore<SkinTableQueries>(database.skinTableQueries) {
+  fun observeByChampionId(championId: ChampionId): Flow<List<SkinTable>> {
+    return queries.findByChampionId(championId).asFlow().mapToList(dbDispatcher)
+  }
 
-    fun insertAll(
-        skins: List<SkinTable>
-    ) = database.transaction {
-        skins.forEach(queries::insert)
-    }
+  fun insertAll(skins: List<SkinTable>) = database.transaction { skins.forEach(queries::insert) }
 }

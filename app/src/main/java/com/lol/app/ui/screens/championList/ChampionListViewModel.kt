@@ -20,7 +20,7 @@ class ChampionListViewModel
 @Inject
 constructor(
   private val settingsUseCase: SettingsUseCase,
-  private val championUseCase: ChampionUseCase
+  private val championUseCase: ChampionUseCase,
 ) : ViewModel() {
 
   val state: StateFlow<ChampionListState> =
@@ -48,33 +48,30 @@ constructor(
     }
   }
 
-  fun onSortMenuItemClicked(){
+  fun onSortMenuItemClicked() {
     viewModelScope.launch {
-      settingsUseCase.updateChampionSortOrder(
-        state.value.sortOrder.toggle()
-      )
+      settingsUseCase.updateChampionSortOrder(state.value.sortOrder.toggle())
     }
   }
 
-  fun onFavoritesClearClicked(){
-    viewModelScope.launch {
-      championUseCase.clearFavorites()
-    }
+  fun onFavoritesClearClicked() {
+    viewModelScope.launch { championUseCase.clearFavorites() }
   }
 
   private fun List<ChampionModel>.sortBy(order: SortOrder): List<ChampionModel> {
     return when (order) {
-      SortOrder.FAVORITES -> this.sortedWith(
-        compareBy(
-          {
-            when (it.isFavorite) {
-              true -> 1
-              else -> 2
-            }
-          },
-          { it.name }
+      SortOrder.FAVORITES ->
+        this.sortedWith(
+          compareBy(
+            {
+              when (it.isFavorite) {
+                true -> 1
+                else -> 2
+              }
+            },
+            { it.name },
+          )
         )
-      )
 
       SortOrder.ASC -> this.sortedBy { it.name }
     }

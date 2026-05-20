@@ -6,34 +6,24 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 
 @Stable
 sealed interface DdragonImage {
+  @Stable val imageUrl: String
+
+  @Stable val championId: ChampionId
+
+  companion object {
     @Stable
-    val imageUrl: String
+    fun championSquareImage(championId: ChampionId, image: String): DdragonImage =
+      Impl(championId = championId, imageUrl = EndPoints.DDragon.championSquareAsset(image))
 
     @Stable
-    val championId: ChampionId
-
-    companion object {
-        @Stable
-        fun championSquareImage(championId: ChampionId, image: String): DdragonImage = Impl(
-            championId = championId,
-            imageUrl = EndPoints.DDragon.championSquareAsset(image)
-        )
-
-        @Stable
-        fun championSkinImage(
-            championId: ChampionId,
-            keyName: String,
-            skinNumber: Int
-        ): DdragonImage = Impl(
-            championId = championId,
-            imageUrl = EndPoints.DDragon.championSkinAsset(
-                keyName,
-                skinNumber
-            )
-        )
-    }
+    fun championSkinImage(championId: ChampionId, keyName: String, skinNumber: Int): DdragonImage =
+      Impl(
+        championId = championId,
+        imageUrl = EndPoints.DDragon.championSkinAsset(keyName, skinNumber),
+      )
+  }
 }
 
 @Stable
 private data class Impl(override val championId: ChampionId, override val imageUrl: String) :
-    DdragonImage
+  DdragonImage

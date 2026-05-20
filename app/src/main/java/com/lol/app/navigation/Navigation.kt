@@ -12,7 +12,7 @@ import kotlinx.serialization.serializer
 private const val SAVED_KEY = "BackStack.KEY"
 
 @Stable
-interface BackStack<S: Any> {
+interface BackStack<S : Any> {
   val history: List<S>
 
   val current: S
@@ -27,19 +27,21 @@ interface BackStack<S: Any> {
 
   companion object {
     @Suppress("FunctionName")
-    inline fun <reified S: Any> Impl(savedStateHandle: SavedStateHandle, initialHistory: List<S>): BackStack<S> {
+    inline fun <reified S : ScreenKey> Impl(
+      savedStateHandle: SavedStateHandle,
+      initialHistory: List<S>,
+    ): BackStack<S> {
       val saver = BackStackSaver.Impl(savedStateHandle, serializer<S>())
 
-      return Impl(
-        saver = saver,
-        initialHistory = saver.get() ?: initialHistory
-      )
+      return Impl(saver = saver, initialHistory = saver.get() ?: initialHistory)
     }
   }
 }
 
-class Impl<S: Any>(private val saver: BackStackSaver<S>, private val initialHistory: List<S>) :
-  BackStack<S> {
+class Impl<S : ScreenKey>(
+  private val saver: BackStackSaver<S>,
+  private val initialHistory: List<S>,
+) : BackStack<S> {
   private val _history: SnapshotStateList<S> =
     SnapshotStateList<S>().apply { addAll(initialHistory) }
 
@@ -64,7 +66,17 @@ class Impl<S: Any>(private val saver: BackStackSaver<S>, private val initialHist
 
   override fun goTo(key: S) {
     Snapshot.withMutableSnapshot {
-      if (_history.lastOrNull() == key) return@withMutableSnapshot
+      val last =
+        _history.lastOrNull() ?: error("Cannot use goTo without having a valid non-empty history")
+
+      // no repeated keys allowed
+      if (last == key) return@withMutableSnapshot
+
+      // if last key is a bottomSheet, cannot go to any other screen
+      // unless closing the bottom sheet
+      if (last.screenType == ScreenKey.ScreenType.BOTTOM_SHEET) {
+        return@withMutableSnapshot
+      }
 
       val index = _history.indexOf(key)
       if (index != -1) {
@@ -88,14 +100,14 @@ class Impl<S: Any>(private val saver: BackStackSaver<S>, private val initialHist
   }
 }
 
-interface BackStackSaver<S: Any> {
+interface BackStackSaver<S : ScreenKey> {
   fun get(): List<S>?
 
   fun save(newHistory: List<S>)
 
-  class Impl<S: Any>(
+  class Impl<S : ScreenKey>(
     private val savedStateHandle: SavedStateHandle,
-    private val serializer: KSerializer<S>
+    private val serializer: KSerializer<S>,
   ) : BackStackSaver<S> {
     override fun get(): List<S>? {
       return savedStateHandle.get<String>(SAVED_KEY)?.let {
@@ -104,8 +116,7 @@ interface BackStackSaver<S: Any> {
     }
 
     override fun save(newHistory: List<S>) {
-      savedStateHandle[SAVED_KEY] =
-        Json.encodeToString(ListSerializer(serializer), newHistory)
+      savedStateHandle[SAVED_KEY] = Json.encodeToString(ListSerializer(serializer), newHistory)
     }
   }
 }

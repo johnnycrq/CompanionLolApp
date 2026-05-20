@@ -19,10 +19,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel(assistedFactory = ChampionDetailsViewModel.Factory::class)
 class ChampionDetailsViewModel
 @AssistedInject
-constructor(
-  @Assisted championId: ChampionId,
-  private val championUseCase: ChampionUseCase
-) : ViewModel() {
+constructor(@Assisted championId: ChampionId, private val championUseCase: ChampionUseCase) :
+  ViewModel() {
   @AssistedFactory
   interface Factory {
     fun create(championId: ChampionId): ChampionDetailsViewModel
@@ -32,16 +30,22 @@ constructor(
     championUseCase
       .observeChampionWithDetails(championId)
       .flowOn(dbDispatcher)
-      .map { ChampionDetailsState(championId = championId, champion = it.champion, details = it.details) }
-      .stateIn(viewModelScope, SharingStarted.Eagerly, ChampionDetailsState(championId = championId))
+      .map {
+        ChampionDetailsState(championId = championId, champion = it.champion, details = it.details)
+      }
+      .stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        ChampionDetailsState(championId = championId),
+      )
 
-  fun onFavoritesClicked(){
+  fun onFavoritesClicked() {
     val champion = state.value.champion ?: return
 
     viewModelScope.launch {
       championUseCase.markFavourite(
         championId = champion.id,
-        isFavourite = champion.isFavorite.not()
+        isFavourite = champion.isFavorite.not(),
       )
     }
   }

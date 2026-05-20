@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,11 +46,7 @@ fun LoginScreen(onLoginClicked: (emailAddress: String) -> Unit) {
 }
 
 @Composable
-fun LoginScreen(
-  state: LoginState,
-  onEmailChanged: (String) -> Unit,
-  onLoginClicked: () -> Unit,
-) {
+fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClicked: () -> Unit) {
 
   CompanionAppSurface(modifier = Modifier.fillMaxSize()) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -103,9 +98,7 @@ fun LoginScreen(
       Button(
         onClick = onLoginClicked,
         enabled = state.isEmailValid,
-        modifier = Modifier
-          .imePadding()
-          .padding(32.dp).fillMaxWidth().height(64.dp),
+        modifier = Modifier.imePadding().padding(32.dp).fillMaxWidth().height(64.dp),
         shape = RoundedCornerShape(16.dp),
         colors =
           ButtonDefaults.buttonColors(
@@ -125,20 +118,12 @@ fun LoginScreen(
 @CompanionAppPreview
 @PreviewWrapper(CompanionAppPreviewWrapperProvider::class)
 private fun LoginPreview() {
-  LoginScreen(
-    state = LoginState(email = ""),
-    onEmailChanged = {},
-    onLoginClicked = {},
-  )
+  LoginScreen(state = LoginState(email = ""), onEmailChanged = {}, onLoginClicked = {})
 }
 
 @Composable
 @CompanionAppPreview
 @PreviewWrapper(CompanionAppPreviewWrapperProvider::class)
 private fun LoginPreview2() {
-  LoginScreen(
-    state = LoginState(),
-    onEmailChanged = {},
-    onLoginClicked = {},
-  )
+  LoginScreen(state = LoginState(), onEmailChanged = {}, onLoginClicked = {})
 }

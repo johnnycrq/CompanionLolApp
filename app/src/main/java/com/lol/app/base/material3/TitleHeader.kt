@@ -19,44 +19,30 @@ import androidx.compose.ui.unit.times
 
 @Composable
 fun TitleHeader(
-    modifier: Modifier,
-    borderColor: Color = Color.White,
-    contentColor: Color = Color.White,
-    borderWidth: Dp = 1.dp,
-    cornerRadius: Dp = 6.dp,
-    label: String
+  modifier: Modifier,
+  borderColor: Color = Color.White,
+  contentColor: Color = Color.White,
+  borderWidth: Dp = 1.dp,
+  cornerRadius: Dp = 6.dp,
+  label: String,
 ) {
-    Text(
-        modifier = modifier
-            .drawBehind {
-                clipRect(
-                    right = size.width / 1.1f,
-                    top = size.height / 4,
-                    clipOp = ClipOp.Intersect,
-                ) {
-                    drawRoundRect(
-                        color = borderColor,
-                        style = Stroke(
-                            width = borderWidth.toPx()
-                        ),
-                        cornerRadius = with(cornerRadius.toPx()) {
-                            CornerRadius(this, this)
-                        },
-                        topLeft = with(borderWidth.toPx()) {
-                            Offset(this, this)
-                        },
-                        size = with((2 * borderWidth).toPx()) {
-                            Size(
-                                size.width - this,
-                                size.height - this,
-                            )
-                        }
-                    )
-                }
-            }
-            .padding(horizontal = 5.dp, vertical = 4.dp),
-        text = label,
-        style = MaterialTheme.typography.bodyMedium,
-        color = contentColor
-    )
+  Text(
+    modifier =
+      modifier
+        .drawBehind {
+          clipRect(right = size.width / 1.1f, top = size.height / 4, clipOp = ClipOp.Intersect) {
+            drawRoundRect(
+              color = borderColor,
+              style = Stroke(width = borderWidth.toPx()),
+              cornerRadius = with(cornerRadius.toPx()) { CornerRadius(this, this) },
+              topLeft = with(borderWidth.toPx()) { Offset(this, this) },
+              size = with((2 * borderWidth).toPx()) { Size(size.width - this, size.height - this) },
+            )
+          }
+        }
+        .padding(horizontal = 5.dp, vertical = 4.dp),
+    text = label,
+    style = MaterialTheme.typography.bodyMedium,
+    color = contentColor,
+  )
 }

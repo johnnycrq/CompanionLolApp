@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,12 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.lol.app.base.theme.DarkPlatinium
-import timber.log.Timber
 
 @Composable
-fun ChampionListScreen(
-  onCardClick: (ChampionId) -> Unit
-) {
+fun ChampionListScreen(onCardClick: (ChampionId) -> Unit) {
   val viewModel = hiltViewModel<ChampionListViewModel>()
   val state by viewModel.state.collectAsState()
 
@@ -48,9 +44,7 @@ fun ChampionListScreen(
 
   val listState = rememberLazyGridState()
 
-  LaunchedEffect(state.sortOrder) {
-    listState.scrollToItem(0)
-  }
+  LaunchedEffect(state.sortOrder) { listState.scrollToItem(0) }
 
   Scaffold(
     topBar = {
@@ -62,7 +56,7 @@ fun ChampionListScreen(
         onClearFavoritesMenuItemClicked = onFavoritesClearClicked,
       )
     },
-    containerColor = DarkPlatinium
+    containerColor = DarkPlatinium,
   ) { contentPadding ->
     LazyVerticalGrid(
       modifier = Modifier.fillMaxSize(),
@@ -80,8 +74,7 @@ fun ChampionListScreen(
     ) {
       items(items = state.champions, key = { it.id.value }) { item ->
         ChampionCard(
-          modifier = Modifier.fillMaxWidth()
-            .animateItem(),
+          modifier = Modifier.fillMaxWidth().animateItem(),
           champion = item,
           onCardClick = onCardClick,
           gridSize = state.gridSize,

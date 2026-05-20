@@ -7,11 +7,11 @@ import com.companion.lol.storage.impl.model.other.PartyType
 
 @Stable
 data class ChampionModel(
-    val id: ChampionId,
-    val name: String,
-    val keyName: String,
-    val title: String,
-    val squareImageName: DdragonImage,
-    val partyType: PartyType,
-    val isFavorite: Boolean
+  val id: ChampionId,
+  val name: String,
+  val keyName: String,
+  val title: String,
+  val squareImageName: DdragonImage,
+  val partyType: PartyType,
+  val isFavorite: Boolean,
 )

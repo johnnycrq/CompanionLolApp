@@ -17,7 +17,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -44,7 +43,6 @@ import com.lol.app.base.theme.FavoriteColor
 import com.lol.app.util.ChampionColorCache
 import com.lol.app.util.DominantColorCoilImage
 import com.lol.app.util.LocalChampionColorCache
-import timber.log.Timber
 
 private val favoriteBorderBrush =
   Brush.verticalGradient(
@@ -155,7 +153,7 @@ fun ChampionCard(
                     Modifier.border(BorderStroke(2.dp, favoriteBorderBrush), RectangleShape)
                   else Modifier
                 ),
-            skipUpdateColorCache = false
+            skipUpdateColorCache = false,
           )
         }
       },

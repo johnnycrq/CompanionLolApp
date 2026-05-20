@@ -13,6 +13,12 @@ android {
   }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlinx.serialization.InternalSerializationApi")
+    }
+}
+
 dependencies {
   implementation(libs.androidx.appcompat)
 

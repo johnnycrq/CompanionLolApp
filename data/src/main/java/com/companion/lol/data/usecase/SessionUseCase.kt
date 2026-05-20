@@ -8,20 +8,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SessionUseCase @Inject constructor(
-    private val store: SessionStore
-) {
-    suspend fun getEmailAddress(): String? = withDbContext{
-        store.get()?.emailAddress
-    }
+class SessionUseCase @Inject constructor(private val store: SessionStore) {
+  suspend fun getEmailAddress(): String? = withDbContext { store.get()?.emailAddress }
 
-    suspend fun updateEmailAddress(emailAddress: String) = withDbContext{
-        store.insert(
-            details = SessionTable(id = SessionId, emailAddress = emailAddress)
-        )
-    }
+  suspend fun updateEmailAddress(emailAddress: String) = withDbContext {
+    store.insert(details = SessionTable(id = SessionId, emailAddress = emailAddress))
+  }
 
-    suspend fun clear() = withDbContext {
-        store.delete().await()
-    }
+  suspend fun clear() = withDbContext { store.delete().await() }
 }

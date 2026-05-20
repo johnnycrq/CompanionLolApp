@@ -24,49 +24,48 @@ import com.lol.app.ui.LocalContentPadding
 @Composable
 @NonRestartableComposable
 fun CompanionAppSurface(
-    modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    contentColor: Color = MaterialTheme.colorScheme.onBackground,
-    border: BorderStroke? = null,
-    insetStatusBar: Boolean = true,
-    insetNavigationBar: Boolean = true,
-    content: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
+  contentColor: Color = MaterialTheme.colorScheme.onBackground,
+  border: BorderStroke? = null,
+  insetStatusBar: Boolean = true,
+  insetNavigationBar: Boolean = true,
+  content: @Composable () -> Unit,
 ) {
-    CompositionLocalProvider(
-        LocalContentColor provides contentColor
+  CompositionLocalProvider(LocalContentColor provides contentColor) {
+    Box(
+      modifier =
+        modifier
+          .then(if (border != null) Modifier.border(border, shape) else Modifier)
+          .background(
+            brush =
+              Brush.verticalGradient(
+                colors =
+                  listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary)
+              ),
+            shape = shape,
+          )
+          .then(
+            if (insetStatusBar) {
+              Modifier.padding(top = LocalContentPadding.current.calculateTopPadding())
+            } else Modifier
+          )
+          .then(
+            if (insetNavigationBar) {
+              Modifier.padding(bottom = LocalContentPadding.current.calculateBottomPadding())
+            } else Modifier
+          )
+          .clip(shape)
+          .semantics(mergeDescendants = false) {
+            // TODO(b/347038246): replace `isContainer` with `isTraversalGroup` with new
+            // pruning API.
+            @Suppress("DEPRECATION")
+            isContainer = true
+          }
+          .pointerInput(Unit) {},
+      propagateMinConstraints = true,
     ) {
-        Box(
-            modifier =
-                modifier
-                    .then(if (border != null) Modifier.border(border, shape) else Modifier)
-                    .background(
-                        brush =
-                            Brush.verticalGradient(
-                                colors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary)
-                            ),
-                        shape = shape
-                    )
-                    .then(
-                        if(insetStatusBar){
-                            Modifier.padding(top = LocalContentPadding.current.calculateTopPadding())
-                        } else Modifier
-                    )
-                    .then(
-                        if(insetNavigationBar){
-                            Modifier.padding(bottom = LocalContentPadding.current.calculateBottomPadding())
-                        } else Modifier
-                    )
-                    .clip(shape)
-                    .semantics(mergeDescendants = false) {
-                        // TODO(b/347038246): replace `isContainer` with `isTraversalGroup` with new
-                        // pruning API.
-                        @Suppress("DEPRECATION")
-                        isContainer = true
-                    }
-                    .pointerInput(Unit) {},
-            propagateMinConstraints = true,
-        ) {
-            content()
-        }
+      content()
     }
+  }
 }

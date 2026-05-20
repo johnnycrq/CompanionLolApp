@@ -6,6 +6,4 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CompanionLolTransactor @Inject constructor(
-    private val db: LolAppDb
-): Transacter by db
+class CompanionLolTransactor @Inject constructor(private val db: LolAppDb) : Transacter by db

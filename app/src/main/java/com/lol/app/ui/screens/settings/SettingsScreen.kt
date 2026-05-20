@@ -26,8 +26,7 @@ fun SettingsScreen(onLogoutClicked: () -> Unit) {
       Button(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         onClick = onLogoutClicked,
-        colors =
-          ButtonDefaults.buttonColors(),
+        colors = ButtonDefaults.buttonColors(),
       ) {
         Text(text = "LOGOUT")
       }

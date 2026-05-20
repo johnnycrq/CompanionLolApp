@@ -13,40 +13,41 @@ import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
 import com.companion.lol.storage.sqldelight.tables.SkinTable
 import javax.inject.Inject
 
-class RefreshChampionDetailsUseCase @Inject constructor(
-    private val championDetailsStore: ChampionDetailsStore,
-    private val skinsStore: SkinStore,
-    private val dDragonApi: DDragonApi,
-    private val transacter: CompanionLolTransactor
+class RefreshChampionDetailsUseCase
+@Inject
+constructor(
+  private val championDetailsStore: ChampionDetailsStore,
+  private val skinsStore: SkinStore,
+  private val dDragonApi: DDragonApi,
+  private val transacter: CompanionLolTransactor,
 ) {
-    suspend fun refresh(championId: ChampionId, championKeyName: String) {
-        val champion = dDragonApi.getChampionDetails(
-            championName = championKeyName
-        ).info
+  suspend fun refresh(championId: ChampionId, championKeyName: String) {
+    val champion = dDragonApi.getChampionDetails(championName = championKeyName).info
 
-        withDbContext {
-            transacter.transaction {
-                val skins = champion.skins.map {
-                    SkinTable(
-                        id = championId,
-                        skinId = SkinId(it.id),
-                        number = it.num,
-                        name = it.name,
-                        isChroma = it.chromas
-                    )
-                }
+    withDbContext {
+      transacter.transaction {
+        val skins =
+          champion.skins.map {
+            SkinTable(
+              id = championId,
+              skinId = SkinId(it.id),
+              number = it.num,
+              name = it.name,
+              isChroma = it.chromas,
+            )
+          }
 
-                championDetailsStore.insert(
-                    ChampionDetailsTable(
-                        id = championId,
-                        lore = champion.lore,
-                        blurb = champion.blurb,
-                        tags = champion.tags.map { ChampionTag.from(it) },
-                        partyTypeId = PartyType.from(champion.partytype).dbId
-                    )
-                )
-                skinsStore.insertAll(skins)
-            }
-        }
+        championDetailsStore.insert(
+          ChampionDetailsTable(
+            id = championId,
+            lore = champion.lore,
+            blurb = champion.blurb,
+            tags = champion.tags.map { ChampionTag.from(it) },
+            partyTypeId = PartyType.from(champion.partytype).dbId,
+          )
+        )
+        skinsStore.insertAll(skins)
+      }
     }
+  }
 }

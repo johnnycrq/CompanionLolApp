@@ -10,18 +10,16 @@ import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionQueries
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
 import com.companion.lol.storage.sqldelight.tables.ChampionWithFavoritesView
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
 
 @Singleton
 class ChampionStore @Inject constructor(database: LolAppDb) :
   SqldelightStore<ChampionQueries>(database.championQueries) {
 
   fun insertAll(champions: List<ChampionTable>) {
-    queries.transaction {
-      champions.forEach { queries.insert(it) }
-    }
+    queries.transaction { champions.forEach { queries.insert(it) } }
   }
 
   fun observeAllWithFavorites(): Flow<List<ChampionWithFavoritesView>> =

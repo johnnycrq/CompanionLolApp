@@ -28,87 +28,79 @@ import com.lol.app.base.theme.DarkPlatinium
 import com.lol.app.ui.scene.BottomSheetSceneStrategy.Companion.bottomSheet
 
 /** An [OverlayScene] that renders an [entry] within a [ModalBottomSheet]. */
-private  data class BottomSheetScene<T : Any>(
-    override val key: T,
-    override val previousEntries: List<NavEntry<T>>,
-    override val overlaidEntries: List<NavEntry<T>>,
-    private val entry: NavEntry<T>,
-    private val modalBottomSheetProperties: ModalBottomSheetProperties,
-    private val onBack: () -> Unit,
+private data class BottomSheetScene<T : Any>(
+  override val key: T,
+  override val previousEntries: List<NavEntry<T>>,
+  override val overlaidEntries: List<NavEntry<T>>,
+  private val entry: NavEntry<T>,
+  private val modalBottomSheetProperties: ModalBottomSheetProperties,
+  private val onBack: () -> Unit,
 ) : OverlayScene<T> {
 
-    override val entries: List<NavEntry<T>> = listOf(entry)
+  override val entries: List<NavEntry<T>> = listOf(entry)
 
-    override val content: @Composable (() -> Unit) = {
-        val lifecycleOwner = rememberLifecycleOwner()
-        ModalBottomSheet(
-            onDismissRequest = onBack,
-            properties = modalBottomSheetProperties,
-            sheetState = rememberModalBottomSheetState(
-                skipPartiallyExpanded = true
-            ),
-            contentWindowInsets = { WindowInsets(0) },
-            containerColor = DarkPlatinium,
-            dragHandle = null
-        ) {
-            Box(
-                contentAlignment = Alignment.TopCenter
-            ) {
-                CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
-                    entry.Content()
-                }
-                BottomSheetDefaults.DragHandle(
-                    color = Color.White
-                )
-            }
-        }
+  override val content: @Composable (() -> Unit) = {
+    val lifecycleOwner = rememberLifecycleOwner()
+    ModalBottomSheet(
+      onDismissRequest = onBack,
+      properties = modalBottomSheetProperties,
+      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+      contentWindowInsets = { WindowInsets(0) },
+      containerColor = DarkPlatinium,
+      dragHandle = null,
+    ) {
+      Box(contentAlignment = Alignment.TopCenter) {
+        CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) { entry.Content() }
+        BottomSheetDefaults.DragHandle(color = Color.White)
+      }
     }
+  }
 }
 
 /**
- * A [SceneStrategy] that displays entries that have added [bottomSheet] to their [NavEntry.metadata]
- * within a [ModalBottomSheet] instance.
+ * A [SceneStrategy] that displays entries that have added [bottomSheet] to their
+ * [NavEntry.metadata] within a [ModalBottomSheet] instance.
  *
  * This strategy should always be added before any non-overlay scene strategies.
  */
 class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
-    override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
-        val lastEntry: NavEntry<T> = entries.lastOrNull() ?: return null
-        val bottomSheetProperties = lastEntry.metadata[BottomSheetKey] ?: return null
-        @Suppress("UNCHECKED_CAST")
-        return BottomSheetScene(
-            key = lastEntry.contentKey as T,
-            previousEntries = entries.dropLast(1),
-            overlaidEntries = entries.dropLast(1),
-            entry = lastEntry,
-            modalBottomSheetProperties = bottomSheetProperties,
-            onBack = onBack
+  override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
+    val lastEntry: NavEntry<T> = entries.lastOrNull() ?: return null
+    val bottomSheetProperties = lastEntry.metadata[BottomSheetKey] ?: return null
+    @Suppress("UNCHECKED_CAST")
+    return BottomSheetScene(
+      key = lastEntry.contentKey as T,
+      previousEntries = entries.dropLast(1),
+      overlaidEntries = entries.dropLast(1),
+      entry = lastEntry,
+      modalBottomSheetProperties = bottomSheetProperties,
+      onBack = onBack,
+    )
+  }
+
+  companion object {
+    /**
+     * Function to be called on the [NavEntry.metadata] to mark this entry as something that should
+     * be displayed within a [ModalBottomSheet].
+     *
+     * @param modalBottomSheetProperties properties that should be passed to the containing
+     *   [ModalBottomSheet].
+     */
+    fun bottomSheet(
+      modalBottomSheetProperties: ModalBottomSheetProperties =
+        ModalBottomSheetProperties(
+          isAppearanceLightStatusBars = false,
+          isAppearanceLightNavigationBars = false,
+          shouldDismissOnBackPress = true,
+          shouldDismissOnClickOutside = true,
         )
-    }
+    ): Map<String, Any> = metadata { put(BottomSheetKey, modalBottomSheetProperties) }
 
-    companion object {
-        /**
-         * Function to be called on the [NavEntry.metadata] to mark this entry as something that
-         * should be displayed within a [ModalBottomSheet].
-         *
-         * @param modalBottomSheetProperties properties that should be passed to the containing
-         * [ModalBottomSheet].
-         */
-        fun bottomSheet(modalBottomSheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties(
-            isAppearanceLightStatusBars = false,
-            isAppearanceLightNavigationBars = false,
-            shouldDismissOnBackPress = true,
-            shouldDismissOnClickOutside = true
-        )): Map<String, Any> =
-            metadata {
-                put(BottomSheetKey, modalBottomSheetProperties)
-            }
-
-        object BottomSheetKey : NavMetadataKey<ModalBottomSheetProperties>
-    }
+    object BottomSheetKey : NavMetadataKey<ModalBottomSheetProperties>
+  }
 }
 
 @Composable
-fun <T: Any> rememberBottomSheetSceneStrategy(): SceneStrategy<T>{
-    return remember { BottomSheetSceneStrategy() }
+fun <T : Any> rememberBottomSheetSceneStrategy(): SceneStrategy<T> {
+  return remember { BottomSheetSceneStrategy() }
 }

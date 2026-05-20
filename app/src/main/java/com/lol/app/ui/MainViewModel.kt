@@ -25,10 +25,8 @@ class MainViewModel
 constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedStateHandle) :
   ViewModel() {
 
-  val backStack: BackStack<ScreenKey> = BackStack.Impl(
-    savedStateHandle = savedStateHandle,
-    initialHistory = listOf(InitialScreenKey)
-  )
+  val backStack: BackStack<ScreenKey> =
+    BackStack.Impl(savedStateHandle = savedStateHandle, initialHistory = listOf(InitialScreenKey))
   val colorCache: ChampionColorCache =
     ChampionColorCache.Impl(scope = viewModelScope, defaultColor = PremiumGreen)
 
@@ -47,10 +45,8 @@ constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedS
     }
   }
 
-  fun goToChampionDetails(championId: ChampionId){
-    backStack.goTo(
-      ChampionDetailsKey(championId)
-    )
+  fun goToChampionDetails(championId: ChampionId) {
+    backStack.goTo(ChampionDetailsKey(championId))
   }
 
   fun onLoginClicked(emailAddress: String) {

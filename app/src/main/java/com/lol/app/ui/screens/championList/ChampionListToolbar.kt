@@ -34,109 +34,98 @@ import com.lol.app.base.material3.CompanionLolTopAppbar
 
 @Composable
 fun ChampionListToolbar(
-    modifier: Modifier,
-    sortOrder: SortOrder,
-    onGridSizeItemMenuClicked: () -> Unit,
-    onSortMenuItemClicked: () -> Unit,
-    onClearFavoritesMenuItemClicked: () -> Unit
+  modifier: Modifier,
+  sortOrder: SortOrder,
+  onGridSizeItemMenuClicked: () -> Unit,
+  onSortMenuItemClicked: () -> Unit,
+  onClearFavoritesMenuItemClicked: () -> Unit,
 ) {
 
-    CompanionLolTopAppbar(
-        modifier = modifier,
-        navIcon = AppBarNavIcon.CLOSE,
-        titleRes = R.string.champion_rotation,
-        actions = {
-            var expanded by remember { mutableStateOf(false) }
+  CompanionLolTopAppbar(
+    modifier = modifier,
+    navIcon = AppBarNavIcon.CLOSE,
+    titleRes = R.string.champion_rotation,
+    actions = {
+      var expanded by remember { mutableStateOf(false) }
 
-            IconButton(onClick = { expanded = true }) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = null
-                )
-            }
+      IconButton(onClick = { expanded = true }) {
+        Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+      }
 
-            DropdownMenu(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                properties = PopupProperties(focusable = true),
-                containerColor = MaterialTheme.colorScheme.surface
-            ) {
-                DropDownMenuItem(
-                    title = R.string.champion_rotation_grid_count,
-                    icon = Icons.AutoMirrored.Filled.List,
-                    onClick = {
-                        onGridSizeItemMenuClicked()
-                        expanded = false
-                    }
-                )
+      DropdownMenu(
+        modifier = Modifier.padding(horizontal = 8.dp),
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
+        properties = PopupProperties(focusable = true),
+        containerColor = MaterialTheme.colorScheme.surface,
+      ) {
+        DropDownMenuItem(
+          title = R.string.champion_rotation_grid_count,
+          icon = Icons.AutoMirrored.Filled.List,
+          onClick = {
+            onGridSizeItemMenuClicked()
+            expanded = false
+          },
+        )
 
-                DropDownMenuItem(
-                    title = when (sortOrder) {
-                        SortOrder.ASC -> R.string.champion_rotation_sort_favorites
-                        SortOrder.FAVORITES -> R.string.champion_rotation_sort_alphabetically
-                    },
-                    icon = when (sortOrder) {
-                        SortOrder.ASC -> Icons.Default.Star
-                        SortOrder.FAVORITES -> Icons.Default.KeyboardArrowDown
-                    },
-                    onClick = {
-                        onSortMenuItemClicked()
-                        expanded = false
-                    }
-                )
+        DropDownMenuItem(
+          title =
+            when (sortOrder) {
+              SortOrder.ASC -> R.string.champion_rotation_sort_favorites
+              SortOrder.FAVORITES -> R.string.champion_rotation_sort_alphabetically
+            },
+          icon =
+            when (sortOrder) {
+              SortOrder.ASC -> Icons.Default.Star
+              SortOrder.FAVORITES -> Icons.Default.KeyboardArrowDown
+            },
+          onClick = {
+            onSortMenuItemClicked()
+            expanded = false
+          },
+        )
 
-                DropDownMenuItem(
-                    title = R.string.champion_rotation_clear_favorites,
-                    icon = Icons.Rounded.Delete,
-                    onClick = {
-                        onClearFavoritesMenuItemClicked()
-                        expanded = false
-                    }
-                )
-            }
-        }
-    )
+        DropDownMenuItem(
+          title = R.string.champion_rotation_clear_favorites,
+          icon = Icons.Rounded.Delete,
+          onClick = {
+            onClearFavoritesMenuItemClicked()
+            expanded = false
+          },
+        )
+      }
+    },
+  )
 }
 
 @Composable
-private fun DropDownMenuItem(
-    @StringRes title: Int,
-    icon: ImageVector,
-    onClick: () -> Unit
-) {
-    DropdownMenuItem(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = onClick,
-        contentPadding = PaddingValues(
-            horizontal = 8.dp,
-            vertical = 0.dp
-        ),
-        text = {
-            Text(
-                modifier = Modifier.padding(horizontal = 10.dp),
-                text = stringResource(
-                    title
-                ),
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-
-        },
-        colors = MenuItemColors(
-            textColor = MaterialTheme.colorScheme.primary,
-            leadingIconColor = MaterialTheme.colorScheme.primary,
-            trailingIconColor = MaterialTheme.colorScheme.primary,
-            disabledTextColor = MaterialTheme.colorScheme.primary,
-            disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
-            disabledTrailingIconColor = MaterialTheme.colorScheme.primary
-        )
-    )
+private fun DropDownMenuItem(@StringRes title: Int, icon: ImageVector, onClick: () -> Unit) {
+  DropdownMenuItem(
+    modifier = Modifier.fillMaxWidth(),
+    onClick = onClick,
+    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+    text = {
+      Text(
+        modifier = Modifier.padding(horizontal = 10.dp),
+        text = stringResource(title),
+        color = MaterialTheme.colorScheme.onSurface,
+      )
+    },
+    leadingIcon = {
+      Icon(
+        imageVector = icon,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.onSurface,
+      )
+    },
+    colors =
+      MenuItemColors(
+        textColor = MaterialTheme.colorScheme.primary,
+        leadingIconColor = MaterialTheme.colorScheme.primary,
+        trailingIconColor = MaterialTheme.colorScheme.primary,
+        disabledTextColor = MaterialTheme.colorScheme.primary,
+        disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
+        disabledTrailingIconColor = MaterialTheme.colorScheme.primary,
+      ),
+  )
 }

@@ -13,39 +13,36 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 
 @Stable
 interface ChampionSkinImagesProvider {
-    val image: DdragonImage?
+  val image: DdragonImage?
 
-    fun toggleSkin()
+  fun toggleSkin()
 }
 
-private class Impl: ChampionSkinImagesProvider{
-    private var currentIndex by mutableIntStateOf(0)
-    val skins = mutableStateOf<List<DdragonImage>>(emptyList())
+private class Impl : ChampionSkinImagesProvider {
+  private var currentIndex by mutableIntStateOf(0)
+  val skins = mutableStateOf<List<DdragonImage>>(emptyList())
 
-    override val image: DdragonImage?
-        get() = skins.value.getOrNull(currentIndex)
+  override val image: DdragonImage?
+    get() = skins.value.getOrNull(currentIndex)
 
-    override fun toggleSkin() {
-        currentIndex = nextIndex()
+  override fun toggleSkin() {
+    currentIndex = nextIndex()
+  }
+
+  private fun nextIndex(): Int {
+    return if (currentIndex == skins.value.lastIndex) {
+      0
+    } else {
+      currentIndex + 1
     }
-
-    private fun nextIndex(): Int {
-        return if (currentIndex == skins.value.lastIndex) {
-            0
-        } else {
-            currentIndex + 1
-        }
-    }
+  }
 }
 
 @Composable
 fun rememberChampionSkinImageProvider(
-    championId: ChampionId,
-    skins: List<ChampionSkin>?
-): ChampionSkinImagesProvider{
-    return remember(championId) {
-        Impl()
-    }.apply {
-        this.skins.value = skins?.map { it.image } ?: emptyList()
-    }
+  championId: ChampionId,
+  skins: List<ChampionSkin>?,
+): ChampionSkinImagesProvider {
+  return remember(championId) { Impl() }
+    .apply { this.skins.value = skins?.map { it.image } ?: emptyList() }
 }

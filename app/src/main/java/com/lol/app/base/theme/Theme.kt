@@ -1,8 +1,5 @@
 package com.lol.app.base.theme
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -16,7 +13,7 @@ private val LightColorScheme =
     onPrimary = OnPremiumGreen,
     background = PremiumGreenLight,
     surface = Color.White,
-    surfaceContainer = Color.Black
+    surfaceContainer = Color.Black,
   )
 
 @Composable
@@ -27,7 +24,7 @@ fun CompanionAppTheme(
   content: @Composable () -> Unit
 ) {
   val colorScheme = LightColorScheme
-  // TODO: Add dark theme color adaptation
+  // Add dark theme color adaptation
   /*when {
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
       val context = LocalContext.current
@@ -39,14 +36,4 @@ fun CompanionAppTheme(
   }*/
 
   MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
-}
-
-private fun Context.findActivity(): Activity {
-  var context = this
-  while (context is ContextWrapper &&
-    context !is Activity
-  ) {
-    context = context.baseContext
-  }
-  return context as Activity
 }

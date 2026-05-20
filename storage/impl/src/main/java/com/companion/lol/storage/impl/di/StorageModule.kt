@@ -50,10 +50,11 @@ internal object StorageModule {
         SettingsTable.Adapter(SettingsIdAdapter, IntColumnAdapter, EnumColumnAdapter<SortOrder>()),
       SessionTableAdapter = SessionTable.Adapter(SessionIdAdapter),
       SkinTableAdapter = SkinTable.Adapter(ChampionIdAdapter, SkinIdAdapter, IntColumnAdapter),
-      ChampionDetailsTableAdapter = ChampionDetailsTable.Adapter(
-        idAdapter = ChampionIdAdapter,
-        tagsAdapter = ChampionTagAdapter,
-        partyTypeIdAdapter = PartyTypeIdAdapter
-      ),
+      ChampionDetailsTableAdapter =
+        ChampionDetailsTable.Adapter(
+          idAdapter = ChampionIdAdapter,
+          tagsAdapter = ChampionTagAdapter,
+          partyTypeIdAdapter = PartyTypeIdAdapter,
+        ),
     )
 }

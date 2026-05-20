@@ -27,61 +27,48 @@ import com.lol.app.base.CompanionAppPreview
 import com.lol.app.base.CompanionAppPreviewWrapperProvider
 
 enum class AppBarNavIcon(val imageVector: ImageVector?) {
-    NONE(null),
-    UP(Icons.AutoMirrored.Rounded.ArrowBack),
-    CLOSE(Icons.Rounded.Close)
+  NONE(null),
+  UP(Icons.AutoMirrored.Rounded.ArrowBack),
+  CLOSE(Icons.Rounded.Close),
 }
-
 
 @Composable
 fun CompanionLolTopAppbar(
-    modifier: Modifier,
-    navIcon: AppBarNavIcon = AppBarNavIcon.NONE,
-    @StringRes titleRes: Int? = null,
-    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(
-        containerColor =  MaterialTheme.colorScheme.primary,
-        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-        actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+  modifier: Modifier,
+  navIcon: AppBarNavIcon = AppBarNavIcon.NONE,
+  @StringRes titleRes: Int? = null,
+  colors: TopAppBarColors =
+    TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primary,
+      titleContentColor = MaterialTheme.colorScheme.onPrimary,
+      navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+      actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
     ),
-    actions: @Composable RowScope.() -> Unit = {}
+  actions: @Composable RowScope.() -> Unit = {},
 ) {
-    TopAppBar(
-        modifier = modifier,
-        title = {
-            titleRes?.let {
-                Text(
-                    text = stringResource(id = it),
-                )
-            }
-        },
-        colors = colors,
-        navigationIcon = {
-            if(navIcon != AppBarNavIcon.NONE){
-                val backPress = LocalOnBackPressedDispatcherOwner.current
-                IconButton(
-                    onClick = {
-                        backPress?.onBackPressedDispatcher?.onBackPressed()
-                    }
-                ) {
-                    Icon(
-                        imageVector = requireNotNull(navIcon.imageVector),
-                        contentDescription = null
-                    )
-                }
-            }
-        },
-        actions = actions,
-    )
+  TopAppBar(
+    modifier = modifier,
+    title = { titleRes?.let { Text(text = stringResource(id = it)) } },
+    colors = colors,
+    navigationIcon = {
+      if (navIcon != AppBarNavIcon.NONE) {
+        val backPress = LocalOnBackPressedDispatcherOwner.current
+        IconButton(onClick = { backPress?.onBackPressedDispatcher?.onBackPressed() }) {
+          Icon(imageVector = requireNotNull(navIcon.imageVector), contentDescription = null)
+        }
+      }
+    },
+    actions = actions,
+  )
 }
 
 @Composable
 @CompanionAppPreview
 @PreviewWrapper(CompanionAppPreviewWrapperProvider::class)
-private fun PReview() {
-    CompanionLolTopAppbar(
-        modifier = Modifier.fillMaxWidth(),
-        titleRes = R.string.app_name,
-        navIcon = AppBarNavIcon.UP
-    )
+private fun Preview() {
+  CompanionLolTopAppbar(
+    modifier = Modifier.fillMaxWidth(),
+    titleRes = R.string.app_name,
+    navIcon = AppBarNavIcon.UP,
+  )
 }

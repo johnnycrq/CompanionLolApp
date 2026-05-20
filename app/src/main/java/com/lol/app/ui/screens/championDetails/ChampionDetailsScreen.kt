@@ -77,14 +77,12 @@ fun ChampionDetailsScreen(state: ChampionDetailsState, onFavoritesClicked: () ->
   val dominantColor = championColorCache.getColor(championId)
 
   Column(
-    modifier = Modifier.fillMaxWidth()
-      .padding(
-        bottom = LocalContentPadding.current.calculateBottomPadding()
-          .plus(32.dp)
-      )
+    modifier =
+      Modifier.fillMaxWidth()
+        .padding(bottom = LocalContentPadding.current.calculateBottomPadding().plus(32.dp))
   ) {
     ImageHeader(
-      championId= championId,
+      championId = championId,
       skins = state.details?.skins ?: emptyList(),
       championColorCache = championColorCache,
       onFavoritesClicked = onFavoritesClicked,
@@ -96,34 +94,24 @@ fun ChampionDetailsScreen(state: ChampionDetailsState, onFavoritesClicked: () ->
 
     Row {
       ChampionPartyType(
-        modifier = Modifier
-          .padding(
-            start = 16.dp,
-            top = 16.dp
-          )
-          .weight(1f),
+        modifier = Modifier.padding(start = 16.dp, top = 16.dp).weight(1f),
         header = stringResource(R.string.champion_details_party_type),
         label = state.champion?.partyType?.label?.uppercase() ?: EMPTY_STRING,
-        color = state.champion?.partyType?.color ?: dominantColor
+        color = state.champion?.partyType?.color ?: dominantColor,
       )
 
       ChampionClass(
-        modifier = Modifier
-          .padding(
-            end = 16.dp,
-            top = 16.dp
-          ),
+        modifier = Modifier.padding(end = 16.dp, top = 16.dp),
         headerTitle = stringResource(R.string.champion_details_class),
-        tags = state.details?.tags ?: emptyList()
+        tags = state.details?.tags ?: emptyList(),
       )
     }
 
     Spacer(modifier = Modifier.height(16.dp))
 
     TitleHeader(
-      modifier = Modifier
-        .padding(bottom = 8.dp, top = 16.dp, start = 16.dp),
-      label = stringResource(id = R.string.champion_details_lore)
+      modifier = Modifier.padding(bottom = 8.dp, top = 16.dp, start = 16.dp),
+      label = stringResource(id = R.string.champion_details_lore),
     )
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -131,10 +119,9 @@ fun ChampionDetailsScreen(state: ChampionDetailsState, onFavoritesClicked: () ->
     Text(
       modifier = Modifier.padding(horizontal = 16.dp),
       text = state.details?.lore ?: EMPTY_STRING,
-      style = MaterialTheme.typography.bodyLarge
-        .copy(fontWeight = FontWeight.ExtraLight),
+      style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraLight),
       color = Color.White,
-      textAlign = TextAlign.Justify
+      textAlign = TextAlign.Justify,
     )
   }
 }
@@ -150,8 +137,7 @@ private fun ImageHeader(
   championName: String,
   championTitle: String,
 ) {
-  val championSkins =
-    rememberChampionSkinImageProvider(championId = championId, skins = skins)
+  val championSkins = rememberChampionSkinImageProvider(championId = championId, skins = skins)
 
   Box(modifier = Modifier.fillMaxWidth().aspectRatio(1215f / 717f)) {
     DominantColorCoilImage(
@@ -159,7 +145,7 @@ private fun ImageHeader(
       championId = championId,
       image = championSkins.image,
       championColorCache = championColorCache,
-      skipUpdateColorCache = true
+      skipUpdateColorCache = true,
     )
 
     Icon(
@@ -223,35 +209,27 @@ private fun ImageHeader(
 }
 
 @Composable
-fun ChampionPartyType(
-  modifier: Modifier,
-  header: String,
-  label: String,
-  color: Color,
-) {
-  Box(modifier = modifier){
+fun ChampionPartyType(modifier: Modifier, header: String, label: String, color: Color) {
+  Box(modifier = modifier) {
     Row(
       modifier = Modifier.height(IntrinsicSize.Max),
-      verticalAlignment = Alignment.CenterVertically
+      verticalAlignment = Alignment.CenterVertically,
     ) {
-      TitleHeader(
-        modifier = Modifier,
-        label = header
-      )
+      TitleHeader(modifier = Modifier, label = header)
       Spacer(modifier = Modifier.width(8.dp))
       Box(
-        modifier = Modifier
-          .padding(vertical = 2.dp)
-          .fillMaxHeight()
-          .background(color, MaterialTheme.shapes.small)
-          .padding(2.dp),
+        modifier =
+          Modifier.padding(vertical = 2.dp)
+            .fillMaxHeight()
+            .background(color, MaterialTheme.shapes.small)
+            .padding(2.dp),
         contentAlignment = Alignment.Center,
       ) {
         Text(
           modifier = Modifier.widthIn(min = 32.dp),
           text = label,
           color = Color.White,
-          style = MaterialTheme.typography.labelSmall
+          style = MaterialTheme.typography.labelSmall,
         )
       }
     }
@@ -259,30 +237,16 @@ fun ChampionPartyType(
 }
 
 @Composable
-fun ChampionClass(
-  modifier: Modifier,
-  headerTitle: String,
-  tags: List<ChampionTag>
-) {
+fun ChampionClass(modifier: Modifier, headerTitle: String, tags: List<ChampionTag>) {
   Row(modifier) {
-    TitleHeader(
-      modifier = Modifier,
-      label = headerTitle
-    )
+    TitleHeader(modifier = Modifier, label = headerTitle)
 
     Column(
-      modifier = Modifier
-        .widthIn(min = 32.dp)
-        .padding(start = 8.dp),
-      verticalArrangement = Arrangement.spacedBy(8.dp)
+      modifier = Modifier.widthIn(min = 32.dp).padding(start = 8.dp),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       for (tag in tags) {
-        key(tag.dbId) {
-          Tag(
-            icon = tag.icon,
-            label = tag.label
-          )
-        }
+        key(tag.dbId) { Tag(icon = tag.icon, label = tag.label) }
       }
     }
   }
@@ -294,33 +258,27 @@ private fun Tag(
   icon: Int,
   label: String,
   tagBackground: Color = Color.White,
-  tagColor: Color = DarkPlatinium
+  tagColor: Color = DarkPlatinium,
 ) {
   Row(
-    modifier = modifier
-      .background(
-        tagBackground,
-        MaterialTheme.shapes.medium
-      )
-      .padding(horizontal = 10.dp, vertical = 5.dp),
-    verticalAlignment = Alignment.CenterVertically
+    modifier =
+      modifier
+        .background(tagBackground, MaterialTheme.shapes.medium)
+        .padding(horizontal = 10.dp, vertical = 5.dp),
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     Icon(
-      modifier = Modifier
-        .alignByBaseline()
-        .width(16.dp)
-        .aspectRatio(1f),
+      modifier = Modifier.alignByBaseline().width(16.dp).aspectRatio(1f),
       painter = painterResource(id = icon),
       contentDescription = null,
-      tint = Color.Unspecified
+      tint = Color.Unspecified,
     )
     Text(
-      modifier = Modifier
-        .padding(start = 4.dp),
+      modifier = Modifier.padding(start = 4.dp),
       text = label,
       color = tagColor,
       textAlign = TextAlign.Start,
-      style = MaterialTheme.typography.labelSmall
+      style = MaterialTheme.typography.labelSmall,
     )
   }
 }
