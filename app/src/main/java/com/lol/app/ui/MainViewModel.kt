@@ -17,6 +17,9 @@ import com.lol.app.navigation.ScreenKey
 import com.lol.app.util.ChampionColorCache
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -24,42 +27,38 @@ class MainViewModel
 @Inject
 constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedStateHandle) :
   ViewModel() {
-
   val backStack: BackStack<ScreenKey> =
     BackStack.Impl(savedStateHandle = savedStateHandle, initialHistory = listOf(InitialScreenKey))
   val colorCache: ChampionColorCache =
     ChampionColorCache.Impl(scope = viewModelScope, defaultColor = Gold1)
 
   init {
-    if (backStack.history.contains(InitialScreenKey)) {
-      viewModelScope.launch {
-        val emailAddress = sessionUseCase.getEmailAddress()
-        backStack.setHistory(
-          if (emailAddress == null) {
-            LoginKey
+    viewModelScope.launch {
+      sessionUseCase.observeEmailAddress().map { it != null }
+        .distinctUntilChanged()
+        .collectLatest { isLoggedIn ->
+          // at this point the backstack could have been
+          // potentially restored from saved state
+          val currentHistory = backStack.history
+          if (!isLoggedIn) {
+            // if we are logged out we rewrite the history.
+            // we drop private screens and ensure we don't stay on Initial (splash)
+            backStack.setHistory(
+              currentHistory.dropLastWhile { it.requiresAuth }
+                .filterNot { it is InitialScreenKey }
+                .ifEmpty { listOf(LoginKey) }
+            )
           } else {
-            ChampionListKey
+            // if we are logged in and on a public-only stack, go to main content
+            if (currentHistory.none { it.requiresAuth }) {
+              backStack.setHistory(ChampionListKey)
+            }
           }
-        )
-      }
+        }
     }
   }
 
   fun goToChampionDetails(championId: ChampionId) {
     backStack.goTo(ChampionDetailsKey(championId))
-  }
-
-  fun onLoginClicked(emailAddress: String) {
-    viewModelScope.launch {
-      sessionUseCase.updateEmailAddress(emailAddress)
-      backStack.setHistory(ChampionListKey)
-    }
-  }
-
-  fun onLogoutClicked() {
-    viewModelScope.launch {
-      sessionUseCase.clear()
-      backStack.setHistory(LoginKey)
-    }
   }
 }

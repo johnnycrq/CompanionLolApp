@@ -30,16 +30,17 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.lol.app.base.CompanionAppPreview
 import com.lol.app.base.CompanionAppPreviewWrapperProvider
 import com.lol.app.base.material3.CompanionAppSurface
+import com.lol.app.base.material3.ext.rememberSaveableTextFieldState
 
 @Composable
-fun LoginScreen(onLoginClicked: (emailAddress: String) -> Unit) {
+fun LoginScreen() {
   val viewModel: LoginViewModel = hiltViewModel()
   val state by viewModel.state.collectAsState()
 
   LoginScreen(
     state = state,
     onEmailChanged = viewModel::onEmailChanged,
-    onLoginClicked = { onLoginClicked(state.email) },
+    onLoginClicked = viewModel::onLoginClicked,
   )
 }
 
@@ -70,9 +71,11 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
 
         Spacer(modifier = Modifier.height(48.dp))
 
+        val textState = rememberSaveableTextFieldState(state.email)
+
         OutlinedTextField(
-          value = state.email,
-          onValueChange = onEmailChanged,
+          value = textState.value,
+          onValueChange = { textState.value = it },
           label = {
             Text("Email Address", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
           },

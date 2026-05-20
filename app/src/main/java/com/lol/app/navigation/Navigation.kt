@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
+import com.lol.app.navigation.ScreenKey.ScreenType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -74,7 +75,7 @@ class Impl<S : ScreenKey>(
 
       // if last key is a bottomSheet, cannot go to any other screen
       // unless closing the bottom sheet
-      if (last.screenType == ScreenKey.ScreenType.BOTTOM_SHEET) {
+      if (last.screenType is ScreenType.BottomSheet) {
         return@withMutableSnapshot
       }
 

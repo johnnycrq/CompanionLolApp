@@ -12,11 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.get
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
+import com.lol.app.navigation.ScreenKey
 import com.lol.app.ui.screens.NavigationBarScreen
 import com.lol.app.util.cacheSize
 
@@ -72,9 +72,9 @@ class NavigationBarDecoratorStrategy<T : Any>(
   override fun SceneDecoratorStrategyScope<T>.decorateScene(scene: Scene<T>): Scene<T> {
     val lastEntry: NavEntry<T> = scene.entries.firstOrNull() ?: return scene
 
-    val isNavBarScreen: Boolean = lastEntry.metadata[NavigationBarScreen] ?: false
+    val key = lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey
 
-    return if (isNavBarScreen) {
+    return if (key is NavigationBarScreen) {
       NavigationBarDecoratorScene(scene, sharedTransitionScope, navBarContent)
     } else (scene)
   }

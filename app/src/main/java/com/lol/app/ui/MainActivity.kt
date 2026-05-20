@@ -51,7 +51,6 @@ import com.lol.app.ui.scene.BottomSheetSceneStrategy
 import com.lol.app.ui.scene.rememberBottomSheetSceneStrategy
 import com.lol.app.ui.scene.rememberNavigationBarDecoratorStrategy
 import com.lol.app.ui.screens.NavigationBar
-import com.lol.app.ui.screens.NavigationBarScreen
 import com.lol.app.ui.screens.championDetails.ChampionDetailsScreen
 import com.lol.app.ui.screens.championList.ChampionListScreen
 import com.lol.app.ui.screens.login.LoginScreen
@@ -127,17 +126,13 @@ private fun MainScreen() {
             entryProvider =
               entryProvider {
                 entryScreenKey<InitialScreenKey> { PlaceHolderScreen() }
-                entryScreenKey<LoginKey> { LoginScreen(onLoginClicked = viewModel::onLoginClicked) }
-                entryScreenKey<ChampionListKey>(metadata = NavigationBarScreen.metadata()) {
+                entryScreenKey<LoginKey> { LoginScreen() }
+                entryScreenKey<ChampionListKey> {
                   ChampionListScreen(onCardClick = viewModel::goToChampionDetails)
                 }
-                entryScreenKey<SettingsKey>(metadata = NavigationBarScreen.metadata()) {
-                  SettingsScreen(onLogoutClicked = viewModel::onLogoutClicked)
-                }
+                entryScreenKey<SettingsKey> { SettingsScreen() }
 
-                entryScreenKey<ChampionDetailsKey>(
-                  metadata = BottomSheetSceneStrategy.bottomSheet()
-                ) {
+                entryScreenKey<ChampionDetailsKey> {
                   ChampionDetailsScreen(it.championId)
                 }
               },

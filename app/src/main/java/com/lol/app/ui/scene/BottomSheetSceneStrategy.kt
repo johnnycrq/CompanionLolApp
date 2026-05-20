@@ -17,14 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.rememberLifecycleOwner
 import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.NavMetadataKey
-import androidx.navigation3.runtime.get
-import androidx.navigation3.runtime.metadata
 import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
-import com.lol.app.ui.scene.BottomSheetSceneStrategy.Companion.bottomSheet
+import com.lol.app.navigation.ScreenKey
+import com.lol.app.navigation.ScreenKey.ScreenType
 
 /** An [OverlayScene] that renders an [entry] within a [ModalBottomSheet]. */
 private data class BottomSheetScene<T : Any>(
@@ -65,7 +63,15 @@ private data class BottomSheetScene<T : Any>(
 class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
   override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
     val lastEntry: NavEntry<T> = entries.lastOrNull() ?: return null
-    val bottomSheetProperties = lastEntry.metadata[BottomSheetKey] ?: return null
+
+    val screenType = (lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey)
+      .screenType
+
+    if (screenType !is ScreenType.BottomSheet) {
+      return null
+    }
+
+    val bottomSheetProperties = screenType.properties
     @Suppress("UNCHECKED_CAST")
     return BottomSheetScene(
       key = lastEntry.contentKey as T,
@@ -75,27 +81,6 @@ class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
       modalBottomSheetProperties = bottomSheetProperties,
       onBack = onBack,
     )
-  }
-
-  companion object {
-    /**
-     * Function to be called on the [NavEntry.metadata] to mark this entry as something that should
-     * be displayed within a [ModalBottomSheet].
-     *
-     * @param modalBottomSheetProperties properties that should be passed to the containing
-     *   [ModalBottomSheet].
-     */
-    fun bottomSheet(
-      modalBottomSheetProperties: ModalBottomSheetProperties =
-        ModalBottomSheetProperties(
-          isAppearanceLightStatusBars = false,
-          isAppearanceLightNavigationBars = false,
-          shouldDismissOnBackPress = true,
-          shouldDismissOnClickOutside = true,
-        )
-    ): Map<String, Any> = metadata { put(BottomSheetKey, modalBottomSheetProperties) }
-
-    object BottomSheetKey : NavMetadataKey<ModalBottomSheetProperties>
   }
 }
 

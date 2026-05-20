@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
-fun SettingsScreen(onLogoutClicked: () -> Unit) {
+fun SettingsScreen() {
   val viewModel: SettingsViewModel = hiltViewModel()
 
   Surface(modifier = Modifier.fillMaxSize()) {
@@ -25,7 +25,7 @@ fun SettingsScreen(onLogoutClicked: () -> Unit) {
     ) {
       Button(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        onClick = onLogoutClicked,
+        onClick = viewModel::onLogoutClicked,
         colors = ButtonDefaults.buttonColors(),
       ) {
         Text(text = "LOGOUT")

@@ -17,8 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.dropUnlessResumed
-import androidx.navigation3.runtime.NavMetadataKey
-import androidx.navigation3.runtime.metadata
 import com.companion.lol.app.R
 import com.lol.app.base.CompanionAppPreview
 import com.lol.app.base.CompanionAppPreviewWrapperProvider
@@ -28,9 +26,7 @@ import com.lol.app.navigation.ChampionListKey
 import com.lol.app.navigation.ScreenKey
 import com.lol.app.navigation.SettingsKey
 
-object NavigationBarScreen : NavMetadataKey<Boolean> {
-  fun metadata() = metadata { put(NavigationBarScreen, true) }
-}
+interface NavigationBarScreen
 
 @Composable
 fun NavigationBar(modifier: Modifier = Modifier, backStack: BackStack<ScreenKey>) {

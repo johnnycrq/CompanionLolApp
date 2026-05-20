@@ -1,6 +1,6 @@
 @file:Suppress("OPT_IN_TO_INHERITANCE")
 
-package com.lol.app.base
+package com.lol.app.util
 
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.FlowCollector
