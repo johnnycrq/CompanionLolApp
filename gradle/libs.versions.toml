@@ -40,6 +40,7 @@ retrofit-serializationConverter = '1.0.0'
 
 io-coil = '3.4.0'
 io-palette = '1.0.0'
+io-lottie = '6.7.1'
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -68,6 +69,7 @@ androidx-compose-runtime-annotation = { module = "androidx.compose.runtime:runti
 io-coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "io-coil" }
 io-coil-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "io-coil" }
 io-palette = { module = "androidx.palette:palette", version.ref = "io-palette" }
+io-lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "io-lottie" }
 
 android-hilt = { module = "com.google.dagger:hilt-android", version.ref = "androidHilt" }
 android-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "androidHilt" }

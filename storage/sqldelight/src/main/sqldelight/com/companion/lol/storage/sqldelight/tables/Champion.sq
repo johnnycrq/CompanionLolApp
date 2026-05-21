@@ -26,6 +26,9 @@ SELECT
 FROM ChampionView
 LEFT JOIN ChampionFavoritesTable USING(id);
 
+hasData:
+SELECT EXISTS (SELECT 1 FROM ChampionTable);
+
 insert:
 INSERT OR REPLACE INTO ChampionTable VALUES ?;
 

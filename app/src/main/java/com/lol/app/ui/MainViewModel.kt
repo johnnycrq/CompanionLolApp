@@ -34,7 +34,9 @@ constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedS
 
   init {
     viewModelScope.launch {
-      sessionUseCase.observeEmailAddress().map { it != null }
+      sessionUseCase
+        .observeEmailAddress()
+        .map { it != null }
         .distinctUntilChanged()
         .collectLatest { isLoggedIn ->
           // at this point the backstack could have been
@@ -42,9 +44,10 @@ constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedS
           val currentHistory = backStack.history
           if (!isLoggedIn) {
             // if we are logged out we rewrite the history.
-            // we drop private screens and ensure we don't stay on Initial (splash)
+            // we drop private screens and ensure we don't stay on Initial (placeHolder)
             backStack.setHistory(
-              currentHistory.dropLastWhile { it.requiresAuth }
+              currentHistory
+                .dropLastWhile { it.requiresAuth }
                 .filterNot { it is InitialScreenKey }
                 .ifEmpty { listOf(LoginKey) }
             )

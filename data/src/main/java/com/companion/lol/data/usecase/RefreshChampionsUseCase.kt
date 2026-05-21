@@ -6,14 +6,14 @@ import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.PartyTypeStore
 import com.companion.lol.storage.impl.util.CompanionLolTransactor
+import com.companion.lol.storage.impl.util.dbDispatcher
 import com.companion.lol.storage.impl.util.withDbContext
 import com.companion.lol.storage.sqldelight.tables.ChampionPartyTypeTable
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
 import com.companion.lol.util.capitalizeWords
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.days
+import kotlinx.coroutines.invoke
 
 @Singleton
 class RefreshChampionsUseCase
@@ -24,8 +24,6 @@ constructor(
   private val api: DDragonApi,
   private val transacter: CompanionLolTransactor,
 ) {
-  private val updateDuration: Duration = 7.days
-
   suspend fun refresh() = withDbContext {
     val champions = api.getChampionList()
     transacter.transaction {
@@ -50,5 +48,9 @@ constructor(
           )
         }
     }
+  }
+
+  suspend fun hasData(): Boolean = dbDispatcher {
+    return@dbDispatcher championStore.hasData()
   }
 }

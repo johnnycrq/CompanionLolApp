@@ -8,15 +8,14 @@ import com.companion.lol.storage.impl.util.dbDispatcher
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.SessionQueries
 import com.companion.lol.storage.sqldelight.tables.SessionTable
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
 
 @Singleton
 class SessionStore @Inject constructor(database: LolAppDb) :
   SqldelightStore<SessionQueries>(database.sessionQueries) {
-  fun observe(): Flow<SessionTable?> = queries.get()
-    .asFlow().mapToOneOrNull(dbDispatcher)
+  fun observe(): Flow<SessionTable?> = queries.get().asFlow().mapToOneOrNull(dbDispatcher)
 
   fun insert(details: SessionTable) {
     queries.insert(details.copy(id = SessionId))

@@ -35,6 +35,7 @@ fun ChampionListScreen(onCardClick: (ChampionId) -> Unit) {
     onGridSizeItemMenuClicked = viewModel::changeGridSize,
     onSortMenuItemClicked = viewModel::onSortMenuItemClicked,
     onFavoritesClearClicked = viewModel::onFavoritesClearClicked,
+    onRefresh = viewModel::onRefresh,
   )
 }
 
@@ -45,6 +46,7 @@ fun ChampionListScreen(
   onGridSizeItemMenuClicked: () -> Unit,
   onSortMenuItemClicked: () -> Unit,
   onFavoritesClearClicked: () -> Unit,
+  onRefresh: () -> Unit,
 ) {
 
   val listState = rememberLazyGridState()
@@ -67,27 +69,34 @@ fun ChampionListScreen(
     },
     containerColor = MaterialTheme.colorScheme.surface,
   ) { contentPadding ->
-    LazyVerticalGrid(
-      modifier = Modifier.fillMaxSize(),
-      state = listState,
-      columns = GridCells.Fixed(state.gridSize),
-      contentPadding =
-        PaddingValues(
-          top = 4.dp + contentPadding.calculateTopPadding(),
-          bottom = 4.dp,
-          start = 4.dp,
-          end = 4.dp,
-        ),
-      horizontalArrangement = Arrangement.spacedBy(16.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
+    ChampionListPullRefreshBox(
+      modifier = Modifier.fillMaxWidth(),
+      isRefreshing = state.isRefreshing,
+      onRefresh = onRefresh,
+      indicatorContentPadding = contentPadding,
     ) {
-      items(items = state.champions, key = { it.id.value }) { item ->
-        ChampionCard(
-          modifier = Modifier.fillMaxWidth().animateItem(),
-          champion = item,
-          onCardClick = onCardClick,
-          gridSize = state.gridSize,
-        )
+      LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
+        state = listState,
+        columns = GridCells.Fixed(state.gridSize),
+        contentPadding =
+          PaddingValues(
+            start = 4.dp,
+            end = 4.dp,
+            top = 4.dp + contentPadding.calculateTopPadding(),
+            bottom = 4.dp,
+          ),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+      ) {
+        items(items = state.champions, key = { it.id.value }) { item ->
+          ChampionCard(
+            modifier = Modifier.fillMaxWidth().animateItem(),
+            champion = item,
+            onCardClick = onCardClick,
+            gridSize = state.gridSize,
+          )
+        }
       }
     }
   }

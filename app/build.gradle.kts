@@ -86,6 +86,8 @@ dependencies {
     implementation(libs.io.coil.okhttp)
     implementation(libs.io.palette)
 
+    implementation(libs.io.lottie)
+
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)

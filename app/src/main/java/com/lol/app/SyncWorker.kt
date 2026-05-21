@@ -6,10 +6,7 @@ import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.companion.lol.data.usecase.RefreshChampionsUseCase
@@ -34,7 +31,7 @@ constructor(
     fun initialSync(context: Context) {
       val workManager = WorkManager.getInstance(context)
 
-      // we use the existence of the periodic sync work to
+      /*// we use the existence of the periodic sync work to
       // check if we need the initial sync
       val workInfos = workManager.getWorkInfosForUniqueWork(PERIODIC_WORK_NAME).get()
 
@@ -55,7 +52,7 @@ constructor(
             )
             .build()
         )
-      }
+      }*/
 
       // 2) Repeating sync every 2 days
       val periodicSync =

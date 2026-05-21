@@ -10,4 +10,5 @@ data class ChampionListState(
   val champions: List<ChampionModel> = emptyList(),
   val gridSize: Int = 4,
   val sortOrder: SortOrder = SortOrder.ASC,
+  val isRefreshing: Boolean = false,
 ) : ComposeState

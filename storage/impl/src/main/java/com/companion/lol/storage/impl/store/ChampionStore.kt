@@ -22,6 +22,8 @@ class ChampionStore @Inject constructor(database: LolAppDb) :
     queries.transaction { champions.forEach { queries.insert(it) } }
   }
 
+  fun hasData(): Boolean = queries.hasData().executeAsOne()
+
   fun observeAllWithFavorites(): Flow<List<ChampionWithFavoritesView>> =
     queries.findAll().asFlow().mapToList(dbDispatcher)
 

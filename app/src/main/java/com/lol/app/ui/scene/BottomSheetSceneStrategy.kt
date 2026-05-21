@@ -64,8 +64,7 @@ class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
   override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
     val lastEntry: NavEntry<T> = entries.lastOrNull() ?: return null
 
-    val screenType = (lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey)
-      .screenType
+    val screenType = (lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey).screenType
 
     if (screenType !is ScreenType.BottomSheet) {
       return null

@@ -47,7 +47,6 @@ import com.lol.app.navigation.LoginKey
 import com.lol.app.navigation.ScreenKey
 import com.lol.app.navigation.SettingsKey
 import com.lol.app.navigation.entryScreenKey
-import com.lol.app.ui.scene.BottomSheetSceneStrategy
 import com.lol.app.ui.scene.rememberBottomSheetSceneStrategy
 import com.lol.app.ui.scene.rememberNavigationBarDecoratorStrategy
 import com.lol.app.ui.screens.NavigationBar
@@ -132,9 +131,7 @@ private fun MainScreen() {
                 }
                 entryScreenKey<SettingsKey> { SettingsScreen() }
 
-                entryScreenKey<ChampionDetailsKey> {
-                  ChampionDetailsScreen(it.championId)
-                }
+                entryScreenKey<ChampionDetailsKey> { ChampionDetailsScreen(it.championId) }
               },
           )
         }

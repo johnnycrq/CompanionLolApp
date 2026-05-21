@@ -4,11 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.data.model.ChampionModel
 import com.companion.lol.data.usecase.ChampionUseCase
+import com.companion.lol.data.usecase.RefreshChampionsUseCase
 import com.companion.lol.data.usecase.SettingsUseCase
 import com.companion.lol.storage.impl.model.other.SortOrder
 import com.lol.app.util.toggle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -21,21 +24,47 @@ class ChampionListViewModel
 constructor(
   private val settingsUseCase: SettingsUseCase,
   private val championUseCase: ChampionUseCase,
+  private val refreshChampionsUseCase: RefreshChampionsUseCase,
 ) : ViewModel() {
+
+  private val isRefreshing = MutableStateFlow(false)
 
   val state: StateFlow<ChampionListState> =
     combine(
         flow = championUseCase.observeAllWithFavorites(),
         flow2 = settingsUseCase.observe(),
-        transform = { champion, settings ->
+        flow3 = isRefreshing,
+        transform = { champion, settings, isRefreshing ->
           ChampionListState(
             champions = champion.sortBy(settings.championRotationSortOrder),
             gridSize = settings.championRotationGridSize,
             sortOrder = settings.championRotationSortOrder,
+            isRefreshing = isRefreshing,
           )
         },
       )
       .stateIn(viewModelScope, SharingStarted.Eagerly, ChampionListState())
+
+  init {
+    viewModelScope.launch { refresh(false) }
+  }
+
+  fun onRefresh() {
+    viewModelScope.launch { refresh(true) }
+  }
+
+  private suspend fun refresh(force: Boolean) {
+    if (force || !refreshChampionsUseCase.hasData()) {
+      try {
+        isRefreshing.value = true
+        refreshChampionsUseCase.refresh()
+        // simulated delay to check animation
+        delay(5000)
+      } finally {
+        isRefreshing.value = false
+      }
+    }
+  }
 
   fun changeGridSize() {
     viewModelScope.launch {
