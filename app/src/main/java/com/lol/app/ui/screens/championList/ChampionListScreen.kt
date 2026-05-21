@@ -60,7 +60,8 @@ fun ChampionListScreen(
     topBar = {
       ChampionListToolbar(
         modifier = Modifier.fillMaxWidth(),
-        scrollBehavior = scrollBehavior,
+        // needed to prevent scroll ON the AppBar while refreshing
+        scrollBehavior = if (state.isRefreshing) null else scrollBehavior,
         sortOrder = state.sortOrder,
         onGridSizeItemMenuClicked = onGridSizeItemMenuClicked,
         onSortMenuItemClicked = onSortMenuItemClicked,
@@ -78,6 +79,8 @@ fun ChampionListScreen(
       LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
         state = listState,
+        // prevent scrolling ON the list while refreshing
+        userScrollEnabled = !state.isRefreshing,
         columns = GridCells.Fixed(state.gridSize),
         contentPadding =
           PaddingValues(

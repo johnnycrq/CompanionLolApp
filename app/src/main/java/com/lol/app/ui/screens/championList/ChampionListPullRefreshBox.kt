@@ -75,6 +75,7 @@ fun ChampionListPullRefreshBox(
       containerColor = Color.Transparent,
       maxDistance = maxDistance,
       shape = RectangleShape,
+      elevation = 0.dp,
     ) {
       LottieAnimation(
         modifier = Modifier,
