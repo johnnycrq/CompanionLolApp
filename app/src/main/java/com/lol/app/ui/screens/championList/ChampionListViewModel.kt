@@ -13,6 +13,7 @@ import com.lol.app.util.awaitAtLeast
 import com.lol.app.util.toggle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration
 
 private val showCaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 2.seconds else Duration.ZERO
 
