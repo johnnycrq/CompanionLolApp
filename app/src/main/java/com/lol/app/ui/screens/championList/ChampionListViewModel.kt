@@ -25,8 +25,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration
 
-private val showCaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 2.seconds else 0.seconds
+private val showCaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 2.seconds else Duration.ZERO
 
 @HiltViewModel
 class ChampionListViewModel
