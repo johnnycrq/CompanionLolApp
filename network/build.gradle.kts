@@ -48,4 +48,5 @@ dependencies {
   implementation(libs.retrofit.retrofit2)
   implementation(libs.retrofit.logging)
   implementation(libs.retrofit.serializationConverter)
+  implementation(libs.retrofit.adapter.result)
 }

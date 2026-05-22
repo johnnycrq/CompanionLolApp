@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,29 +22,35 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.companion.lol.app.R
-import com.companion.lol.data.model.other.ChampionSkin
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.other.ChampionTag
+import com.companion.lol.storage.impl.model.other.PartyType
 import com.lol.app.base.material3.TitleHeader
 import com.lol.app.ui.LocalContentPadding
 import com.lol.app.util.ChampionColorCache
@@ -61,7 +66,7 @@ fun ChampionDetailsScreen(championId: ChampionId) {
     hiltViewModel<ChampionDetailsViewModel, ChampionDetailsViewModel.Factory>(
       creationCallback = { factory -> factory.create(championId) }
     )
-  val state by viewModel.state.collectAsState()
+  val state by viewModel.state.collectAsStateWithLifecycle()
 
   ChampionDetailsScreen(state = state, onFavoritesClicked = viewModel::onFavoritesClicked)
 }
@@ -70,77 +75,92 @@ fun ChampionDetailsScreen(championId: ChampionId) {
 fun ChampionDetailsScreen(state: ChampionDetailsState, onFavoritesClicked: () -> Unit) {
   val championId = state.championId
   val championColorCache = LocalChampionColorCache.current
-  val dominantColor = championColorCache.getColor(championId)
+
+  val championSkinsProvider =
+    rememberChampionSkinImageProvider(championId = championId, skins = state.details?.skins)
 
   Column(
     modifier =
       Modifier.fillMaxWidth()
-        .padding(bottom = LocalContentPadding.current.calculateBottomPadding().plus(32.dp))
+        .padding(
+          bottom =
+            LocalContentPadding.current
+              .calculateBottomPadding()
+              .plus(if (state.details == null) 0.dp else 32.dp)
+        )
   ) {
     ImageHeader(
       championId = championId,
-      skins = state.details?.skins ?: emptyList(),
+      championSkins = championSkinsProvider,
       championColorCache = championColorCache,
       onFavoritesClicked = onFavoritesClicked,
       isFavourite = state.champion?.isFavorite ?: false,
-      dominantColor = dominantColor,
       championName = state.champion?.name ?: EMPTY_STRING,
       championTitle = state.champion?.title ?: EMPTY_STRING,
     )
 
-    Row {
-      ChampionPartyType(
-        modifier = Modifier.padding(start = 16.dp, top = 16.dp).weight(1f),
-        header = stringResource(R.string.champion_details_party_type),
-        label = state.champion?.partyType?.label?.uppercase() ?: EMPTY_STRING,
-        color = state.champion?.partyType?.color ?: dominantColor,
-      )
-
-      ChampionClass(
-        modifier = Modifier.padding(end = 16.dp, top = 16.dp),
-        headerTitle = stringResource(R.string.champion_details_class),
-        tags = state.details?.tags ?: emptyList(),
+    if (state.details == null) {
+      LinearProgressIndicator(
+        modifier = Modifier.fillMaxWidth(),
+        color = championColorCache.getColor(championId),
+        trackColor = MaterialTheme.colorScheme.onSurface,
+        gapSize = 0.dp,
       )
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
+    if (state.champion != null && state.details != null) {
+      Row {
+        ChampionPartyType(
+          modifier = Modifier.padding(start = 16.dp, top = 16.dp).weight(1f),
+          header = stringResource(R.string.champion_details_party_type),
+          partyType = state.champion.partyType,
+        )
 
-    TitleHeader(
-      modifier = Modifier.padding(bottom = 8.dp, top = 16.dp, start = 16.dp),
-      label = stringResource(id = R.string.champion_details_lore),
-    )
+        ChampionClass(
+          modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+          headerTitle = stringResource(R.string.champion_details_class),
+          tags = state.details.tags,
+        )
+      }
 
-    Spacer(modifier = Modifier.height(16.dp))
+      Spacer(modifier = Modifier.height(16.dp))
 
-    Text(
-      modifier = Modifier.padding(horizontal = 16.dp),
-      text = state.details?.lore ?: EMPTY_STRING,
-      style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraLight),
-      textAlign = TextAlign.Justify,
-    )
+      TitleHeader(
+        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp, start = 16.dp),
+        label = stringResource(id = R.string.champion_details_lore),
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
+      Text(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        text = state.details.lore,
+        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraLight),
+        textAlign = TextAlign.Justify,
+      )
+    }
   }
 }
 
 @Composable
 private fun ImageHeader(
   championId: ChampionId,
-  skins: List<ChampionSkin>,
+  championSkins: ChampionSkinImagesProvider,
   championColorCache: ChampionColorCache,
   onFavoritesClicked: () -> Unit,
   isFavourite: Boolean,
-  dominantColor: Color,
   championName: String,
   championTitle: String,
 ) {
-  val championSkins = rememberChampionSkinImageProvider(championId = championId, skins = skins)
   val topActionIconBg = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
   val iconTint = MaterialTheme.colorScheme.onSurface
+  val dominantColor = championColorCache.getColor(championId)
 
   Box(modifier = Modifier.fillMaxWidth().aspectRatio(1215f / 717f)) {
     DominantColorCoilImage(
       modifier = Modifier.fillMaxSize(),
       championId = championId,
-      image = championSkins.image,
+      image = championSkins.imageInfo,
       championColorCache = championColorCache,
       skipUpdateColorCache = true,
     )
@@ -187,21 +207,27 @@ private fun ImageHeader(
           .padding(16.dp)
     ) {
       Row(
-        modifier = Modifier.height(IntrinsicSize.Max).offset(x = (-4).dp),
+        modifier = Modifier.height(IntrinsicSize.Max),
         verticalAlignment = Alignment.CenterVertically,
       ) {
-        Text(text = championName, style = MaterialTheme.typography.headlineMedium)
+        Text(text = championName, style = MaterialTheme.typography.displaySmall)
       }
       Text(
         text = championTitle,
-        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Light),
+        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Light),
+      )
+
+      Text(
+        modifier = Modifier.padding(top = 4.dp),
+        text = rememberLabeledString(championSkins.imageInfo?.skinName),
+        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Light),
       )
     }
   }
 }
 
 @Composable
-fun ChampionPartyType(modifier: Modifier, header: String, label: String, color: Color) {
+fun ChampionPartyType(modifier: Modifier, header: String, partyType: PartyType) {
   Box(modifier = modifier) {
     Row(
       modifier = Modifier.height(IntrinsicSize.Max),
@@ -209,17 +235,20 @@ fun ChampionPartyType(modifier: Modifier, header: String, label: String, color: 
     ) {
       TitleHeader(modifier = Modifier, label = header)
       Spacer(modifier = Modifier.width(8.dp))
+
       Box(
         modifier =
           Modifier.padding(vertical = 2.dp)
             .fillMaxHeight()
-            .background(color, MaterialTheme.shapes.small)
+            .drawBehind {
+              drawRoundRect(color = partyType.color, cornerRadius = CornerRadius(8.dp.toPx()))
+            }
             .padding(2.dp),
         contentAlignment = Alignment.Center,
       ) {
         Text(
           modifier = Modifier.widthIn(min = 40.dp),
-          text = label,
+          text = partyType.label,
           style = MaterialTheme.typography.labelSmall,
           textAlign = TextAlign.Center,
         )
@@ -272,5 +301,19 @@ private fun Tag(
       textAlign = TextAlign.Start,
       style = MaterialTheme.typography.labelSmall,
     )
+  }
+}
+
+@Composable
+private fun rememberLabeledString(skinName: String?): AnnotatedString {
+  val prefix = stringResource(R.string.champion_skin_prefix)
+  val noSkin = stringResource(R.string.champion_skin_unavailable)
+
+  return remember(skinName) {
+    buildAnnotatedString {
+      withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append(prefix) }
+      append(" ")
+      append(skinName ?: noSkin)
+    }
   }
 }

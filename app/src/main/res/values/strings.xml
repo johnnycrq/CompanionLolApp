@@ -10,8 +10,15 @@
     <string name="champion_details_party_type">Party Type:</string>
     <string name="champion_details_class">Class:</string>
     <string name="champion_details_lore">Lore:</string>
+    <string name="champion_skin_prefix">Skin:</string>
+    <string name="champion_skin_unavailable">[N/A]</string>
 
     <string name="sync_error_title">Teemo blinded the servers!</string>
     <string name="sync_error_description">We couldn\'t get the champion list. Maybe they are hiding in a brush? Try to find them again!</string>
     <string name="sync_error_retry_button">Ward the area (Retry)</string>
+
+    <string name="settings_title">SETTINGS</string>
+    <string name="settings_email">Email</string>
+    <string name="settings_auto_sync">Auto-sync</string>
+    <string name="settings_logout">Logout</string>
 </resources>

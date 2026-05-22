@@ -42,5 +42,12 @@ class ChampionDetailsDto(private val data: HashMap<String, Data>) {
     val attackspeed: Float,
   )
 
-  @Serializable class Skins(val id: Int, val num: Int, val name: String, val chromas: Boolean)
+  @Serializable
+  class Skins(
+    val id: Int,
+    val num: Int,
+    val name: String,
+    val chromas: Boolean,
+    val parentSkin: Int? = null,
+  )
 }

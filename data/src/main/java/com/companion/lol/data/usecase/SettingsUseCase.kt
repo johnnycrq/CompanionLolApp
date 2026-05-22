@@ -4,6 +4,7 @@ import com.companion.lol.data.mapper.model
 import com.companion.lol.data.model.SettingsModel
 import com.companion.lol.storage.impl.model.other.SortOrder
 import com.companion.lol.storage.impl.store.SettingsStore
+import com.companion.lol.storage.impl.util.dbDispatcher
 import com.companion.lol.storage.impl.util.withDbContext
 import com.companion.lol.storage.sqldelight.tables.SettingsTable
 import javax.inject.Inject
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.map
 
 @Singleton
 class SettingsUseCase @Inject constructor(private val settingsStore: SettingsStore) {
-  fun observe(): Flow<SettingsModel> = settingsStore.observe().map(SettingsTable::model)
+  fun observe(): Flow<SettingsModel> = settingsStore.observe(dbDispatcher).map(SettingsTable::model)
 
   suspend fun updateChampionGridSize(value: Int) = withDbContext {
     settingsStore.insert(championRotationGridSize = value)

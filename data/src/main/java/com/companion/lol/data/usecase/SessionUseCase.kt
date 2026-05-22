@@ -1,25 +1,28 @@
 package com.companion.lol.data.usecase
 
-import com.companion.lol.storage.impl.model.ids.SessionId
 import com.companion.lol.storage.impl.store.SessionStore
+import com.companion.lol.storage.impl.util.CompanionLolTransactor
+import com.companion.lol.storage.impl.util.dbDispatcher
 import com.companion.lol.storage.impl.util.withDbContext
 import com.companion.lol.storage.sqldelight.tables.SessionTable
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 @Singleton
-class SessionUseCase @Inject constructor(private val store: SessionStore) {
+class SessionUseCase
+@Inject
+constructor(private val store: SessionStore, private val transactor: CompanionLolTransactor) {
 
-  // we could observe the email address directly from the db
-  // but for the purpose of this simple login logic lets assume
-  // we will need something more complex in the future
-  fun observeEmailAddress(): Flow<String?> = store.observe().map { it?.emailAddress }
+  fun observeEmailAddress(): Flow<String?> = store.observeEmailAddress(dbDispatcher)
 
-  suspend fun updateEmailAddress(emailAddress: String) = withDbContext {
-    store.insert(details = SessionTable(id = SessionId, emailAddress = emailAddress))
+  suspend fun insert(data: SessionTable) = withDbContext { store.insert(data) }
+
+  suspend fun updateAutoSync(autoSync: Boolean) = withDbContext {
+    transactor.transaction { store.insert(store.get().copy(autoSync = autoSync)) }
   }
+
+  fun observe(): Flow<SessionTable?> = store.observe(dbDispatcher)
 
   suspend fun clear() = withDbContext { store.delete().await() }
 }

@@ -21,7 +21,7 @@ interface ChampionColorCache {
 
   val defaultColor: Color
 
-  fun getColor(id: ChampionId): Color
+  @Stable fun getColor(id: ChampionId): Color
 
   fun isDefaultColor(id: ChampionId): Boolean
 

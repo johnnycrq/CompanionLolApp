@@ -1,13 +1,15 @@
 import com.companion.lol.storage.impl.model.ids.SessionId;
+import kotlin.Boolean;
 
 
 CREATE TABLE SessionTable (
   id INTEGER AS SessionId PRIMARY KEY NOT NULL,
-  emailAddress TEXT
+  emailAddress TEXT NOT NULL,
+  autoSync INTEGER AS Boolean NOT NULL
 );
 
 insert:
-INSERT INTO SessionTable
+INSERT OR REPLACE INTO SessionTable
 VALUES ?;
 
 get:
@@ -15,3 +17,9 @@ SELECT * FROM SessionTable LIMIT 1;
 
 delete:
 DELETE FROM SessionTable;
+
+emailAddress:
+SELECT emailAddress FROM SessionTable LIMIT 1;
+
+isAutoSync:
+SELECT autoSync FROM SessionTable LIMIT 1;

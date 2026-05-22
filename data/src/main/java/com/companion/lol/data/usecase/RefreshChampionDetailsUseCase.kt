@@ -21,21 +21,30 @@ constructor(
   private val dDragonApi: DDragonApi,
   private val transacter: CompanionLolTransactor,
 ) {
-  suspend fun refresh(championId: ChampionId, championKeyName: String) {
-    val champion = dDragonApi.getChampionDetails(championName = championKeyName).info
+  suspend fun refresh(championId: ChampionId, championKeyName: String): Result<Unit> {
+    val champion =
+      dDragonApi
+        .getChampionDetails(championName = championKeyName)
+        .getOrElse {
+          return Result.failure(it)
+        }
+        .info
 
     withDbContext {
       transacter.transaction {
         val skins =
-          champion.skins.map {
-            SkinTable(
-              id = championId,
-              skinId = SkinId(it.id),
-              number = it.num,
-              name = it.name,
-              isChroma = it.chromas,
-            )
-          }
+          champion.skins
+            // parentSkin are chroma skins, don't map directly to url
+            .filter { it.parentSkin == null }
+            .map {
+              SkinTable(
+                id = championId,
+                skinId = SkinId(it.id),
+                number = it.num,
+                name = it.name,
+                isChroma = it.chromas,
+              )
+            }
 
         championDetailsStore.insert(
           ChampionDetailsTable(
@@ -49,5 +58,6 @@ constructor(
         skinsStore.insertAll(skins)
       }
     }
+    return Result.success(Unit)
   }
 }

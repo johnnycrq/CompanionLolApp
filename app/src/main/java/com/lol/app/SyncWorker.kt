@@ -13,7 +13,8 @@ import com.companion.lol.data.usecase.RefreshChampionsUseCase
 import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
+import kotlin.time.toJavaDuration
 import timber.log.Timber
 
 @HiltWorker
@@ -28,11 +29,15 @@ constructor(
 
     private const val PERIODIC_WORK_NAME = "periodic_sync"
 
-    fun initialSync(context: Context) {
+    fun schedulePeriodicSync(
+      context: Context,
+      repeatInterval: Duration = AppConst.syncRepeatDuration,
+      startAfterInterval: Boolean = true,
+    ) {
       val workManager = WorkManager.getInstance(context)
 
       /*// we use the existence of the periodic sync work to
-      // check if we need the initial sync
+      // check if we need the initial sync (first time)
       val workInfos = workManager.getWorkInfosForUniqueWork(PERIODIC_WORK_NAME).get()
 
       val hasExistingWork =
@@ -53,14 +58,17 @@ constructor(
             .build()
         )
       }*/
-
-      // 2) Repeating sync every 2 days
+      val duration = repeatInterval.toJavaDuration()
       val periodicSync =
-        PeriodicWorkRequestBuilder<SyncWorker>(2, TimeUnit.DAYS)
+        PeriodicWorkRequestBuilder<SyncWorker>(duration)
           .setConstraints(
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
           )
-          .setInitialDelay(2, TimeUnit.DAYS)
+          .apply {
+            if (startAfterInterval) {
+              setInitialDelay(duration)
+            }
+          }
           .build()
 
       workManager.enqueueUniquePeriodicWork(
@@ -68,6 +76,10 @@ constructor(
         ExistingPeriodicWorkPolicy.KEEP,
         periodicSync,
       )
+    }
+
+    fun cancelPeriodicSync(context: Context) {
+      WorkManager.getInstance(context).cancelUniqueWork(PERIODIC_WORK_NAME)
     }
   }
 

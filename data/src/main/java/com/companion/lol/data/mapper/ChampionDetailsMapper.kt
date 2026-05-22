@@ -21,6 +21,7 @@ internal fun ChampionDetailsTable.model(keyName: String, skins: List<SkinTable>)
               championId = this.id,
               keyName = keyName,
               skinNumber = it.number,
+              skinName = it.name,
             ),
           isChroma = it.isChroma,
         )

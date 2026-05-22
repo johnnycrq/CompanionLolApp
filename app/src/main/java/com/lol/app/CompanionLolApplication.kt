@@ -52,8 +52,6 @@ class CompanionLolApplication :
           .build()
       )
     }
-
-    SyncWorker.initialSync(this)
   }
 
   override fun newImageLoader(context: Context): ImageLoader {

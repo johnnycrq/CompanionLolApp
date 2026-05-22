@@ -4,6 +4,7 @@ import com.companion.lol.network.BuildConfig
 import com.companion.lol.network.DDragonApi
 import com.companion.lol.network.EndPoints
 import com.companion.lol.network.interceptors.RiotDevPortalApiKeyInterceptor
+import com.skydoves.retrofit.adapters.result.ResultCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,17 +27,19 @@ object NetworkModule {
   @OptIn(ExperimentalSerializationApi::class)
   @Provides
   @Singleton
-  internal fun baseRetrofit(): Retrofit {
+  internal fun baseRetrofit(okhttpClient: OkHttpClient): Retrofit {
     // This is an ugly hack
     // But StrictMode identifies violation here
     // somewhere in the initialization
     @Suppress("JSON_FORMAT_REDUNDANT")
     return runBlocking(Dispatchers.IO) {
       Retrofit.Builder()
+        .baseUrl(EndPoints.DDragon.base) // we replace this later
         .addConverterFactory(
           Json { ignoreUnknownKeys = true }.asConverterFactory("application/json".toMediaType())
         )
-        .baseUrl("http://www.google.com") // we replace this later
+        .addCallAdapterFactory(ResultCallAdapterFactory.create())
+        .client(okhttpClient)
         .build()
     }
   }
@@ -64,10 +67,7 @@ object NetworkModule {
 
   @Provides
   @Singleton
-  internal fun dDragonApi(retrofit: Retrofit, okhttpClient: OkHttpClient): DDragonApi {
-    val publicRetrofit =
-      retrofit.newBuilder().baseUrl(EndPoints.DDragon.base).client(okhttpClient).build()
-
-    return publicRetrofit.create(DDragonApi::class.java)
+  internal fun dDragonApi(retrofit: Retrofit): DDragonApi {
+    return retrofit.create(DDragonApi::class.java)
   }
 }

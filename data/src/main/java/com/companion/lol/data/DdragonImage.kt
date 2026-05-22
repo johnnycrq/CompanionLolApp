@@ -10,20 +10,35 @@ sealed interface DdragonImage {
 
   @Stable val championId: ChampionId
 
+  @Stable val skinName: String?
+
   companion object {
     @Stable
     fun championSquareImage(championId: ChampionId, image: String): DdragonImage =
-      Impl(championId = championId, imageUrl = EndPoints.DDragon.championSquareAsset(image))
+      Impl(
+        championId = championId,
+        imageUrl = EndPoints.DDragon.championSquareAsset(image),
+        skinName = null,
+      )
 
     @Stable
-    fun championSkinImage(championId: ChampionId, keyName: String, skinNumber: Int): DdragonImage =
+    fun championSkinImage(
+      championId: ChampionId,
+      keyName: String,
+      skinNumber: Int,
+      skinName: String,
+    ): DdragonImage =
       Impl(
         championId = championId,
         imageUrl = EndPoints.DDragon.championSkinAsset(keyName, skinNumber),
+        skinName = skinName,
       )
   }
 }
 
 @Stable
-private data class Impl(override val championId: ChampionId, override val imageUrl: String) :
-  DdragonImage
+private data class Impl(
+  override val championId: ChampionId,
+  override val imageUrl: String,
+  override val skinName: String?,
+) : DdragonImage
