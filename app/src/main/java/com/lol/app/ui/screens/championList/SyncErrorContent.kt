@@ -15,11 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.companion.lol.app.R
 import com.lol.app.base.CompanionAppPreview
 import com.lol.app.base.CompanionAppPreviewWrapperProvider
 
@@ -40,7 +42,7 @@ fun SyncErrorContent(modifier: Modifier = Modifier, onRetry: () -> Unit) {
     Spacer(modifier = Modifier.height(24.dp))
 
     Text(
-      text = "Teemo blinded the servers!",
+      text = stringResource(R.string.sync_error_title),
       style = MaterialTheme.typography.headlineSmall,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,
@@ -49,8 +51,7 @@ fun SyncErrorContent(modifier: Modifier = Modifier, onRetry: () -> Unit) {
     Spacer(modifier = Modifier.height(8.dp))
 
     Text(
-      text =
-        "We couldn't get the champion list. Maybe they are hiding in a brush? Try to find them again!",
+      text = stringResource(R.string.sync_error_description),
       style = MaterialTheme.typography.bodyLarge,
       textAlign = TextAlign.Center,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -59,7 +60,11 @@ fun SyncErrorContent(modifier: Modifier = Modifier, onRetry: () -> Unit) {
     Spacer(modifier = Modifier.height(32.dp))
 
     Button(onClick = onRetry) {
-      Text(text = "Ward the area (Retry)", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+      Text(
+        text = stringResource(R.string.sync_error_retry_button),
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+      )
     }
   }
 }
