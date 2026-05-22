@@ -9,6 +9,7 @@ import com.companion.lol.data.usecase.SessionUseCase
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.lol.app.base.theme.Gold1
 import com.lol.app.navigation.BackStack
+import com.lol.app.navigation.BackStack.Companion.backStack
 import com.lol.app.navigation.ChampionDetailsKey
 import com.lol.app.navigation.ChampionListKey
 import com.lol.app.navigation.InitialScreenKey
@@ -28,7 +29,7 @@ class MainViewModel
 constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedStateHandle) :
   ViewModel() {
   val backStack: BackStack<ScreenKey> =
-    BackStack.Impl(savedStateHandle = savedStateHandle, initialHistory = listOf(InitialScreenKey))
+    savedStateHandle.backStack(initialHistory = listOf(InitialScreenKey))
   val colorCache: ChampionColorCache =
     ChampionColorCache.Impl(scope = viewModelScope, defaultColor = Gold1)
 

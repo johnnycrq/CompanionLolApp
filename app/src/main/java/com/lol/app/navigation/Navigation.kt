@@ -1,10 +1,10 @@
 package com.lol.app.navigation
 
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import com.lol.app.navigation.ScreenKey.ScreenType
+import com.lol.app.util.withSnapshot
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -27,13 +27,10 @@ interface BackStack<S : Any> {
   fun goBack(): Boolean
 
   companion object {
-    @Suppress("FunctionName")
-    inline fun <reified S : ScreenKey> Impl(
-      savedStateHandle: SavedStateHandle,
-      initialHistory: List<S>,
+    inline fun <reified S : ScreenKey> SavedStateHandle.backStack(
+      initialHistory: List<S>
     ): BackStack<S> {
-      val saver = BackStackSaver.Impl(savedStateHandle, serializer<S>())
-
+      val saver = BackStackSaver.Impl(this, serializer<S>())
       return Impl(saver = saver, initialHistory = saver.get() ?: initialHistory)
     }
   }
@@ -57,38 +54,33 @@ class Impl<S : ScreenKey>(
     saver.save(history)
   }
 
-  override fun setHistory(newHistory: List<S>) {
-    Snapshot.withMutableSnapshot {
-      _history.clear()
-      _history.addAll(newHistory)
-      saver.save(history)
-    }
+  override fun setHistory(newHistory: List<S>) = withSnapshot {
+    _history.clear()
+    _history.addAll(newHistory)
+    saver.save(history)
   }
 
-  override fun goTo(key: S) {
-    Snapshot.withMutableSnapshot {
-      val last =
-        _history.lastOrNull() ?: error("Cannot use goTo without having a valid non-empty history")
+  override fun goTo(key: S) = withSnapshot {
+    val last =
+      _history.lastOrNull() ?: error("Cannot use goTo without having a valid non-empty history")
 
-      // no repeated keys allowed
-      if (last == key) return@withMutableSnapshot
+    // no repeated keys allowed
+    if (last == key) return@withSnapshot
 
-      // if last key is a bottomSheet, cannot go to any other screen
-      // unless closing the bottom sheet
-      if (last.screenType is ScreenType.BottomSheet) {
-        return@withMutableSnapshot
-      }
-
-      val index = _history.indexOf(key)
-      if (index != -1) {
-        while (_history.size > index + 1) {
-          _history.removeAt(_history.size - 1)
-        }
-      } else {
-        _history.add(key)
-      }
-      saver.save(history)
+    // if last key is a bottomSheet, cannot go to any other screen
+    if (last.screenType is ScreenType.BottomSheet) {
+      return@withSnapshot
     }
+
+    val index = _history.indexOf(key)
+    if (index != -1) {
+      while (_history.size > index + 1) {
+        _history.removeAt(_history.size - 1)
+      }
+    } else {
+      _history.add(key)
+    }
+    saver.save(history)
   }
 
   override fun goBack(): Boolean {

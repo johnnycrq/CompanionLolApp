@@ -1,0 +1,7 @@
+package com.lol.app.util
+
+import androidx.compose.runtime.snapshots.Snapshot
+
+inline fun withSnapshot(action: () -> Unit): Unit {
+  Snapshot.withMutableSnapshot { action() }
+}

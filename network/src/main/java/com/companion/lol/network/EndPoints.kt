@@ -2,7 +2,10 @@ package com.companion.lol.network
 
 object EndPoints {
   object DDragon {
-    private const val version = "13.6.1"
+
+    // TODO: fetch this to be automatically updated
+    // https://ddragon.leagueoflegends.com/api/versions.json
+    private const val version = "16.10.1"
     private const val baseEndPoint = "https://ddragon.leagueoflegends.com/cdn"
     private const val baseEndPointWithVersion = "${baseEndPoint}/${version}"
     const val base = "${baseEndPointWithVersion}/data/en_US/"
