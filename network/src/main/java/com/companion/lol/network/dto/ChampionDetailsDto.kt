@@ -1,12 +1,15 @@
 package com.companion.lol.network.dto
 
+import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Keep
 class ChampionDetailsDto(private val data: HashMap<String, Data>) {
   val info: Data = data.values.first()
 
   @Serializable
+  @Keep
   class Data(
     val key: String,
     val title: String,
@@ -19,6 +22,7 @@ class ChampionDetailsDto(private val data: HashMap<String, Data>) {
   )
 
   @Serializable
+  @Keep
   class Stats(
     val hp: Int,
     val hpperlevel: Int,
@@ -43,6 +47,7 @@ class ChampionDetailsDto(private val data: HashMap<String, Data>) {
   )
 
   @Serializable
+  @Keep
   class Skins(
     val id: Int,
     val num: Int,

@@ -1,10 +1,12 @@
 package com.companion.lol.network.dto
 
+import androidx.annotation.Keep
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
+@Keep
 class ChampionDto(
   val id: String,
   private val key: String,
