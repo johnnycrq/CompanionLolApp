@@ -15,6 +15,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,7 +38,6 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigationevent.NavigationEvent
-import com.lol.app.base.material3.CompanionAppSurface
 import com.lol.app.base.theme.CompanionAppTheme
 import com.lol.app.navigation.BackStack
 import com.lol.app.navigation.ChampionDetailsKey
@@ -142,7 +142,7 @@ private fun MainScreen() {
 
 @Composable
 private fun PlaceHolderScreen() {
-  CompanionAppSurface(modifier = Modifier.fillMaxSize()) {}
+  Box(modifier = Modifier.fillMaxSize())
 }
 
 @Composable
