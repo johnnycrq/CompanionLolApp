@@ -58,7 +58,10 @@ android {
 }
 
 composeCompiler {
-    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("config/compose-stability-config.txt"))
+    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("config/compose-stability-config.conf"))
+
+    reportsDestination = rootProject.layout.projectDirectory.dir("composeReports/compose_compiler")
+    metricsDestination = rootProject.layout.projectDirectory.dir("composeReports/_compiler")
 }
 
 tasks.withType<KotlinCompile> {

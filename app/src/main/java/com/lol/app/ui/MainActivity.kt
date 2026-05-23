@@ -18,7 +18,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.unit.dp
@@ -44,6 +43,7 @@ import com.lol.app.navigation.keys.entryScreenKey
 import com.lol.app.ui.scene.rememberBottomSheetSceneStrategy
 import com.lol.app.ui.scene.rememberNavigationBarDecoratorStrategy
 import com.lol.app.ui.screens.NavigationBar
+import com.lol.app.util.ChampionColorCache
 import com.lol.app.util.LocalChampionColorCache
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -69,66 +69,81 @@ private fun MainScreen() {
     val backStack: BackStack<ScreenKey> = viewModel.backStack
     val snackBarManager = rememberSnackBarManager()
 
-    val bottomSheetStrategy = rememberBottomSheetSceneStrategy<ScreenKey>()
-
     snackBarManager.HandleReceivingErrorEffect { error ->
       showSnackbar(error.message, duration = SnackbarDuration.Short)
     }
 
+    Scaffold(
+      containerColor = Transparent,
+      contentColor = MaterialTheme.colorScheme.onSurface,
+      snackbarHost = {
+        SnackbarHost(
+          hostState = snackBarManager.snackBarHostState,
+          snackbar = {
+            Snackbar(
+              modifier = Modifier.padding(bottom = 80.dp),
+              snackbarData = it,
+              containerColor = MaterialTheme.colorScheme.secondary,
+              contentColor = MaterialTheme.colorScheme.onBackground,
+            )
+          },
+        )
+      },
+    ) { contentPadding ->
+      NavDisplay(
+        contentPadding = contentPadding,
+        colorCache = viewModel.colorCache,
+        backStack = backStack,
+        snackBarManager = snackBarManager,
+      )
+    }
+  }
+}
+
+@Composable
+private fun NavDisplay(
+  contentPadding: PaddingValues,
+  colorCache: ChampionColorCache,
+  backStack: BackStack<ScreenKey>,
+  snackBarManager: SnackBarManager,
+) {
+  CompositionLocalProvider(
+    LocalContentPadding provides contentPadding,
+    LocalChampionColorCache provides colorCache,
+    LocalBackStack provides backStack,
+    LocalSnackBarManager provides snackBarManager,
+  ) {
     SharedTransitionLayout {
+
       val navigationBarDecoratorStrategy =
         rememberNavigationBarDecoratorStrategy<ScreenKey>(
           navBar = { NavigationBar(backStack = backStack) },
           sharedTransitionScope = this,
         )
+      val bottomSheetStrategy = rememberBottomSheetSceneStrategy<ScreenKey>()
 
-      Scaffold(
-        containerColor = Transparent,
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        snackbarHost = {
-          SnackbarHost(
-            hostState = snackBarManager.snackBarHostState,
-            snackbar = {
-              Snackbar(
-                modifier = Modifier.padding(bottom = 80.dp),
-                snackbarData = it,
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onBackground,
-              )
-            },
-          )
-        },
-      ) { contentPadding ->
-        CompositionLocalProvider(
-          LocalContentPadding provides contentPadding,
-          LocalChampionColorCache provides viewModel.colorCache,
-          LocalBackStack provides backStack,
-          LocalSnackBarManager provides snackBarManager,
-        ) {
-          NavDisplay(
-            backStack = backStack.history,
-            onBack = backStack::goBack,
-            entryDecorators =
-              rememberDecorators(
-                rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator(),
-              ),
-            sceneStrategies = listOf(bottomSheetStrategy),
-            sceneDecoratorStrategies = listOf(navigationBarDecoratorStrategy),
-            transitionSpec = defaultNoTransition(),
-            popTransitionSpec = defaultNoTransition(),
-            predictivePopTransitionSpec = predictiveBack(),
-            entryProvider =
-              entryProvider {
-                entryScreenKey<InitialScreenKey>()
-                entryScreenKey<LoginKey>()
-                entryScreenKey<ChampionListKey>()
-                entryScreenKey<SettingsKey>()
-                entryScreenKey<ChampionDetailsKey>()
-              },
-          )
-        }
-      }
+      NavDisplay(
+        backStack = backStack.history,
+        onBack = backStack::goBack,
+        entryDecorators =
+          rememberDecorators(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator(),
+          ),
+        sceneStrategies = listOf(bottomSheetStrategy),
+        sceneDecoratorStrategies = listOf(navigationBarDecoratorStrategy),
+        transitionSpec = defaultNoTransition(),
+        popTransitionSpec = defaultNoTransition(),
+        predictivePopTransitionSpec = predictiveBack(),
+        entryProvider =
+          entryProvider {
+            entryScreenKey<InitialScreenKey>()
+            entryScreenKey<LoginKey>()
+            entryScreenKey<ChampionListKey>()
+            entryScreenKey<SettingsKey>()
+            entryScreenKey<ChampionDetailsKey>()
+          },
+      )
     }
   }
 }
@@ -136,4 +151,4 @@ private fun MainScreen() {
 @Composable
 private fun <T : ScreenKey> rememberDecorators(
   vararg decorators: NavEntryDecorator<T>
-): List<NavEntryDecorator<T>> = remember { listOf(*decorators) }
+): List<NavEntryDecorator<T>> = listOf(*decorators)
