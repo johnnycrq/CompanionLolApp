@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
 import com.companion.lol.storage.impl.model.ids.ChampionId
-import com.lol.app.base.theme.Gold1
+import com.lol.app.compose.ui.theme.Gold1
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

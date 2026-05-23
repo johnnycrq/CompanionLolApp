@@ -1,4 +1,4 @@
-package com.lol.app.base.material3
+package com.lol.app.compose.app
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

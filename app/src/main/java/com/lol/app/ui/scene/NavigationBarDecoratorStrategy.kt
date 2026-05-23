@@ -16,8 +16,7 @@ import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
-import com.lol.app.navigation.ScreenKey
-import com.lol.app.ui.screens.NavigationBarScreen
+import com.lol.app.navigation.keys.ScreenKey
 import com.lol.app.util.cacheSize
 
 data class NavigationBarDecoratorScene<T : Any>(
@@ -74,7 +73,7 @@ class NavigationBarDecoratorStrategy<T : Any>(
 
     val key = lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey
 
-    return if (key is NavigationBarScreen) {
+    return if (key.isNavBarEntry()) {
       NavigationBarDecoratorScene(scene, sharedTransitionScope, navBarContent)
     } else (scene)
   }

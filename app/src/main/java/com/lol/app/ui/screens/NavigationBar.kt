@@ -18,15 +18,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.dropUnlessResumed
 import com.companion.lol.app.R
-import com.lol.app.base.CompanionAppPreview
-import com.lol.app.base.CompanionAppPreviewWrapperProvider
-import com.lol.app.base.material3.companionAppGradient
+import com.lol.app.compose.app.companionAppGradient
+import com.lol.app.compose.ui.tooling.CompanionAppPreview
+import com.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
 import com.lol.app.navigation.BackStack
-import com.lol.app.navigation.ChampionListKey
-import com.lol.app.navigation.ScreenKey
-import com.lol.app.navigation.SettingsKey
-
-interface NavigationBarScreen
+import com.lol.app.navigation.keys.ChampionListKey
+import com.lol.app.navigation.keys.ScreenKey
+import com.lol.app.navigation.keys.SettingsKey
 
 @Composable
 fun NavigationBar(modifier: Modifier = Modifier, backStack: BackStack<ScreenKey>) {

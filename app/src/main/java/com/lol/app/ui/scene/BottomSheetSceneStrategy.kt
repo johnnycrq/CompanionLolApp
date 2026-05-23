@@ -21,8 +21,8 @@ import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
-import com.lol.app.navigation.ScreenKey
-import com.lol.app.navigation.ScreenKey.ScreenType
+import com.lol.app.navigation.keys.ScreenKey
+import com.lol.app.navigation.keys.ScreenKey.Type
 
 /** An [OverlayScene] that renders an [entry] within a [ModalBottomSheet]. */
 private data class BottomSheetScene<T : Any>(
@@ -64,9 +64,9 @@ class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
   override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
     val lastEntry: NavEntry<T> = entries.lastOrNull() ?: return null
 
-    val screenType = (lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey).screenType
+    val screenType = (lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey).type()
 
-    if (screenType !is ScreenType.BottomSheet) {
+    if (screenType !is Type.BottomSheet) {
       return null
     }
 

@@ -1,9 +1,9 @@
-package com.lol.app.base
+package com.lol.app.compose.ui.tooling
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
-import com.lol.app.base.theme.CompanionAppTheme
+import com.lol.app.compose.ui.theme.CompanionAppTheme
 
 @Preview
 // @Preview(uiMode = UI_MODE_NIGHT_YES)

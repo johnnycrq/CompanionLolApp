@@ -36,9 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.companion.lol.app.R
 import com.companion.lol.storage.impl.model.other.SortOrder
-import com.lol.app.base.material3.AppBarNavIcon
-import com.lol.app.base.material3.CompanionLolTopAppbar
-import com.lol.app.base.material3.companionAppGradientInverted
+import com.lol.app.compose.app.AppBarNavIcon
+import com.lol.app.compose.app.CompanionLolTopAppbar
+import com.lol.app.compose.app.companionAppGradientInverted
 
 @ExperimentalMaterial3Api
 @Composable

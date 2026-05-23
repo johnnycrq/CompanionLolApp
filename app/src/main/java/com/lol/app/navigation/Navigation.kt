@@ -3,7 +3,8 @@ package com.lol.app.navigation
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
-import com.lol.app.navigation.ScreenKey.ScreenType
+import com.lol.app.navigation.keys.ScreenKey
+import com.lol.app.navigation.keys.ScreenKey.Type
 import com.lol.app.util.withSnapshot
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
@@ -13,7 +14,7 @@ import kotlinx.serialization.serializer
 private const val SAVED_KEY = "BackStack.KEY"
 
 @Stable
-interface BackStack<S : Any> {
+interface BackStack<S : ScreenKey> {
   val history: List<S>
 
   val current: S
@@ -68,7 +69,7 @@ class Impl<S : ScreenKey>(
     if (last == key) return@withSnapshot
 
     // if last key is a bottomSheet, cannot go to any other screen
-    if (last.screenType is ScreenType.BottomSheet) {
+    if (last.type() is Type.BottomSheet) {
       return@withSnapshot
     }
 

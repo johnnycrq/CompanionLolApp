@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.companion.lol.app.R
-import com.lol.app.base.CompanionAppPreview
-import com.lol.app.base.CompanionAppPreviewWrapperProvider
+import com.lol.app.compose.ui.tooling.CompanionAppPreview
+import com.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
 
 @Composable
 fun SyncErrorContent(modifier: Modifier = Modifier, onRetry: () -> Unit) {

@@ -1,4 +1,4 @@
-package com.lol.app.base.material3
+package com.lol.app.compose.app
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme

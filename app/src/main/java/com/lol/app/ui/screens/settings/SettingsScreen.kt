@@ -33,8 +33,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.companion.lol.app.R
-import com.lol.app.base.CompanionAppPreview
-import com.lol.app.base.CompanionAppPreviewWrapperProvider
+import com.lol.app.compose.ui.tooling.CompanionAppPreview
+import com.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
 import com.lol.app.ui.LocalContentPadding
 
 private val rowShape = RoundedCornerShape(12.dp)

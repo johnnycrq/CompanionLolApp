@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.lol.app.base.material3
+package com.lol.app.compose.app
 
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.StringRes
@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.companion.lol.app.R
-import com.lol.app.base.CompanionAppPreview
-import com.lol.app.base.CompanionAppPreviewWrapperProvider
+import com.lol.app.compose.ui.tooling.CompanionAppPreview
+import com.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
 
 enum class AppBarNavIcon(val imageVector: ImageVector?) {
   NONE(null),

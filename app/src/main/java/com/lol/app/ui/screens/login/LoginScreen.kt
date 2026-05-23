@@ -27,10 +27,10 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.lol.app.base.CompanionAppPreview
-import com.lol.app.base.CompanionAppPreviewWrapperProvider
-import com.lol.app.base.material3.CompanionAppSurface
-import com.lol.app.base.material3.ext.rememberSaveableTextFieldState
+import com.lol.app.compose.app.CompanionAppSurface
+import com.lol.app.compose.ui.tooling.CompanionAppPreview
+import com.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
+import com.lol.app.compose.utils.rememberSaveableTextFieldState
 
 @Composable
 fun LoginScreen() {

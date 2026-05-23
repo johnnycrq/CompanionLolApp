@@ -51,7 +51,7 @@ import com.companion.lol.app.R
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.other.ChampionTag
 import com.companion.lol.storage.impl.model.other.PartyType
-import com.lol.app.base.material3.TitleHeader
+import com.lol.app.compose.app.TitleHeader
 import com.lol.app.ui.LocalContentPadding
 import com.lol.app.util.ChampionColorCache
 import com.lol.app.util.DominantColorCoilImage

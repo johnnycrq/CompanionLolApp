@@ -1,4 +1,4 @@
-package com.lol.app.base.material3.ext
+package com.lol.app.compose.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

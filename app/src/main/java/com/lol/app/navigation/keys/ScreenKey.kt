@@ -1,26 +1,37 @@
 @file:Suppress("ClassName")
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.lol.app.navigation
+package com.lol.app.navigation.keys
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.navigation3.runtime.EntryProviderScope
+import com.lol.app.navigation.BackStack
+import com.lol.app.ui.LocalBackStack
 import kotlinx.serialization.Serializable
 
 @Stable
 @Serializable
 sealed interface ScreenKey {
 
-  val screenType: ScreenType
-    get() = ScreenType.Normal
+  fun type(): Type {
+    return Type.Normal
+  }
 
-  val requiresAuth: Boolean
+  fun requiresAuth(): Boolean {
+    return false
+  }
 
-  sealed interface ScreenType {
-    data object Normal : ScreenType
+  fun isNavBarEntry(): Boolean {
+    return false
+  }
+
+  @Composable fun Content(backStack: BackStack<ScreenKey>)
+
+  sealed interface Type {
+    data object Normal : Type
 
     data class BottomSheet(
       val properties: ModalBottomSheetProperties =
@@ -30,9 +41,9 @@ sealed interface ScreenKey {
           shouldDismissOnBackPress = true,
           shouldDismissOnClickOutside = true,
         )
-    ) : ScreenType
+    ) : Type
 
-    data object Dialog : ScreenType
+    data object Dialog : Type
   }
 
   companion object {
@@ -41,8 +52,7 @@ sealed interface ScreenKey {
 }
 
 inline fun <reified K : ScreenKey> EntryProviderScope<ScreenKey>.entryScreenKey(
-  metadata: Map<String, Any> = emptyMap(),
-  noinline content: @Composable (K) -> Unit,
+  metadata: Map<String, Any> = emptyMap()
 ) {
   entry(
     metadata = { key ->
@@ -51,6 +61,6 @@ inline fun <reified K : ScreenKey> EntryProviderScope<ScreenKey>.entryScreenKey(
         putAll(metadata)
       }
     },
-    content = content,
+    content = { key: K -> key.Content(LocalBackStack.current) },
   )
 }

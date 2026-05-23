@@ -6,28 +6,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.unit.IntOffset
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -35,47 +24,26 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.scene.Scene
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigationevent.NavigationEvent
-import com.lol.app.base.theme.CompanionAppTheme
+import com.lol.app.compose.animation.defaultNoTransition
+import com.lol.app.compose.animation.predictiveBack
+import com.lol.app.compose.ui.theme.CompanionAppTheme
 import com.lol.app.navigation.BackStack
-import com.lol.app.navigation.ChampionDetailsKey
-import com.lol.app.navigation.ChampionListKey
-import com.lol.app.navigation.InitialScreenKey
-import com.lol.app.navigation.LoginKey
-import com.lol.app.navigation.ScreenKey
-import com.lol.app.navigation.SettingsKey
-import com.lol.app.navigation.entryScreenKey
+import com.lol.app.navigation.keys.ChampionDetailsKey
+import com.lol.app.navigation.keys.ChampionListKey
+import com.lol.app.navigation.keys.InitialScreenKey
+import com.lol.app.navigation.keys.LoginKey
+import com.lol.app.navigation.keys.ScreenKey
+import com.lol.app.navigation.keys.SettingsKey
+import com.lol.app.navigation.keys.entryScreenKey
 import com.lol.app.ui.scene.rememberBottomSheetSceneStrategy
 import com.lol.app.ui.scene.rememberNavigationBarDecoratorStrategy
 import com.lol.app.ui.screens.NavigationBar
-import com.lol.app.ui.screens.championDetails.ChampionDetailsScreen
-import com.lol.app.ui.screens.championList.ChampionListScreen
-import com.lol.app.ui.screens.login.LoginScreen
-import com.lol.app.ui.screens.settings.SettingsScreen
 import com.lol.app.util.LocalChampionColorCache
 import dagger.hilt.android.AndroidEntryPoint
 
 val LocalContentPadding = compositionLocalOf { PaddingValues.Zero }
-
-private val contentTransformScreenTransition =
-  ContentTransform(EnterTransition.None, ExitTransition.None)
-
-fun <T : Any> predictiveBack():
-  AnimatedContentTransitionScope<Scene<T>>.(@NavigationEvent.SwipeEdge Int) -> ContentTransform = {
-  val spring =
-    spring(stiffness = Spring.StiffnessVeryLow, visibilityThreshold = IntOffset(100, 100))
-
-  ContentTransform(
-    EnterTransition.None,
-    if (it == NavigationEvent.EDGE_RIGHT) {
-      scaleOut(targetScale = 0.9f) + slideOutHorizontally(spring, targetOffsetX = { -(it / 2) })
-    } else {
-      scaleOut(targetScale = 0.9f) + slideOutHorizontally(spring, targetOffsetX = { it / 2 })
-    },
-  )
-}
+val LocalBackStack = compositionLocalOf<BackStack<ScreenKey>> { error("Not initialized") }
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -108,6 +76,7 @@ private fun MainScreen() {
         CompositionLocalProvider(
           LocalContentPadding provides contentPadding,
           LocalChampionColorCache provides viewModel.colorCache,
+          LocalBackStack provides backStack,
         ) {
           NavDisplay(
             backStack = backStack.history,
@@ -119,30 +88,22 @@ private fun MainScreen() {
               ),
             sceneStrategies = listOf(bottomSheetStrategy),
             sceneDecoratorStrategies = listOf(navigationBarDecoratorStrategy),
-            transitionSpec = { contentTransformScreenTransition },
-            popTransitionSpec = { contentTransformScreenTransition },
+            transitionSpec = defaultNoTransition(),
+            popTransitionSpec = defaultNoTransition(),
             predictivePopTransitionSpec = predictiveBack(),
             entryProvider =
               entryProvider {
-                entryScreenKey<InitialScreenKey> { PlaceHolderScreen() }
-                entryScreenKey<LoginKey> { LoginScreen() }
-                entryScreenKey<ChampionListKey> {
-                  ChampionListScreen(onCardClick = viewModel::goToChampionDetails)
-                }
-                entryScreenKey<SettingsKey> { SettingsScreen() }
-
-                entryScreenKey<ChampionDetailsKey> { ChampionDetailsScreen(it.championId) }
+                entryScreenKey<InitialScreenKey>()
+                entryScreenKey<LoginKey>()
+                entryScreenKey<ChampionListKey>()
+                entryScreenKey<SettingsKey>()
+                entryScreenKey<ChampionDetailsKey>()
               },
           )
         }
       }
     }
   }
-}
-
-@Composable
-private fun PlaceHolderScreen() {
-  Box(modifier = Modifier.fillMaxSize())
 }
 
 @Composable

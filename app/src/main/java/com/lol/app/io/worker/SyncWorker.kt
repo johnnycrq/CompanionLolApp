@@ -1,4 +1,4 @@
-package com.lol.app
+package com.lol.app.io.worker
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
@@ -10,6 +10,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.companion.lol.data.usecase.RefreshChampionsUseCase
+import com.lol.app.AppConst
 import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -34,7 +35,7 @@ constructor(
       repeatInterval: Duration = AppConst.syncRepeatDuration,
       startAfterInterval: Boolean = true,
     ) {
-      val workManager = WorkManager.getInstance(context)
+      val workManager = WorkManager.Companion.getInstance(context)
 
       /*// we use the existence of the periodic sync work to
       // check if we need the initial sync (first time)
@@ -79,7 +80,7 @@ constructor(
     }
 
     fun cancelPeriodicSync(context: Context) {
-      WorkManager.getInstance(context).cancelUniqueWork(PERIODIC_WORK_NAME)
+      WorkManager.Companion.getInstance(context).cancelUniqueWork(PERIODIC_WORK_NAME)
     }
   }
 
@@ -88,7 +89,7 @@ constructor(
       refreshChampions.get().refresh()
       Result.success()
     } catch (e: Exception) {
-      Timber.e(e)
+      Timber.Forest.e(e)
       Result.retry()
     }
   }
