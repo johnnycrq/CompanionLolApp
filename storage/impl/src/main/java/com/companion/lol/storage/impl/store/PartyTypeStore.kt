@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class PartyTypeStore @Inject constructor(database: LolAppDb) :
   SqldelightStore<ChampionPartyTypeQueries>(database.championPartyTypeQueries) {
 
-  fun insertAll(partyTypes: List<ChampionPartyTypeTable>) {
-    queries.transaction { partyTypes.forEach(queries::insert) }
+  fun insertAllSync(partyTypes: List<ChampionPartyTypeTable>) {
+    partyTypes.forEach(queries::insert)
   }
 }

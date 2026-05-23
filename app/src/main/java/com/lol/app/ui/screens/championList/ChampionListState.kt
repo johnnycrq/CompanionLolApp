@@ -15,5 +15,5 @@ data class ChampionListState(
 ) : ComposeState {
   val isRefreshing: Boolean = refreshState.refreshing
 
-  val showError: Boolean = !refreshState.initialSync && refreshState.hasError && champions.isEmpty()
+  val showError: Boolean = refreshState.hasError && champions.isEmpty()
 }

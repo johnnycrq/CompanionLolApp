@@ -26,8 +26,7 @@ constructor(
   private val dispatcher: DbDispatcher,
 ) {
   suspend fun refresh(championId: ChampionId): Result<Unit> {
-    val championKeyName =
-      withContext(dispatcher) { checkNotNull(championStore.findKeyNameById(championId)) }
+    val championKeyName = championStore.findKeyNameById(championId)
 
     val champion =
       dDragonApi

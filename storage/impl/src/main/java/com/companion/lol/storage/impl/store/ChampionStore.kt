@@ -13,16 +13,14 @@ import com.companion.lol.storage.sqldelight.tables.ChampionTable
 import com.companion.lol.storage.sqldelight.tables.ChampionWithFavoritesView
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 @Singleton
 class ChampionStore @Inject constructor(database: LolAppDb, private val dispatcher: DbDispatcher) :
   SqldelightStore<ChampionQueries>(database.championQueries) {
-
   fun insertAll(champions: List<ChampionTable>) {
-    queries.transaction { champions.forEach { queries.insert(it) } }
+    champions.forEach { queries.insert(it) }
   }
 
   suspend fun hasData(): Boolean = withContext(dbDispatcher) { queries.hasData().executeAsOne() }
@@ -30,11 +28,9 @@ class ChampionStore @Inject constructor(database: LolAppDb, private val dispatch
   fun observeAllWithFavorites(): Flow<List<ChampionWithFavoritesView>> =
     queries.findAll().asFlow().mapToList(dispatcher)
 
-  fun observeWithFavoritesById(
-    championId: ChampionId,
-    dispatcher: CoroutineDispatcher,
-  ): Flow<ChampionWithFavoritesView> = queries.findById(championId).asFlow().mapToOne(dispatcher)
+  fun observeWithFavoritesById(championId: ChampionId): Flow<ChampionWithFavoritesView> =
+    queries.findById(championId).asFlow().mapToOne(dispatcher)
 
-  fun findKeyNameById(championId: ChampionId): String? =
-    queries.findKeyNameById(championId).executeAsOneOrNull()
+  suspend fun findKeyNameById(championId: ChampionId): String =
+    withContext(dispatcher) { queries.findKeyNameById(championId).executeAsOne() }
 }

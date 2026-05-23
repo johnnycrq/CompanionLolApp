@@ -44,7 +44,7 @@ constructor(
         }
         .also {
           championStore.insertAll(it)
-          partyTypeStore.insertAll(
+          partyTypeStore.insertAllSync(
             it
               .distinctBy { item -> item.partTypeId }
               .map { item -> PartyType.from(item.partTypeId) }

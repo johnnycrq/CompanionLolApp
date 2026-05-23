@@ -16,7 +16,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +26,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lol.app.compose.app.CompanionAppSurface
 import com.lol.app.compose.ui.tooling.CompanionAppPreview
 import com.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
@@ -35,7 +35,7 @@ import com.lol.app.compose.utils.rememberSaveableTextFieldState
 @Composable
 fun LoginScreen() {
   val viewModel: LoginViewModel = hiltViewModel()
-  val state by viewModel.state.collectAsState()
+  val state by viewModel.state.collectAsStateWithLifecycle()
 
   LoginScreen(
     state = state,

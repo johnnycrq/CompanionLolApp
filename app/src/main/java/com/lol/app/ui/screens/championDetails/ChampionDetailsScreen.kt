@@ -53,6 +53,7 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.other.ChampionTag
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.lol.app.compose.app.TitleHeader
+import com.lol.app.io.UiError
 import com.lol.app.ui.LocalBackStack
 import com.lol.app.ui.LocalContentPadding
 import com.lol.app.ui.LocalSnackBarManager
@@ -75,8 +76,8 @@ fun ChampionDetailsScreen(championId: ChampionId) {
 
   LaunchedEffect(viewModel.errorOnFetch) {
     viewModel.errorOnFetch.receive()
+    snackBarManager.addError(UiError(message = "Cannot load the details data"))
     backStack.goBack()
-    snackBarManager.addError("Cannot load the details data")
   }
 
   ChampionDetailsScreen(state = state, onFavoritesClicked = viewModel::onFavoritesClicked)
@@ -181,12 +182,12 @@ private fun ImageHeader(
         Modifier.padding(20.dp)
           .size(32.dp)
           .background(color = topActionIconBg, shape = MaterialTheme.shapes.small)
-          .clickable(onClick = onFavoritesClicked)
+          .clickable(onClick = onFavoritesClicked, enabled = loaded)
           .padding(4.dp)
           .align(Alignment.TopStart),
       imageVector = if (isFavourite) Icons.Rounded.Star else Icons.Outlined.StarBorder,
       contentDescription = null,
-      tint = if (!isFavourite) iconTint else dominantColor,
+      tint = iconTint,
     )
 
     Icon(

@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 private val showCaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 2.seconds else Duration.ZERO
@@ -62,32 +61,26 @@ constructor(
 
   init {
     viewModelScope.launch {
-      refreshState.filter { it.refreshing }.map { it.isForced }.collectLatest(::refresh)
+      refreshState.filter { it.refreshing }.map { it.userTriggered }.collectLatest(::refresh)
     }
   }
 
   fun onRefresh() {
-    refreshState.update { it.copy(refreshing = true, isForced = true, hasError = false) }
+    refreshState.value = RefreshState(refreshing = true, userTriggered = true, hasError = false)
   }
 
   fun onRetry() = onRefresh()
 
-  private suspend fun refresh(isForced: Boolean) {
-    if (isForced || !championStore.hasData()) {
+  private suspend fun refresh(userTriggered: Boolean) {
+    if (userTriggered || !championStore.hasData()) {
       val success =
         awaitAtLeast(showCaseArtificialAnimationDelay) { refreshChampionsUseCase.refresh() }
 
       refreshState.value =
-        RefreshState(
-          refreshing = false,
-          initialSync = false,
-          isForced = isForced,
-          hasError = !success,
-        )
+        RefreshState(refreshing = false, userTriggered = userTriggered, hasError = !success)
     } else {
       delay(showCaseArtificialAnimationDelay)
-      refreshState.value =
-        RefreshState(refreshing = false, initialSync = false, isForced = false, hasError = false)
+      refreshState.value = RefreshState(refreshing = false, userTriggered = false, hasError = false)
     }
   }
 

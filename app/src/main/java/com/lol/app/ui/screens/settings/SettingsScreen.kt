@@ -22,7 +22,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.companion.lol.app.R
 import com.lol.app.compose.ui.tooling.CompanionAppPreview
 import com.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
@@ -42,7 +42,7 @@ private val rowShape = RoundedCornerShape(12.dp)
 @Composable
 fun SettingsScreen() {
   val viewModel: SettingsViewModel = hiltViewModel()
-  val state by viewModel.state.collectAsState()
+  val state by viewModel.state.collectAsStateWithLifecycle()
 
   SettingsScreen(
     state = state,
