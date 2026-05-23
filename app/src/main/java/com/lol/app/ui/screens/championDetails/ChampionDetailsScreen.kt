@@ -26,6 +26,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -52,7 +53,9 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.other.ChampionTag
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.lol.app.compose.app.TitleHeader
+import com.lol.app.ui.LocalBackStack
 import com.lol.app.ui.LocalContentPadding
+import com.lol.app.ui.LocalSnackBarManager
 import com.lol.app.util.ChampionColorCache
 import com.lol.app.util.DominantColorCoilImage
 import com.lol.app.util.EMPTY_STRING
@@ -67,6 +70,14 @@ fun ChampionDetailsScreen(championId: ChampionId) {
       creationCallback = { factory -> factory.create(championId) }
     )
   val state by viewModel.state.collectAsStateWithLifecycle()
+  val backStack = LocalBackStack.current
+  val snackBarManager = LocalSnackBarManager.current
+
+  LaunchedEffect(viewModel.errorOnFetch) {
+    viewModel.errorOnFetch.receive()
+    backStack.goBack()
+    snackBarManager.addError("Cannot load the details data")
+  }
 
   ChampionDetailsScreen(state = state, onFavoritesClicked = viewModel::onFavoritesClicked)
 }
@@ -97,18 +108,17 @@ fun ChampionDetailsScreen(state: ChampionDetailsState, onFavoritesClicked: () ->
       isFavourite = state.champion?.isFavorite ?: false,
       championName = state.champion?.name ?: EMPTY_STRING,
       championTitle = state.champion?.title ?: EMPTY_STRING,
+      loaded = state.champion != null && state.details != null,
     )
 
-    if (state.details == null) {
+    if (state.champion == null || state.details == null) {
       LinearProgressIndicator(
         modifier = Modifier.fillMaxWidth(),
         color = championColorCache.getColor(championId),
         trackColor = MaterialTheme.colorScheme.onSurface,
         gapSize = 0.dp,
       )
-    }
-
-    if (state.champion != null && state.details != null) {
+    } else {
       Row {
         ChampionPartyType(
           modifier = Modifier.padding(start = 16.dp, top = 16.dp).weight(1f),
@@ -151,6 +161,7 @@ private fun ImageHeader(
   isFavourite: Boolean,
   championName: String,
   championTitle: String,
+  loaded: Boolean,
 ) {
   val topActionIconBg = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
   val iconTint = MaterialTheme.colorScheme.onSurface
@@ -183,7 +194,7 @@ private fun ImageHeader(
         Modifier.padding(16.dp)
           .size(32.dp)
           .background(color = topActionIconBg, shape = MaterialTheme.shapes.small)
-          .clickable(onClick = championSkins::toggleSkin)
+          .clickable(onClick = championSkins::toggleSkin, enabled = loaded)
           .padding(4.dp)
           .align(Alignment.TopEnd),
       imageVector = Icons.Rounded.Refresh,

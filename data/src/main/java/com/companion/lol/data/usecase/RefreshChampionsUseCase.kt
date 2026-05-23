@@ -5,15 +5,13 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.PartyTypeStore
-import com.companion.lol.storage.impl.util.CompanionLolTransactor
-import com.companion.lol.storage.impl.util.dbDispatcher
+import com.companion.lol.storage.impl.util.DbTransactor
 import com.companion.lol.storage.impl.util.withDbContext
 import com.companion.lol.storage.sqldelight.tables.ChampionPartyTypeTable
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
 import com.companion.lol.util.capitalizeWords
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.invoke
 import timber.log.Timber
 
 @Singleton
@@ -23,7 +21,7 @@ constructor(
   private val championStore: ChampionStore,
   private val partyTypeStore: PartyTypeStore,
   private val api: DDragonApi,
-  private val transacter: CompanionLolTransactor,
+  private val transacter: DbTransactor,
 ) {
   suspend fun refresh(): Boolean = withDbContext {
     val champions =
@@ -55,9 +53,5 @@ constructor(
         }
     }
     return@withDbContext true
-  }
-
-  suspend fun hasData(): Boolean = dbDispatcher {
-    return@dbDispatcher championStore.hasData()
   }
 }

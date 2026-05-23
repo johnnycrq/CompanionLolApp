@@ -4,28 +4,34 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.companion.lol.storage.impl.model.ids.SessionId
 import com.companion.lol.storage.impl.store.base.SqldelightStore
+import com.companion.lol.storage.impl.util.DbDispatcher
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.SessionQueries
 import com.companion.lol.storage.sqldelight.tables.SessionTable
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 @Singleton
-class SessionStore @Inject constructor(database: LolAppDb) :
+class SessionStore @Inject constructor(database: LolAppDb, private val dispatcher: DbDispatcher) :
   SqldelightStore<SessionQueries>(database.sessionQueries) {
-  fun observe(dispatcher: CoroutineDispatcher): Flow<SessionTable?> =
-    queries.get().asFlow().mapToOneOrNull(dispatcher)
 
-  fun get(): SessionTable = queries.get().executeAsOne()
+  suspend fun insert(value: SessionTable) =
+    withContext(dispatcher) { queries.insert(value.copy(id = SessionId)) }
 
-  fun observeEmailAddress(dispatcher: CoroutineDispatcher): Flow<String?> =
+  fun observe(): Flow<SessionTable?> = queries.get().asFlow().mapToOneOrNull(dispatcher)
+
+  fun observeEmailAddress(): Flow<String?> =
     queries.emailAddress().asFlow().mapToOneOrNull(dispatcher)
 
-  fun insert(details: SessionTable) {
-    queries.insert(details.copy(id = SessionId))
-  }
+  suspend fun updateAutoSync(autoSync: Boolean) =
+    withContext(dispatcher) {
+      queries.transaction {
+        val current = queries.get().executeAsOne()
+        queries.insert(current.copy(autoSync = autoSync))
+      }
+    }
 
-  fun delete() = queries.delete()
+  suspend fun delete() = withContext(dispatcher) { queries.delete().await() }
 }

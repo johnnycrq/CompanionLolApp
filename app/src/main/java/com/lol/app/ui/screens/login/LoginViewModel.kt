@@ -2,8 +2,8 @@ package com.lol.app.ui.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.companion.lol.data.usecase.SessionUseCase
 import com.companion.lol.storage.impl.model.ids.SessionId
+import com.companion.lol.storage.impl.store.SessionStore
 import com.companion.lol.storage.sqldelight.tables.SessionTable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val sessionUseCase: SessionUseCase) : ViewModel() {
+class LoginViewModel @Inject constructor(private val sessionStore: SessionStore) : ViewModel() {
   val state: StateFlow<LoginState>
     field = MutableStateFlow(LoginState())
 
@@ -27,8 +27,8 @@ class LoginViewModel @Inject constructor(private val sessionUseCase: SessionUseC
     if (!currentState.isEmailValid) return
 
     viewModelScope.launch {
-      sessionUseCase.insert(
-        data = SessionTable(id = SessionId, emailAddress = currentState.email, autoSync = false)
+      sessionStore.insert(
+        value = SessionTable(id = SessionId, emailAddress = currentState.email, autoSync = false)
       )
     }
   }

@@ -3,11 +3,15 @@ package com.lol.app.ui.screens.championList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.BuildConfig
+import com.companion.lol.data.mapper.model
 import com.companion.lol.data.model.ChampionModel
-import com.companion.lol.data.usecase.ChampionUseCase
 import com.companion.lol.data.usecase.RefreshChampionsUseCase
-import com.companion.lol.data.usecase.SettingsUseCase
 import com.companion.lol.storage.impl.model.other.SortOrder
+import com.companion.lol.storage.impl.store.ChampionFavoritesStore
+import com.companion.lol.storage.impl.store.ChampionStore
+import com.companion.lol.storage.impl.store.SettingsStore
+import com.companion.lol.storage.sqldelight.tables.ChampionWithFavoritesView
+import com.companion.lol.util.listMap
 import com.lol.app.ui.screens.RefreshState
 import com.lol.app.util.awaitAtLeast
 import com.lol.app.util.toggle
@@ -33,16 +37,17 @@ private val showCaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 2.seconds 
 class ChampionListViewModel
 @Inject
 constructor(
-  private val settingsUseCase: SettingsUseCase,
-  private val championUseCase: ChampionUseCase,
+  private val championStore: ChampionStore,
+  private val settingsStore: SettingsStore,
+  private val favoritesStore: ChampionFavoritesStore,
   private val refreshChampionsUseCase: RefreshChampionsUseCase,
 ) : ViewModel() {
   private val refreshState = MutableStateFlow(RefreshState())
 
   val state: StateFlow<ChampionListState> =
     combine(
-        flow = championUseCase.observeAllWithFavorites(),
-        flow2 = settingsUseCase.observe(),
+        flow = championStore.observeAllWithFavorites().listMap(ChampionWithFavoritesView::model),
+        flow2 = settingsStore.observe(),
         flow3 = refreshState,
         transform = { champion, settings, refreshState ->
           ChampionListState(
@@ -68,7 +73,7 @@ constructor(
   fun onRetry() = onRefresh()
 
   private suspend fun refresh(isForced: Boolean) {
-    if (isForced || !refreshChampionsUseCase.hasData()) {
+    if (isForced || !championStore.hasData()) {
       val success =
         awaitAtLeast(showCaseArtificialAnimationDelay) { refreshChampionsUseCase.refresh() }
 
@@ -88,23 +93,25 @@ constructor(
 
   fun changeGridSize() {
     viewModelScope.launch {
-      settingsUseCase.updateChampionGridSize(
-        when (val value = state.value.gridSize) {
-          5 -> 3
-          else -> value + 1
-        }
+      settingsStore.insert(
+        championRotationGridSize =
+          when (state.value.gridSize) {
+            3 -> 4
+            4 -> 5
+            else -> 3
+          }
       )
     }
   }
 
   fun onSortMenuItemClicked() {
     viewModelScope.launch {
-      settingsUseCase.updateChampionSortOrder(state.value.sortOrder.toggle())
+      settingsStore.insert(championRotationSortOrder = state.value.sortOrder.toggle())
     }
   }
 
   fun onFavoritesClearClicked() {
-    viewModelScope.launch { championUseCase.clearFavorites() }
+    viewModelScope.launch { favoritesStore.clearAll() }
   }
 
   private fun List<ChampionModel>.sortBy(order: SortOrder): List<ChampionModel> {

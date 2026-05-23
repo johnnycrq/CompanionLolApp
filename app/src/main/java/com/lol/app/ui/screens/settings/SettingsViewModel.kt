@@ -3,7 +3,7 @@ package com.lol.app.ui.screens.settings
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.companion.lol.data.usecase.SessionUseCase
+import com.companion.lol.storage.impl.store.SessionStore
 import com.lol.app.io.worker.SyncWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -17,11 +17,11 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class SettingsViewModel
 @Inject
-constructor(private val sessionUseCase: SessionUseCase, private val application: Application) :
+constructor(private val sessionStore: SessionStore, private val application: Application) :
   ViewModel() {
 
   val state: StateFlow<SettingsState?> =
-    sessionUseCase
+    sessionStore
       .observe()
       .filterNotNull()
       .map { SettingsState(emailAddress = it.emailAddress, autoSync = it.autoSync) }
@@ -29,7 +29,7 @@ constructor(private val sessionUseCase: SessionUseCase, private val application:
 
   fun onAutoSyncChanged(enabled: Boolean) {
     viewModelScope.launch {
-      sessionUseCase.updateAutoSync(enabled)
+      sessionStore.updateAutoSync(enabled)
 
       if (enabled) {
         SyncWorker.schedulePeriodicSync(context = application)
@@ -39,7 +39,7 @@ constructor(private val sessionUseCase: SessionUseCase, private val application:
 
   fun onLogoutClicked() {
     viewModelScope.launch {
-      sessionUseCase.clear()
+      sessionStore.delete()
       SyncWorker.cancelPeriodicSync(application)
     }
   }

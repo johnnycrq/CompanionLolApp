@@ -5,8 +5,8 @@ package com.lol.app.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.companion.lol.data.usecase.SessionUseCase
 import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.storage.impl.store.SessionStore
 import com.lol.app.compose.ui.theme.Gold1
 import com.lol.app.navigation.BackStack
 import com.lol.app.navigation.BackStack.Companion.backStack
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MainViewModel
 @Inject
-constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedStateHandle) :
+constructor(private val sessionStore: SessionStore, savedStateHandle: SavedStateHandle) :
   ViewModel(), AppActions {
   val backStack: BackStack<ScreenKey> =
     savedStateHandle.backStack(initialHistory = listOf(InitialScreenKey))
@@ -35,7 +35,7 @@ constructor(private val sessionUseCase: SessionUseCase, savedStateHandle: SavedS
 
   init {
     viewModelScope.launch {
-      sessionUseCase
+      sessionStore
         .observeEmailAddress()
         .map { it != null }
         .distinctUntilChanged()
