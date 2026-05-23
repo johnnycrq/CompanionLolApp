@@ -1,5 +1,4 @@
 # CompanionLolApp
-
 CompanionLolApp is a modern Android showcase application designed to demonstrate the latest technologies, architectural patterns, and best practices in Android development. It serves as a comprehensive portfolio, focusing on clean code, modularization, and advanced Jetpack libraries. This is a work-in-progress.
 
 ## 📱 About the App
