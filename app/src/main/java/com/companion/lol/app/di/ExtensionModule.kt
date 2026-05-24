@@ -5,6 +5,7 @@ import coil3.ImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
+import com.companion.lol.app.BuildConfig
 import com.companion.lol.app.compose.ui.theme.Gold1
 import com.companion.lol.app.io.AppScope
 import com.companion.lol.app.util.ChampionColorCache
@@ -43,7 +44,7 @@ object ExtensionModule {
   internal fun coilImageLoader(okhttpClient: OkHttpClient, context: Application): ImageLoader =
     ImageLoader.Builder(context)
       .components { add(OkHttpNetworkFetcherFactory(callFactory = { okhttpClient })) }
-      .logger(DebugLogger())
+      .logger(if (BuildConfig.DEBUG) DebugLogger() else null)
       .crossfade(true)
       .build()
 }
