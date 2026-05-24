@@ -114,10 +114,9 @@ private fun NavDisplay(
     LocalSnackBarManager provides snackBarManager,
   ) {
     SharedTransitionLayout {
-
       val navigationBarDecoratorStrategy =
         rememberNavigationBarDecoratorStrategy<ScreenKey>(
-          navBar = { NavigationBar(backStack = backStack) },
+          navBar = { NavigationBar(currentKey = { backStack.current }, goTo = backStack::goTo) },
           sharedTransitionScope = this,
         )
       val bottomSheetStrategy = rememberBottomSheetSceneStrategy<ScreenKey>()

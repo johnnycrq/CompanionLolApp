@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.Flow
 @Singleton
 class SkinStore
 @Inject
-constructor(private val database: LolAppDb, private val dispatcher: DbDispatcher) :
+constructor(private val database: LolAppDb, private val dbDispatcher: DbDispatcher) :
   SqldelightStore<SkinTableQueries>(database.skinTableQueries) {
   fun observeByChampionId(championId: ChampionId): Flow<List<SkinTable>> {
-    return queries.findByChampionId(championId).asFlow().mapToList(dispatcher)
+    return queries.findByChampionId(championId).asFlow().mapToList(dbDispatcher)
   }
 
   fun insertAll(skins: List<SkinTable>) = database.transaction { skins.forEach(queries::insert) }

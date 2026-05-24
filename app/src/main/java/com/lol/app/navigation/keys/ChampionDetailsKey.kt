@@ -21,6 +21,6 @@ data class ChampionDetailsKey(
 
   @Composable
   override fun Content(backStack: BackStack<ScreenKey>) {
-    ChampionDetailsScreen(championId)
+    ChampionDetailsScreen(championId = championId, goBack = backStack::goBack)
   }
 }

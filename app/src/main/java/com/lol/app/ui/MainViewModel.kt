@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.store.SessionStore
-import com.lol.app.compose.ui.theme.Gold1
 import com.lol.app.navigation.BackStack
 import com.lol.app.navigation.BackStack.Companion.backStack
 import com.lol.app.navigation.keys.ChampionDetailsKey
@@ -26,12 +25,13 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MainViewModel
 @Inject
-constructor(private val sessionStore: SessionStore, savedStateHandle: SavedStateHandle) :
-  ViewModel(), AppActions {
+constructor(
+  private val sessionStore: SessionStore,
+  savedStateHandle: SavedStateHandle,
+  val colorCache: ChampionColorCache,
+) : ViewModel(), AppActions {
   val backStack: BackStack<ScreenKey> =
     savedStateHandle.backStack(initialHistory = listOf(InitialScreenKey))
-  val colorCache: ChampionColorCache =
-    ChampionColorCache.Impl(scope = viewModelScope, defaultColor = Gold1)
 
   init {
     viewModelScope.launch {

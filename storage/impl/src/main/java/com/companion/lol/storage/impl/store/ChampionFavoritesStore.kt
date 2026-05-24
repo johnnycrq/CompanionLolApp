@@ -13,12 +13,12 @@ import kotlinx.coroutines.withContext
 @Singleton
 class ChampionFavoritesStore
 @Inject
-constructor(database: LolAppDb, private val dispatcher: DbDispatcher) :
+constructor(database: LolAppDb, private val dbDispatcher: DbDispatcher) :
   SqldelightStore<ChampionFavoritesQueries>(database.championFavoritesQueries) {
   suspend fun markFavorite(championId: ChampionId, isFavorite: Boolean) =
-    withContext(dispatcher) {
+    withContext(dbDispatcher) {
       queries.insert(ChampionFavoritesTable(championId, isFavorite)).await()
     }
 
-  suspend fun clearAll() = withContext(dispatcher) { queries.clearAll().await() }
+  suspend fun clearAll() = withContext(dbDispatcher) { queries.clearAll().await() }
 }

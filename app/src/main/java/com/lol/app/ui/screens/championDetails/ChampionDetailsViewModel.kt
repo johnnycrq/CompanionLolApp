@@ -52,7 +52,7 @@ constructor(
   init {
     viewModelScope.launch {
       // refresh details
-      withRetry(times = 3, delayDuration = 5.seconds) { refreshUseCase.refresh(championId) }
+      withRetry(times = 2, delayDuration = 5.seconds) { refreshUseCase.refresh(championId) }
         .onFailure { errorOnFetch.send(Unit) }
     }
   }

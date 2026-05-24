@@ -47,6 +47,8 @@ fun ChampionListPullRefreshBox(
   LaunchedEffect(composition, isRefreshing) {
     if (isRefreshing) {
       animatable.animate(composition = composition, iterations = LottieConstants.IterateForever)
+    } else {
+      animatable.snapTo(composition = composition, progress = 0f)
     }
   }
 

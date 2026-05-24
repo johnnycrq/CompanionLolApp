@@ -10,6 +10,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.companion.lol.data.usecase.RefreshChampionsUseCase
+import com.companion.lol.util.getOrPropagate
 import com.lol.app.AppConst
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -35,7 +36,7 @@ constructor(
       repeatInterval: Duration = AppConst.syncRepeatDuration,
       startAfterInterval: Boolean = true,
     ) {
-      val workManager = WorkManager.Companion.getInstance(context)
+      val workManager = WorkManager.getInstance(context)
 
       /*// we use the existence of the periodic sync work to
       // check if we need the initial sync (first time)
@@ -80,17 +81,16 @@ constructor(
     }
 
     fun cancelPeriodicSync(context: Context) {
-      WorkManager.Companion.getInstance(context).cancelUniqueWork(PERIODIC_WORK_NAME)
+      WorkManager.getInstance(context).cancelUniqueWork(PERIODIC_WORK_NAME)
     }
   }
 
   override suspend fun doWork(): Result {
-    return try {
-      refreshChampions.get().refresh()
-      Result.success()
-    } catch (e: Exception) {
-      Timber.Forest.e(e)
-      Result.retry()
+    refreshChampions.get().refresh().getOrPropagate {
+      Timber.e(it)
+      return@doWork Result.retry()
     }
+
+    return Result.success()
   }
 }

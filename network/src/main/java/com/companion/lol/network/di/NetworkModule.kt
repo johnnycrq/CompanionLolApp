@@ -30,7 +30,8 @@ object NetworkModule {
   internal fun baseRetrofit(okhttpClient: OkHttpClient): Retrofit {
     // This is an ugly hack
     // But StrictMode identifies violation here
-    // somewhere in the initialization
+    // somewhere in the initialization. We could theoretically
+    // get this dependency as Lazy<*>, but that would mean do it everywhere
     @Suppress("JSON_FORMAT_REDUNDANT")
     return runBlocking(Dispatchers.IO) {
       Retrofit.Builder()

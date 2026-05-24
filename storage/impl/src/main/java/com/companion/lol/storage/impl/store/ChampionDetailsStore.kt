@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.Flow
 @Singleton
 class ChampionDetailsStore
 @Inject
-constructor(database: LolAppDb, private val dispatcher: DbDispatcher) :
+constructor(database: LolAppDb, private val dbDispatcher: DbDispatcher) :
   SqldelightStore<ChampionDetailsQueries>(database.championDetailsQueries) {
   fun insert(details: ChampionDetailsTable) = queries.insert(details)
 
   fun observeByID(championId: ChampionId): Flow<ChampionDetailsTable?> =
-    queries.findById(championId).asFlow().mapToOneOrNull(dispatcher)
+    queries.findById(championId).asFlow().mapToOneOrNull(dbDispatcher)
 }

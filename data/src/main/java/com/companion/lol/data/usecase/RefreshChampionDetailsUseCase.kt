@@ -1,5 +1,6 @@
 package com.companion.lol.data.usecase
 
+import com.companion.lol.data.other.CompletableResult
 import com.companion.lol.network.DDragonApi
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.ids.SkinId
@@ -9,11 +10,13 @@ import com.companion.lol.storage.impl.store.ChampionDetailsStore
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.SkinStore
 import com.companion.lol.storage.impl.util.DbDispatcher
-import com.companion.lol.storage.impl.util.DbTransactor
+import com.companion.lol.storage.impl.util.DbTransacter
 import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
 import com.companion.lol.storage.sqldelight.tables.SkinTable
+import com.companion.lol.util.getOrPropagate
 import javax.inject.Inject
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class RefreshChampionDetailsUseCase
 @Inject
@@ -22,21 +25,22 @@ constructor(
   private val championDetailsStore: ChampionDetailsStore,
   private val skinsStore: SkinStore,
   private val dDragonApi: DDragonApi,
-  private val transacter: DbTransactor,
-  private val dispatcher: DbDispatcher,
+  private val transacter: DbTransacter,
+  private val dbDispatcher: DbDispatcher,
 ) {
-  suspend fun refresh(championId: ChampionId): Result<Unit> {
-    val championKeyName = championStore.findKeyNameById(championId)
+  suspend fun refresh(championId: ChampionId): CompletableResult =
+    withContext(dbDispatcher) {
+      val championKeyName = championStore.findKeyNameById(championId)
 
-    val champion =
-      dDragonApi
-        .getChampionDetails(championName = championKeyName)
-        .getOrElse {
-          return Result.failure(it)
-        }
-        .info
+      val champion =
+        dDragonApi
+          .getChampionDetails(championName = championKeyName)
+          .getOrPropagate {
+            Timber.e(it)
+            return@withContext Result.failure(it)
+          }
+          .info
 
-    withContext(dispatcher) {
       transacter.transaction {
         val skins =
           champion.skins
@@ -63,7 +67,6 @@ constructor(
         )
         skinsStore.insertAll(skins)
       }
+      return@withContext Result.success(Unit)
     }
-    return Result.success(Unit)
-  }
 }

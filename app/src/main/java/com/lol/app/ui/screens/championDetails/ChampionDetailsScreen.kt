@@ -54,7 +54,6 @@ import com.companion.lol.storage.impl.model.other.ChampionTag
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.lol.app.compose.app.TitleHeader
 import com.lol.app.io.UiError
-import com.lol.app.ui.LocalBackStack
 import com.lol.app.ui.LocalContentPadding
 import com.lol.app.ui.LocalSnackBarManager
 import com.lol.app.util.ChampionColorCache
@@ -65,19 +64,18 @@ import com.lol.app.util.color
 import com.lol.app.util.icon
 
 @Composable
-fun ChampionDetailsScreen(championId: ChampionId) {
+fun ChampionDetailsScreen(championId: ChampionId, goBack: () -> Unit) {
   val viewModel =
     hiltViewModel<ChampionDetailsViewModel, ChampionDetailsViewModel.Factory>(
       creationCallback = { factory -> factory.create(championId) }
     )
   val state by viewModel.state.collectAsStateWithLifecycle()
-  val backStack = LocalBackStack.current
   val snackBarManager = LocalSnackBarManager.current
 
   LaunchedEffect(viewModel.errorOnFetch) {
     viewModel.errorOnFetch.receive()
     snackBarManager.addError(UiError(message = "Cannot load the details data"))
-    backStack.goBack()
+    goBack()
   }
 
   ChampionDetailsScreen(state = state, onFavoritesClicked = viewModel::onFavoritesClicked)

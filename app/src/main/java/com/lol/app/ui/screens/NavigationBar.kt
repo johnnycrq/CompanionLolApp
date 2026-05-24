@@ -1,7 +1,7 @@
 package com.lol.app.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Settings
@@ -9,75 +9,70 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.dropUnlessResumed
 import com.companion.lol.app.R
 import com.lol.app.compose.app.companionAppGradient
-import com.lol.app.compose.ui.tooling.CompanionAppPreview
-import com.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
-import com.lol.app.navigation.BackStack
 import com.lol.app.navigation.keys.ChampionListKey
 import com.lol.app.navigation.keys.ScreenKey
 import com.lol.app.navigation.keys.SettingsKey
 
 @Composable
-fun NavigationBar(modifier: Modifier = Modifier, backStack: BackStack<ScreenKey>) {
-  val screenKey = backStack.current
+fun NavigationBar(
+  modifier: Modifier = Modifier,
+  currentKey: () -> ScreenKey,
+  goTo: (ScreenKey) -> Unit,
+) {
+  val colors =
+    NavigationBarItemDefaults.colors(
+      selectedTextColor = MaterialTheme.colorScheme.primary,
+      unselectedIconColor = MaterialTheme.colorScheme.onSecondary,
+      unselectedTextColor = MaterialTheme.colorScheme.onSecondary,
+      indicatorColor = MaterialTheme.colorScheme.primary,
+    )
 
   NavigationBar(
     containerColor = Color.Transparent,
     modifier = modifier.background(brush = companionAppGradient),
   ) {
-    val colors =
-      NavigationBarItemDefaults.colors(
-        selectedTextColor = MaterialTheme.colorScheme.primary,
-        unselectedIconColor = MaterialTheme.colorScheme.onSecondary,
-        unselectedTextColor = MaterialTheme.colorScheme.onSecondary,
-        indicatorColor = MaterialTheme.colorScheme.primary,
-      )
-
-    NavigationBarItem(
-      icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
-      label = { Text(stringResource(R.string.champion_rotation)) },
-      selected = screenKey is ChampionListKey,
+    CompanionLolNavigationBarItem(
+      icon = Icons.AutoMirrored.Filled.List,
+      label = stringResource(R.string.champion_rotation),
+      selected = { currentKey() is ChampionListKey },
       colors = colors,
-      onClick = dropUnlessResumed { backStack.goTo(ChampionListKey) },
+      onClick = { goTo(ChampionListKey) },
     )
 
-    NavigationBarItem(
-      icon = { Icon(Icons.Filled.Settings, contentDescription = null) },
-      label = { Text(stringResource(R.string.settings)) },
-      selected = screenKey is SettingsKey,
+    CompanionLolNavigationBarItem(
+      icon = Icons.Filled.Settings,
+      label = stringResource(R.string.settings),
+      selected = { currentKey() is SettingsKey },
       colors = colors,
-      onClick = dropUnlessResumed { backStack.goTo(SettingsKey) },
+      onClick = { goTo(SettingsKey) },
     )
   }
 }
 
 @Composable
-@CompanionAppPreview
-@PreviewWrapper(CompanionAppPreviewWrapperProvider::class)
-private fun Preview() {
-  NavigationBar(
-    modifier = Modifier.fillMaxWidth(),
-    backStack =
-      object : BackStack<ScreenKey> {
-        override val history: List<ScreenKey> = listOf()
-        override val current: ScreenKey = ChampionListKey
-
-        override fun goTo(key: ScreenKey) = Unit
-
-        override fun setHistory(singleKey: ScreenKey) = Unit
-
-        override fun setHistory(newHistory: List<ScreenKey>) = Unit
-
-        override fun goBack(): Boolean = true
-      },
+private fun RowScope.CompanionLolNavigationBarItem(
+  icon: ImageVector,
+  label: String,
+  selected: () -> Boolean,
+  colors: NavigationBarItemColors,
+  onClick: () -> Unit,
+) {
+  NavigationBarItem(
+    icon = { Icon(icon, contentDescription = null) },
+    label = { Text(label) },
+    selected = selected(),
+    colors = colors,
+    onClick = dropUnlessResumed(block = onClick),
   )
 }

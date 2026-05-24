@@ -17,18 +17,20 @@ import kotlinx.coroutines.withContext
 private val default = SettingsTable(SettingsId, 4, SortOrder.ASC)
 
 @Singleton
-class SettingsStore @Inject constructor(database: LolAppDb, private val dispatcher: DbDispatcher) :
+class SettingsStore
+@Inject
+constructor(database: LolAppDb, private val dbDispatcher: DbDispatcher) :
   SqldelightStore<SettingsQueries>(database.settingsQueries) {
   private fun find(): SettingsTable = queries.findAll().executeAsOneOrNull() ?: default
 
   fun observe(): Flow<SettingsTable> =
-    queries.findAll().asFlow().mapToOneOrDefault(default, dispatcher)
+    queries.findAll().asFlow().mapToOneOrDefault(default, dbDispatcher)
 
   suspend fun insert(
     championRotationGridSize: Int? = null,
     championRotationSortOrder: SortOrder? = null,
   ) =
-    withContext(dispatcher) {
+    withContext(dbDispatcher) {
       queries.transaction {
         val current = find()
         queries.insert(

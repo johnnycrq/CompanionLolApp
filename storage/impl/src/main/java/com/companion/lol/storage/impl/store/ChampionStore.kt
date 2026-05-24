@@ -6,7 +6,6 @@ import app.cash.sqldelight.coroutines.mapToOne
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.store.base.SqldelightStore
 import com.companion.lol.storage.impl.util.DbDispatcher
-import com.companion.lol.storage.impl.util.dbDispatcher
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionQueries
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
@@ -17,7 +16,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 @Singleton
-class ChampionStore @Inject constructor(database: LolAppDb, private val dispatcher: DbDispatcher) :
+class ChampionStore
+@Inject
+constructor(database: LolAppDb, private val dbDispatcher: DbDispatcher) :
   SqldelightStore<ChampionQueries>(database.championQueries) {
   fun insertAll(champions: List<ChampionTable>) {
     champions.forEach { queries.insert(it) }
@@ -26,11 +27,11 @@ class ChampionStore @Inject constructor(database: LolAppDb, private val dispatch
   suspend fun hasData(): Boolean = withContext(dbDispatcher) { queries.hasData().executeAsOne() }
 
   fun observeAllWithFavorites(): Flow<List<ChampionWithFavoritesView>> =
-    queries.findAll().asFlow().mapToList(dispatcher)
+    queries.findAll().asFlow().mapToList(dbDispatcher)
 
   fun observeWithFavoritesById(championId: ChampionId): Flow<ChampionWithFavoritesView> =
-    queries.findById(championId).asFlow().mapToOne(dispatcher)
+    queries.findById(championId).asFlow().mapToOne(dbDispatcher)
 
   suspend fun findKeyNameById(championId: ChampionId): String =
-    withContext(dispatcher) { queries.findKeyNameById(championId).executeAsOne() }
+    withContext(dbDispatcher) { queries.findKeyNameById(championId).executeAsOne() }
 }

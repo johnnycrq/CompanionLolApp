@@ -5,7 +5,9 @@ import coil3.ImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
+import com.lol.app.compose.ui.theme.Gold1
 import com.lol.app.io.AppScope
+import com.lol.app.util.ChampionColorCache
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,16 +21,12 @@ import okhttp3.OkHttpClient
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
+object ExtensionModule {
 
   @Provides
   @Singleton
-  internal fun coilImageLoader(okhttpClient: OkHttpClient, context: Application): ImageLoader =
-    ImageLoader.Builder(context)
-      .components { add(OkHttpNetworkFetcherFactory(callFactory = { okhttpClient })) }
-      .logger(DebugLogger())
-      .crossfade(true)
-      .build()
+  internal fun championColorCache(appScope: AppScope): ChampionColorCache =
+    ChampionColorCache.Impl(scope = appScope, defaultColor = Gold1)
 
   @Provides
   @Singleton
@@ -39,4 +37,13 @@ object DataModule {
       override val coroutineContext: CoroutineContext
         get() = scope.coroutineContext
     }
+
+  @Provides
+  @Singleton
+  internal fun coilImageLoader(okhttpClient: OkHttpClient, context: Application): ImageLoader =
+    ImageLoader.Builder(context)
+      .components { add(OkHttpNetworkFetcherFactory(callFactory = { okhttpClient })) }
+      .logger(DebugLogger())
+      .crossfade(true)
+      .build()
 }

@@ -9,7 +9,6 @@ import androidx.palette.graphics.Palette
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.lol.app.compose.ui.theme.Gold1
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
@@ -35,7 +34,7 @@ interface ChampionColorCache {
       Channel<Pair<ChampionId, coil3.Bitmap>>(capacity = Channel.UNLIMITED)
 
     init {
-      scope.launch(Dispatchers.IO) {
+      scope.launch {
         for ((championId, input) in extractChannel) {
           Palette.from(input).generate().let {
             putColor(

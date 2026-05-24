@@ -75,6 +75,7 @@ constructor(
     if (userTriggered || !championStore.hasData()) {
       val success =
         awaitAtLeast(showCaseArtificialAnimationDelay) { refreshChampionsUseCase.refresh() }
+          .isSuccess
 
       refreshState.value =
         RefreshState(refreshing = false, userTriggered = userTriggered, hasError = !success)
