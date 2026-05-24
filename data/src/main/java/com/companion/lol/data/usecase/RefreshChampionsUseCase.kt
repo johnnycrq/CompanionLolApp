@@ -1,6 +1,8 @@
 package com.companion.lol.data.usecase
 
 import com.companion.lol.data.other.CompletableResult
+import com.companion.lol.data.util.capitalizeWords
+import com.companion.lol.data.util.getOrPropagate
 import com.companion.lol.network.DDragonApi
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.other.PartyType
@@ -10,8 +12,6 @@ import com.companion.lol.storage.impl.util.DbDispatcher
 import com.companion.lol.storage.impl.util.DbTransacter
 import com.companion.lol.storage.sqldelight.tables.ChampionPartyTypeTable
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
-import com.companion.lol.util.capitalizeWords
-import com.companion.lol.util.getOrPropagate
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.withContext
