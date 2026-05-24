@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.rememberLifecycleOwner
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.get
 import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
@@ -64,7 +65,7 @@ class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
   override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
     val lastEntry: NavEntry<T> = entries.lastOrNull() ?: return null
 
-    val screenType = (lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey).type()
+    val screenType = lastEntry.metadata[ScreenKey.Companion.Id]?.type()
 
     if (screenType !is Type.BottomSheet) {
       return null

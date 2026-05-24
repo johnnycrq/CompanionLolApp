@@ -15,6 +15,7 @@ private const val SAVED_KEY = "BackStack.KEY"
 
 @Stable
 interface BackStack<S : ScreenKey> {
+
   val history: List<S>
 
   val current: S

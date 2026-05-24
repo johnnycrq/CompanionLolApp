@@ -8,6 +8,7 @@ import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavMetadataKey
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.ui.LocalBackStack
 import kotlinx.serialization.Serializable
@@ -47,7 +48,7 @@ sealed interface ScreenKey {
   }
 
   companion object {
-    const val METADATA_KEY = "ScreenKey.METADATA_KEY"
+    object Id : NavMetadataKey<ScreenKey>
   }
 }
 
@@ -57,7 +58,7 @@ inline fun <reified K : ScreenKey> EntryProviderScope<ScreenKey>.entryScreenKey(
   entry(
     metadata = { key ->
       buildMap {
-        put(ScreenKey.METADATA_KEY, key)
+        put(ScreenKey.Companion.Id.toString(), key)
         putAll(metadata)
       }
     },

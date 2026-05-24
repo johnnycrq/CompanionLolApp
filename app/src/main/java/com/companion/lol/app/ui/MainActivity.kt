@@ -46,7 +46,7 @@ import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.app.util.LocalChampionColorCache
 import dagger.hilt.android.AndroidEntryPoint
 
-val LocalContentPadding = compositionLocalOf { PaddingValues.Zero }
+val LocalContentPadding = compositionLocalOf { PaddingValues.Zero } // could be static?
 val LocalBackStack = compositionLocalOf<BackStack<ScreenKey>> { error("Not initialized") }
 val LocalSnackBarManager = compositionLocalOf<SnackBarManager> { error("Not initialized") }
 
@@ -65,37 +65,47 @@ class MainActivity : ComponentActivity() {
 private fun MainScreen() {
   CompanionAppTheme {
     val viewModel = hiltViewModel<MainViewModel>()
-    val backStack: BackStack<ScreenKey> = viewModel.backStack
-    val snackBarManager = rememberSnackBarManager()
 
-    snackBarManager.HandleReceivingErrorEffect { error ->
-      showSnackbar(error.message, duration = SnackbarDuration.Short)
-    }
+    MainScreen(
+      snackBarManager = rememberSnackBarManager(),
+      colorCache = viewModel.colorCache,
+      backStack = viewModel.backStack,
+    )
+  }
+}
 
-    Scaffold(
-      containerColor = MaterialTheme.colorScheme.secondary,
-      contentColor = MaterialTheme.colorScheme.onSurface,
-      snackbarHost = {
-        SnackbarHost(
-          hostState = snackBarManager.snackBarHostState,
-          snackbar = {
-            Snackbar(
-              modifier = Modifier.padding(bottom = 80.dp),
-              snackbarData = it,
-              containerColor = MaterialTheme.colorScheme.secondary,
-              contentColor = MaterialTheme.colorScheme.onBackground,
-            )
-          },
-        )
-      },
-    ) { contentPadding ->
-      NavDisplay(
-        contentPadding = contentPadding,
-        colorCache = viewModel.colorCache,
-        backStack = backStack,
-        snackBarManager = snackBarManager,
+@Composable
+private fun MainScreen(
+  snackBarManager: SnackBarManager,
+  colorCache: ChampionColorCache,
+  backStack: BackStack<ScreenKey>,
+) {
+  snackBarManager.HandleReceivingErrorEffect { error ->
+    showSnackbar(error.message, duration = SnackbarDuration.Short)
+  }
+
+  Scaffold(
+    containerColor = MaterialTheme.colorScheme.secondary,
+    snackbarHost = {
+      SnackbarHost(
+        hostState = snackBarManager.snackBarHostState,
+        snackbar = {
+          Snackbar(
+            modifier = Modifier.padding(bottom = 80.dp),
+            snackbarData = it,
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onBackground,
+          )
+        },
       )
-    }
+    },
+  ) { contentPadding ->
+    NavDisplay(
+      contentPadding = contentPadding,
+      colorCache = colorCache,
+      backStack = backStack,
+      snackBarManager = snackBarManager,
+    )
   }
 }
 

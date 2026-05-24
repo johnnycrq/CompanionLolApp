@@ -7,13 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.BackStack.Companion.backStack
-import com.companion.lol.app.navigation.keys.ChampionDetailsKey
 import com.companion.lol.app.navigation.keys.ChampionListKey
 import com.companion.lol.app.navigation.keys.InitialScreenKey
 import com.companion.lol.app.navigation.keys.LoginKey
 import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.util.ChampionColorCache
-import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.store.SessionStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -29,7 +27,7 @@ constructor(
   private val sessionStore: SessionStore,
   savedStateHandle: SavedStateHandle,
   val colorCache: ChampionColorCache,
-) : ViewModel(), AppActions {
+) : ViewModel() {
   val backStack: BackStack<ScreenKey> =
     savedStateHandle.backStack(initialHistory = listOf(InitialScreenKey))
 
@@ -60,9 +58,5 @@ constructor(
           }
         }
     }
-  }
-
-  override fun goToChampionDetails(championId: ChampionId) {
-    backStack.goTo(ChampionDetailsKey(championId))
   }
 }

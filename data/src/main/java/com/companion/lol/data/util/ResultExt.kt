@@ -16,7 +16,6 @@ suspend inline fun <T> withRetry(
   delayDuration: Duration,
   action: suspend () -> Result<T>,
 ): Result<T> {
-
   require(times >= 0) { "times must be >= 0" }
   var attempts = 0
   while (true) {

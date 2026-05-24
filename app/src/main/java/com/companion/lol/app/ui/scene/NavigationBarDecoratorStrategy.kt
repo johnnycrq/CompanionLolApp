@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.get
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
@@ -71,7 +72,7 @@ class NavigationBarDecoratorStrategy<T : Any>(
   override fun SceneDecoratorStrategyScope<T>.decorateScene(scene: Scene<T>): Scene<T> {
     val lastEntry: NavEntry<T> = scene.entries.firstOrNull() ?: return scene
 
-    val key = lastEntry.metadata[ScreenKey.METADATA_KEY] as ScreenKey
+    val key: ScreenKey = lastEntry.metadata[ScreenKey.Companion.Id] ?: return scene
 
     return if (key.isNavBarEntry()) {
       NavigationBarDecoratorScene(scene, sharedTransitionScope, navBarContent)

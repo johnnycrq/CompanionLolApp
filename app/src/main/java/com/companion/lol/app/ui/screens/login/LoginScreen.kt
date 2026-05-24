@@ -31,6 +31,7 @@ import com.companion.lol.app.compose.app.CompanionAppSurface
 import com.companion.lol.app.compose.ui.tooling.CompanionAppPreview
 import com.companion.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
 import com.companion.lol.app.compose.utils.rememberSaveableTextFieldState
+import com.companion.lol.app.ui.LocalContentPadding
 
 @Composable
 fun LoginScreen() {
@@ -46,9 +47,8 @@ fun LoginScreen() {
 
 @Composable
 fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClicked: () -> Unit) {
-
   CompanionAppSurface(modifier = Modifier.fillMaxSize()) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.padding(LocalContentPadding.current)) {
       Column(
         modifier = Modifier.fillMaxWidth().weight(1f),
         verticalArrangement = Arrangement.Center,

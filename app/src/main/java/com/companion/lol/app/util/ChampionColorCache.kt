@@ -20,7 +20,7 @@ interface ChampionColorCache {
 
   val defaultColor: Color
 
-  @Stable fun getColor(id: ChampionId): Color
+  fun getColor(id: ChampionId): Color
 
   fun isDefaultColor(id: ChampionId): Boolean
 
@@ -49,11 +49,9 @@ interface ChampionColorCache {
       }
     }
 
-    @Stable
     private fun getColorState(id: ChampionId): MutableState<Color> =
       cache.getOrPut(id) { mutableStateOf(defaultColor) }
 
-    @Stable
     override fun getColor(id: ChampionId): Color {
       return getColorState(id).value
     }

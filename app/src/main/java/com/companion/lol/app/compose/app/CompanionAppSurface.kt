@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,7 +19,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
-import com.companion.lol.app.ui.LocalContentPadding
 
 val companionAppGradient: Brush
   @Stable
@@ -45,8 +43,6 @@ fun CompanionAppSurface(
   shape: Shape = RectangleShape,
   contentColor: Color = MaterialTheme.colorScheme.onBackground,
   border: BorderStroke? = null,
-  insetStatusBar: Boolean = true,
-  insetNavigationBar: Boolean = true,
   content: @Composable () -> Unit,
 ) {
   CompositionLocalProvider(LocalContentColor provides contentColor) {
@@ -55,16 +51,6 @@ fun CompanionAppSurface(
         modifier
           .then(if (border != null) Modifier.border(border, shape) else Modifier)
           .background(brush = companionAppGradient, shape = shape)
-          .then(
-            if (insetStatusBar) {
-              Modifier.padding(top = LocalContentPadding.current.calculateTopPadding())
-            } else Modifier
-          )
-          .then(
-            if (insetNavigationBar) {
-              Modifier.padding(bottom = LocalContentPadding.current.calculateBottomPadding())
-            } else Modifier
-          )
           .clip(shape)
           .semantics(mergeDescendants = false) {
             // TODO(b/347038246): replace `isContainer` with `isTraversalGroup` with new
