@@ -5,12 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.BuildConfig
 import com.companion.lol.app.ui.screens.RefreshState
 import com.companion.lol.app.util.awaitAtLeast
+import com.companion.lol.app.util.sortBy
 import com.companion.lol.app.util.toggle
 import com.companion.lol.data.mapper.model
-import com.companion.lol.data.model.ChampionModel
 import com.companion.lol.data.usecase.RefreshChampionsUseCase
 import com.companion.lol.data.util.listMap
-import com.companion.lol.storage.impl.model.other.SortOrder
 import com.companion.lol.storage.impl.store.ChampionFavoritesStore
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.SettingsStore
@@ -30,15 +29,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-private val showCaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 2.seconds else Duration.ZERO
+private val showcaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 2.seconds else Duration.ZERO
 
 @HiltViewModel
 class ChampionListViewModel
 @Inject
 constructor(
   private val championStore: ChampionStore,
-  private val settingsStore: SettingsStore,
   private val favoritesStore: ChampionFavoritesStore,
+  private val settingsStore: SettingsStore,
   private val refreshChampionsUseCase: RefreshChampionsUseCase,
 ) : ViewModel() {
   private val refreshState = MutableStateFlow(RefreshState())
@@ -50,9 +49,10 @@ constructor(
         flow3 = refreshState,
         transform = { champion, settings, refreshState ->
           ChampionListState(
-            champions = champion.sortBy(settings.championRotationSortOrder),
-            gridSize = settings.championRotationGridSize,
-            sortOrder = settings.championRotationSortOrder,
+            // few champions, otherwise flowOn down the line
+            champions = champion.sortBy(settings.championSortOrder),
+            gridSize = settings.championGridSize,
+            sortOrder = settings.championSortOrder,
             refreshState = refreshState,
           )
         },
@@ -74,13 +74,13 @@ constructor(
   private suspend fun refresh(userTriggered: Boolean) {
     if (userTriggered || !championStore.hasData()) {
       val success =
-        awaitAtLeast(showCaseArtificialAnimationDelay) { refreshChampionsUseCase.refresh() }
+        awaitAtLeast(showcaseArtificialAnimationDelay) { refreshChampionsUseCase.refresh() }
           .isSuccess
 
       refreshState.value =
         RefreshState(refreshing = false, userTriggered = userTriggered, hasError = !success)
     } else {
-      delay(showCaseArtificialAnimationDelay)
+      delay(showcaseArtificialAnimationDelay)
       refreshState.value = RefreshState(refreshing = false, userTriggered = false, hasError = false)
     }
   }
@@ -88,7 +88,7 @@ constructor(
   fun changeGridSize() {
     viewModelScope.launch {
       settingsStore.insert(
-        championRotationGridSize =
+        championGridSize =
           when (state.value.gridSize) {
             3 -> 4
             4 -> 5
@@ -100,30 +100,11 @@ constructor(
 
   fun onSortMenuItemClicked() {
     viewModelScope.launch {
-      settingsStore.insert(championRotationSortOrder = state.value.sortOrder.toggle())
+      settingsStore.insert(championSortOrder = state.value.sortOrder.toggle())
     }
   }
 
   fun onFavoritesClearClicked() {
     viewModelScope.launch { favoritesStore.clearAll() }
-  }
-
-  private fun List<ChampionModel>.sortBy(order: SortOrder): List<ChampionModel> {
-    return when (order) {
-      SortOrder.FAVORITES ->
-        this.sortedWith(
-          compareBy(
-            {
-              when (it.isFavorite) {
-                true -> 1
-                else -> 2
-              }
-            },
-            { it.name },
-          )
-        )
-
-      SortOrder.ASC -> this.sortedBy { it.name }
-    }
   }
 }

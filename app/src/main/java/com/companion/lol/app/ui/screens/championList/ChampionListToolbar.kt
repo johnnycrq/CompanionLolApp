@@ -77,7 +77,7 @@ fun ChampionListToolbar(
       ),
     scrollBehavior = scrollBehavior,
     navIcon = AppBarNavIcon.CLOSE,
-    titleRes = R.string.champion_rotation,
+    titleRes = R.string.champion_list,
     actions = {
       var expanded by remember { mutableStateOf(false) }
 
@@ -93,7 +93,7 @@ fun ChampionListToolbar(
         containerColor = MaterialTheme.colorScheme.surface,
       ) {
         DropDownMenuItem(
-          title = R.string.champion_rotation_grid_count,
+          title = R.string.champion_list_grid_count,
           icon = Icons.AutoMirrored.Filled.List,
           onClick = {
             onGridSizeItemMenuClicked()
@@ -104,8 +104,8 @@ fun ChampionListToolbar(
         DropDownMenuItem(
           title =
             when (sortOrder) {
-              SortOrder.ASC -> R.string.champion_rotation_sort_favorites
-              SortOrder.FAVORITES -> R.string.champion_rotation_sort_alphabetically
+              SortOrder.ASC -> R.string.champion_list_sort_favorites
+              SortOrder.FAVORITES -> R.string.champion_list_sort_alphabetically
             },
           icon =
             when (sortOrder) {
@@ -119,7 +119,7 @@ fun ChampionListToolbar(
         )
 
         DropDownMenuItem(
-          title = R.string.champion_rotation_clear_favorites,
+          title = R.string.champion_list_clear_favorites,
           icon = Icons.Rounded.Delete,
           onClick = {
             onClearFavoritesMenuItemClicked()

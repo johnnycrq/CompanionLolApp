@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">CLolApp</string>
-    <string name="champion_rotation">Champions</string>
+    <string name="champion_list">Champions</string>
     <string name="settings">Settings</string>
 
-    <string name="champion_rotation_grid_count">Toggle Grid Size</string>
-    <string name="champion_rotation_sort_favorites">Sort by Favorites</string>
-    <string name="champion_rotation_sort_alphabetically">Sort Alphabetically</string>
-    <string name="champion_rotation_clear_favorites">Clear Favorites</string>
+    <string name="champion_list_grid_count">Toggle Grid Size</string>
+    <string name="champion_list_sort_favorites">Sort by Favorites</string>
+    <string name="champion_list_sort_alphabetically">Sort Alphabetically</string>
+    <string name="champion_list_clear_favorites">Clear Favorites</string>
     <string name="champion_details_party_type">Party Type:</string>
     <string name="champion_details_class">Class:</string>
     <string name="champion_details_lore">Lore:</string>

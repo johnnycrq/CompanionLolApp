@@ -26,19 +26,15 @@ constructor(database: LolAppDb, private val dbDispatcher: DbDispatcher) :
   fun observe(): Flow<SettingsTable> =
     queries.findAll().asFlow().mapToOneOrDefault(default, dbDispatcher)
 
-  suspend fun insert(
-    championRotationGridSize: Int? = null,
-    championRotationSortOrder: SortOrder? = null,
-  ) =
+  suspend fun insert(championGridSize: Int? = null, championSortOrder: SortOrder? = null) =
     withContext(dbDispatcher) {
       queries.transaction {
         val current = find()
         queries.insert(
           SettingsTable(
             id = SettingsId,
-            championRotationGridSize = championRotationGridSize ?: current.championRotationGridSize,
-            championRotationSortOrder =
-              championRotationSortOrder ?: current.championRotationSortOrder,
+            championGridSize = championGridSize ?: current.championGridSize,
+            championSortOrder = championSortOrder ?: current.championSortOrder,
           )
         )
       }

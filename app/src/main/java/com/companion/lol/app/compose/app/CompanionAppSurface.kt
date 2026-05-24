@@ -23,16 +23,14 @@ import androidx.compose.ui.semantics.semantics
 val companionAppGradient: Brush
   @Stable
   @Composable
-  get() =
-    Brush.verticalGradient(
+  get() = Brush.verticalGradient(
       colors = listOf(MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.tertiary)
     )
 
 val companionAppGradientInverted: Brush
   @Stable
   @Composable
-  get() =
-    Brush.verticalGradient(
+  get() = Brush.verticalGradient(
       colors = listOf(MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.secondary)
     )
 
@@ -45,6 +43,7 @@ fun CompanionAppSurface(
   border: BorderStroke? = null,
   content: @Composable () -> Unit,
 ) {
+  // copied from source Surface
   CompositionLocalProvider(LocalContentColor provides contentColor) {
     Box(
       modifier =

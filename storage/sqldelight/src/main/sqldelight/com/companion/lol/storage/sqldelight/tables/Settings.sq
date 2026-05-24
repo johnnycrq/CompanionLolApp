@@ -4,8 +4,8 @@ import kotlin.Int;
 
 CREATE TABLE SettingsTable (
   id INTEGER AS SettingsId NOT NULL PRIMARY KEY,
-  championRotationGridSize INTEGER AS Int NOT NULL,
-  championRotationSortOrder TEXT AS SortOrder NOT NULL
+  championGridSize INTEGER AS Int NOT NULL,
+  championSortOrder TEXT AS SortOrder NOT NULL
 );
 
 insert:

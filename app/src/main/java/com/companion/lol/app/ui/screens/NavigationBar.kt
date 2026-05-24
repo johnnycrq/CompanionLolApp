@@ -44,7 +44,7 @@ fun NavigationBar(
   ) {
     CompanionLolNavigationBarItem(
       icon = Icons.AutoMirrored.Filled.List,
-      label = stringResource(R.string.champion_rotation),
+      label = stringResource(R.string.champion_list),
       selected = { currentKey() is ChampionListKey },
       colors = colors,
       onClick = { goTo(ChampionListKey) },
