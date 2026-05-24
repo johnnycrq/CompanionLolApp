@@ -12,12 +12,11 @@
         android:name="com.lol.app.CompanionLolApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CompanionLolApp">
+        android:theme="@style/Theme.Companion.Lol.App">
         <activity
             android:name="com.lol.app.ui.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.CompanionLolApp">
+            android:theme="@style/Theme.Companion.Lol.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

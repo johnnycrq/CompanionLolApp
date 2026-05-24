@@ -74,7 +74,7 @@ private fun MainScreen() {
     }
 
     Scaffold(
-      containerColor = Transparent,
+      containerColor = MaterialTheme.colorScheme.secondary,
       contentColor = MaterialTheme.colorScheme.onSurface,
       snackbarHost = {
         SnackbarHost(

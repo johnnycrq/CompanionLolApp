@@ -13,8 +13,8 @@ dependencies {
   api(project(":storage:impl"))
 
   implementation(libs.io.timber)
-  implementation(libs.android.hilt)
-  ksp(libs.android.hilt.compiler)
+  implementation(libs.dagger.hilt.android)
+  ksp(libs.dagger.hilt.compiler)
 
   compileOnly(libs.androidx.compose.runtime.annotation)
 }

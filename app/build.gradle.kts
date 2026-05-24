@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.stability.analyzer)
 }
 
@@ -84,26 +84,26 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     //implementation(libs.androidx.lifecycle.process)
-    implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.core.splashscreen)
 
     implementation(libs.io.coil)
     implementation(libs.io.coil.okhttp)
-    implementation(libs.io.palette)
+    implementation(libs.androidx.palette)
 
     implementation(libs.io.lottie)
 
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-    implementation(libs.kotlinx.serialization)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.workmanager)
     implementation(libs.androidx.hilt.work)
-    implementation(libs.android.hilt)
+    implementation(libs.dagger.hilt.android)
     ksp(libs.androidx.hilt.work.compiler)
-    ksp(libs.android.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
-    implementation(libs.android.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.io.timber)
 
     testImplementation(libs.junit)

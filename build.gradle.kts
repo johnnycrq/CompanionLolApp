@@ -6,8 +6,8 @@ plugins {
     alias(libs.plugins.ksp)  apply false
     alias(libs.plugins.detekt) apply true
     alias(libs.plugins.spotless) apply false
-    alias(libs.plugins.hilt) apply false
-    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.dagger.hilt.android) apply false
+    alias(libs.plugins.kotlinx.serialization) apply false
     alias(libs.plugins.stability.analyzer) apply false
 }
 

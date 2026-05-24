@@ -47,7 +47,7 @@ sqldelight {
 dependencies {
   api(libs.io.sqldelight)
   api(libs.io.sqldelight.adapters)
-  api(libs.io.sqldelight.flow)
+  api(libs.io.sqldelight.coroutines)
   api(libs.kotlinx.datetime)
 
   compileOnly(libs.androidx.compose.runtime.annotation)

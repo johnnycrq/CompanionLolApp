@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
 
-    <style name="Theme.CompanionLolApp" parent="Theme.SplashScreen">
-        <item name="android:windowBackground">@color/background</item>
+<resources>
+    <style name="Theme.Companion.Lol.App" parent="android:Theme.Material.Light">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="background">@color/background</item>
+    </style>
+
+    <style name="Theme.Companion.Lol.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splashscreen</item>
-        <item name="postSplashScreenTheme">@style/Theme.Material3.Light.NoActionBar</item>
-        <item name="android:windowFullscreen">true</item>
+        <item name="postSplashScreenTheme">@style/Theme.Companion.Lol.App</item>
     </style>
+
 </resources>
+
+

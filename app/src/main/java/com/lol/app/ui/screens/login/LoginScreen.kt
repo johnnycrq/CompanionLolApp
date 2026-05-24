@@ -71,11 +71,11 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        val textState = rememberSaveableTextFieldState(state.email)
+        rememberSaveableTextFieldState(state.email)
 
         OutlinedTextField(
-          value = textState.value,
-          onValueChange = { textState.value = it },
+          value = state.email,
+          onValueChange = onEmailChanged,
           label = {
             Text("Email Address", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
           },

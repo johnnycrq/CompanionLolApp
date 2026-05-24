@@ -3,7 +3,7 @@ import java.util.Properties
 plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.ksp)
-  alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -38,15 +38,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 dependencies {
   implementation(libs.androidx.appcompat)
 
-  implementation(libs.kotlinx.serialization)
+  implementation(libs.kotlinx.serialization.json)
 
-  implementation(libs.android.hilt)
-  ksp(libs.android.hilt.compiler)
+  implementation(libs.dagger.hilt.android)
+  ksp(libs.dagger.hilt.compiler)
 
   implementation(libs.io.timber)
 
-  implementation(libs.retrofit.retrofit2)
-  implementation(libs.retrofit.logging)
-  implementation(libs.retrofit.serializationConverter)
-  implementation(libs.retrofit.adapter.result)
+  implementation(libs.io.retrofit2)
+  implementation(libs.io.retrofit2.logging)
+  implementation(libs.io.retrofit2.converter)
+  implementation(libs.io.retrofit2.result.adapter)
 }
