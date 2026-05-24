@@ -12,6 +12,8 @@ import com.companion.lol.app.navigation.keys.SettingsKey
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class BackStackTest {
@@ -58,8 +60,8 @@ class BackStackTest {
 
     backStack.setHistory(listOf(screenB, screenC))
 
-    Assert.assertEquals(listOf(screenB, screenC), backStack.history)
-    Assert.assertEquals(listOf(screenB, screenC), saver.savedHistory)
+    assertEquals(listOf(screenB, screenC), backStack.history)
+    assertEquals(listOf(screenB, screenC), saver.savedHistory)
   }
 
   @Test
@@ -68,8 +70,8 @@ class BackStackTest {
 
     backStack.goTo(screenB)
 
-    Assert.assertEquals(listOf(screenA, screenB), backStack.history)
-    Assert.assertEquals(listOf(screenA, screenB), saver.savedHistory)
+    assertEquals(listOf(screenA, screenB), backStack.history)
+    assertEquals(listOf(screenA, screenB), saver.savedHistory)
   }
 
   @Test
@@ -78,7 +80,7 @@ class BackStackTest {
 
     backStack.goTo(screenA)
 
-    Assert.assertEquals(listOf(screenA), backStack.history)
+    assertEquals(listOf(screenA), backStack.history)
   }
 
   @Test
@@ -87,8 +89,8 @@ class BackStackTest {
 
     backStack.goTo(screenA)
 
-    Assert.assertEquals(listOf(screenA), backStack.history)
-    Assert.assertEquals(listOf(screenA), saver.savedHistory)
+    assertEquals(listOf(screenA), backStack.history)
+    assertEquals(listOf(screenA), saver.savedHistory)
   }
 
   @Test
@@ -97,7 +99,7 @@ class BackStackTest {
 
     backStack.goTo(screenB)
 
-    Assert.assertEquals(listOf(screenA, bottomSheetScreen), backStack.history)
+    assertEquals(listOf(screenA, bottomSheetScreen), backStack.history)
   }
 
   @Test
@@ -106,9 +108,9 @@ class BackStackTest {
 
     val result = backStack.goBack()
 
-    Assert.assertTrue(result)
-    Assert.assertEquals(listOf(screenA), backStack.history)
-    Assert.assertEquals(listOf(screenA), saver.savedHistory)
+    assertTrue(result)
+    assertEquals(listOf(screenA), backStack.history)
+    assertEquals(listOf(screenA), saver.savedHistory)
   }
 
   @Test
@@ -117,8 +119,8 @@ class BackStackTest {
 
     val result = backStack.goBack()
 
-    Assert.assertFalse(result)
-    Assert.assertEquals(listOf(screenA), backStack.history)
+    assertFalse(result)
+    assertEquals(listOf(screenA), backStack.history)
   }
 
   @Test
@@ -126,7 +128,7 @@ class BackStackTest {
     val savedStateHandle = SavedStateHandle()
     val backStack = savedStateHandle.backStack<ScreenKey>(listOf(screenA))
 
-    Assert.assertEquals(listOf(screenA), backStack.history)
+    assertEquals(listOf(screenA), backStack.history)
   }
 
   @Test
@@ -139,6 +141,6 @@ class BackStackTest {
     // New instance with same SSH should restore
     val restoredBackStack = savedStateHandle.backStack<ScreenKey>(listOf(screenA))
 
-    Assert.assertEquals(listOf(screenA, screenB), restoredBackStack.history)
+    assertEquals(listOf(screenA, screenB), restoredBackStack.history)
   }
 }
