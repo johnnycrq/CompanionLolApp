@@ -8,5 +8,5 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 data class ChampionDetailsState(
   val championId: ChampionId,
   val champion: ChampionModel? = null,
-  val details: ChampionDetailsModel? = null,
+  val details: ChampionDetailsModel? = null
 ) : ComposeState

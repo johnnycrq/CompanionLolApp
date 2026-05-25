@@ -11,10 +11,10 @@ import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionQueries
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
 import com.companion.lol.storage.sqldelight.tables.ChampionWithFavoritesView
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class ChampionStore
@@ -25,15 +25,12 @@ constructor(database: LolAppDb, private val dbDispatcher: DbDispatcher) :
   fun insertAllSync(champions: List<ChampionTable>) {
     queries.transaction { champions.forEach { queries.insert(it) } }
   }
-
   suspend fun hasData(): Boolean = withContext(dbDispatcher) { queries.hasData().executeAsOne() }
-
   fun observeAllWithFavorites(): Flow<List<ChampionWithFavoritesView>> =
     queries.findAll().asFlow().mapToList(dbDispatcher)
 
   fun observeWithFavoritesById(championId: ChampionId): Flow<ChampionWithFavoritesView> =
     queries.findById(championId).asFlow().mapToOne(dbDispatcher)
-
   suspend fun findKeyNameById(championId: ChampionId): String =
     withContext(dbDispatcher) { queries.findKeyNameById(championId).executeAsOne() }
 }
