@@ -22,7 +22,7 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+internal object NetworkModule {
 
   @OptIn(ExperimentalSerializationApi::class)
   @Provides
