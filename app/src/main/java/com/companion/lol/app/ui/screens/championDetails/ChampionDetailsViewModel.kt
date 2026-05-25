@@ -2,6 +2,8 @@ package com.companion.lol.app.ui.screens.championDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.companion.lol.app.io.UiError
+import com.companion.lol.app.util.UiMessageEventFlow
 import com.companion.lol.data.usecase.ChampionWithDetailsUseCase
 import com.companion.lol.data.usecase.RefreshChampionDetailsUseCase
 import com.companion.lol.data.util.withRetry
@@ -11,14 +13,12 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel(assistedFactory = ChampionDetailsViewModel.Factory::class)
 class ChampionDetailsViewModel
@@ -33,9 +33,8 @@ constructor(
   interface Factory {
     fun create(championId: ChampionId): ChampionDetailsViewModel
   }
-
-  val errorOnFetch: ReceiveChannel<Unit>
-    field = Channel(capacity = 1)
+  val uiErrors: UiMessageEventFlow<UiError>
+    field = UiMessageEventFlow.Impl()
 
   val state: StateFlow<ChampionDetailsState> =
     detailsUseCase
@@ -53,7 +52,7 @@ constructor(
     viewModelScope.launch {
       // refresh details
       withRetry(times = 4, delayDuration = 5.seconds) { refreshUseCase.refresh(championId) }
-        .onFailure { errorOnFetch.send(Unit) }
+        .onFailure { uiErrors.emit(UiError(message = "Cannot load the details data")) }
     }
   }
 

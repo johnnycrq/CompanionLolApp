@@ -31,6 +31,7 @@ sealed interface ScreenKey {
 
   @Composable fun Content(backStack: BackStack<ScreenKey>)
 
+
   sealed interface Type {
     data object Normal : Type
 
