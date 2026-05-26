@@ -15,30 +15,27 @@ import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.storage.impl.store.SessionStore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel
 @Inject
-constructor(
-  private val sessionStore: SessionStore,
-  savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+constructor(private val sessionStore: SessionStore, savedStateHandle: SavedStateHandle) :
+  ViewModel() {
   val backStack: BackStack<ScreenKey> =
     savedStateHandle.backStack(initialHistory = listOf(InitialScreenKey))
 
-  /** we need this to survive rotation but not process death because
-    the images will be refetched and color can change
-    using rememberSaveable in the UI layer would need to save the whole
-    list of colors. There is no need. ViewModel just won't recreate the
-    cache on rotation
-   **/
-  val colorCache: ChampionColorCache
-    = ChampionColorCache.Impl(scope = viewModelScope, defaultColor = Gold1)
+  /**
+   * we need this to survive rotation but not process death because the images will be refetched and
+   * color can change using rememberSaveable in the UI layer would need to save the whole list of
+   * colors. There is no need. ViewModel just won't recreate the cache on rotation
+   */
+  val colorCache: ChampionColorCache =
+    ChampionColorCache.Impl(scope = viewModelScope, defaultColor = Gold1)
 
   init {
     viewModelScope.launch {
