@@ -5,6 +5,7 @@ package com.companion.lol.app.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.companion.lol.app.compose.ui.theme.Gold1
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.BackStack.Companion.backStack
 import com.companion.lol.app.navigation.keys.ChampionListKey
@@ -14,11 +15,11 @@ import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.storage.impl.store.SessionStore
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel
@@ -26,10 +27,18 @@ class MainViewModel
 constructor(
   private val sessionStore: SessionStore,
   savedStateHandle: SavedStateHandle,
-  val colorCache: ChampionColorCache,
 ) : ViewModel() {
   val backStack: BackStack<ScreenKey> =
     savedStateHandle.backStack(initialHistory = listOf(InitialScreenKey))
+
+  /** we need this to survive rotation but not process death because
+    the images will be refetched and color can change
+    using rememberSaveable in the UI layer would need to save the whole
+    list of colors. There is no need. ViewModel just won't recreate the
+    cache on rotation
+   **/
+  val colorCache: ChampionColorCache
+    = ChampionColorCache.Impl(scope = viewModelScope, defaultColor = Gold1)
 
   init {
     viewModelScope.launch {
@@ -39,7 +48,7 @@ constructor(
         .distinctUntilChanged()
         .collectLatest { isLoggedIn ->
           // at this point the backstack could have been
-          // potentially restored from saved state
+          // potentially restored from saved state after process death
           val currentHistory = backStack.history
           if (!isLoggedIn) {
             // if we are logged out we rewrite the history.
