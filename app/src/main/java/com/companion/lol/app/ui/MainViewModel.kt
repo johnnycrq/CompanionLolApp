@@ -31,7 +31,7 @@ constructor(private val sessionStore: SessionStore, savedStateHandle: SavedState
 
   /**
    * we need this to survive rotation but not process death because the images will be refetched and
-   * color can change using rememberSaveable in the UI layer would need to save the whole list of
+   * color can change. Using rememberSaveable in the UI layer would need to save the whole list of
    * colors. There is no need. ViewModel just won't recreate the cache on rotation
    */
   val colorCache: ChampionColorCache =
