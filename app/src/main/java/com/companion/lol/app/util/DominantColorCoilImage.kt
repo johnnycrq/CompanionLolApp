@@ -19,7 +19,7 @@ import coil3.request.ImageRequest
 import coil3.request.transformations
 import coil3.size.Size
 import coil3.transform.Transformation
-import com.companion.lol.data.DdragonImage
+import com.companion.lol.data.io.images.DdragonImage
 import com.companion.lol.storage.impl.model.ids.ChampionId
 
 private val noPainter = ColorPainter(Color.Transparent)
@@ -31,7 +31,7 @@ fun DominantColorCoilImage(
   image: DdragonImage?,
   championColorCache: ChampionColorCache,
   imageModifier: Modifier = Modifier,
-  skipUpdateColorCache: Boolean,
+  shouldUpdateColor: Boolean,
 ) {
   val context = LocalContext.current
 
@@ -45,9 +45,9 @@ fun DominantColorCoilImage(
             .data(image.imageUrl)
             .transformations(
               DominantColorTransformation(
-                championId = image.championId,
+                championId = championId,
                 championColorCache = championColorCache,
-                skipUpdateColorCache = skipUpdateColorCache,
+                shouldUpdateColor = shouldUpdateColor,
               )
             )
             .build()
@@ -74,12 +74,12 @@ fun DominantColorCoilImage(
 private class DominantColorTransformation(
   private val championId: ChampionId,
   private val championColorCache: ChampionColorCache,
-  private val skipUpdateColorCache: Boolean,
+  private val shouldUpdateColor: Boolean,
 ) : Transformation() {
   override val cacheKey: String = championId.value.toString()
 
   override suspend fun transform(input: Bitmap, size: Size): Bitmap {
-    if (!skipUpdateColorCache) {
+    if (!shouldUpdateColor) {
       championColorCache.extractColor(input, championId)
     }
     return input

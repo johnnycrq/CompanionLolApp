@@ -24,10 +24,8 @@ class CompanionLolApplication :
     super.onCreate()
 
     if (BuildConfig.DEBUG) {
-      (Timber.plant(Timber.DebugTree()))
-    }
+      Timber.plant(Timber.DebugTree())
 
-    if (BuildConfig.DEBUG) {
       StrictMode.setThreadPolicy(
         StrictMode.ThreadPolicy.Builder()
           .detectAll()

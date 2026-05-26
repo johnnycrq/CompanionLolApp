@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.BuildConfig
 import com.companion.lol.app.ui.screens.RefreshState
 import com.companion.lol.app.util.awaitAtLeast
+import com.companion.lol.app.util.next
 import com.companion.lol.app.util.sortBy
 import com.companion.lol.app.util.toggle
 import com.companion.lol.data.mapper.model
@@ -86,16 +87,7 @@ constructor(
   }
 
   fun changeGridSize() {
-    viewModelScope.launch {
-      settingsStore.insert(
-        championGridSize =
-          when (state.value.gridSize) {
-            3 -> 4
-            4 -> 5
-            else -> 3
-          }
-      )
-    }
+    viewModelScope.launch { settingsStore.insert(championGridSize = state.value.gridSize.next()) }
   }
 
   fun onSortMenuItemClicked() {

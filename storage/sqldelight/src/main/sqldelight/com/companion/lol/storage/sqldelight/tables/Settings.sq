@@ -1,10 +1,10 @@
 import com.companion.lol.storage.impl.model.ids.SettingsId;
+import com.companion.lol.storage.impl.model.other.GridSize;
 import com.companion.lol.storage.impl.model.other.SortOrder;
-import kotlin.Int;
 
 CREATE TABLE SettingsTable (
   id INTEGER AS SettingsId NOT NULL PRIMARY KEY,
-  championGridSize INTEGER AS Int NOT NULL,
+  championGridSize TEXT AS GridSize NOT NULL,
   championSortOrder TEXT AS SortOrder NOT NULL
 );
 

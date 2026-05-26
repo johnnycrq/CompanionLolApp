@@ -18,7 +18,7 @@ class LoginViewModel
 constructor(private val sessionStore: SessionStore, savedStateHandle: SavedStateHandle) :
   ViewModel() {
   val state: StateFlow<LoginState>
-    field = savedStateHandle.persistedFlow(LoginState())
+    field = savedStateHandle.persistedFlow(key = "LoginState", LoginState())
 
   fun onEmailChanged(newEmail: String) {
     state.update { it.copy(email = newEmail) }

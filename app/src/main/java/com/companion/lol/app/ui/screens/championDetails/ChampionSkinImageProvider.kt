@@ -7,22 +7,22 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.companion.lol.data.DdragonImage
+import com.companion.lol.data.io.images.DdragonImage
 import com.companion.lol.data.model.other.ChampionSkin
 import com.companion.lol.storage.impl.model.ids.ChampionId
 
 @Stable
-interface ChampionSkinImagesProvider {
-  val imageInfo: DdragonImage?
+interface ChampionSkinProvider {
+  val image: DdragonImage.Skin?
 
   fun toggleSkin()
 }
 
-private class Impl : ChampionSkinImagesProvider {
+private class Impl : ChampionSkinProvider {
   private var currentIndex by mutableIntStateOf(0)
-  val skins = mutableStateOf<List<DdragonImage>>(emptyList())
+  val skins = mutableStateOf<List<DdragonImage.Skin>>(emptyList())
 
-  override val imageInfo: DdragonImage?
+  override val image: DdragonImage.Skin?
     get() = skins.value.getOrNull(currentIndex)
 
   override fun toggleSkin() {
@@ -39,10 +39,10 @@ private class Impl : ChampionSkinImagesProvider {
 }
 
 @Composable
-fun rememberChampionSkinImageProvider(
+fun rememberChampionSkinProvider(
   championId: ChampionId,
   skins: List<ChampionSkin>?,
-): ChampionSkinImagesProvider {
+): ChampionSkinProvider {
   return remember(championId) { Impl() }
     .apply { this.skins.value = skins?.map { it.image } ?: emptyList() }
 }

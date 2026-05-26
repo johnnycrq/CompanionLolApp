@@ -73,10 +73,13 @@ fun ChampionDetailsScreen(championId: ChampionId, goBack: () -> Unit) {
     )
   val state by viewModel.state.collectAsStateWithLifecycle()
   val snackBarManager = LocalSnackBarManager.current
+  val championSkinsProvider =
+    rememberChampionSkinProvider(championId = championId, skins = state.details?.skins)
 
   ChampionDetailsScreen(
     state = state,
     snackBarManager = snackBarManager,
+    skinsProvider = championSkinsProvider,
     uiErrors = viewModel.uiErrors,
     goBack = goBack,
     onFavoritesClicked = viewModel::onFavoritesClicked,
@@ -87,15 +90,13 @@ fun ChampionDetailsScreen(championId: ChampionId, goBack: () -> Unit) {
 fun ChampionDetailsScreen(
   state: ChampionDetailsState,
   snackBarManager: SnackBarManager,
+  skinsProvider: ChampionSkinProvider,
   uiErrors: UiMessageEventFlow<UiError>,
   goBack: () -> Unit,
   onFavoritesClicked: () -> Unit,
 ) {
   val championId = state.championId
   val championColorCache = LocalChampionColorCache.current
-
-  val championSkinsProvider =
-    rememberChampionSkinImageProvider(championId = championId, skins = state.details?.skins)
 
   LaunchedEffect(uiErrors) {
     uiErrors.collect {
@@ -116,7 +117,7 @@ fun ChampionDetailsScreen(
   ) {
     ImageHeader(
       championId = championId,
-      championSkins = championSkinsProvider,
+      skinsProvider = skinsProvider,
       championColorCache = championColorCache,
       onFavoritesClicked = onFavoritesClicked,
       isFavourite = state.champion?.isFavorite ?: false,
@@ -169,7 +170,7 @@ fun ChampionDetailsScreen(
 @Composable
 private fun ImageHeader(
   championId: ChampionId,
-  championSkins: ChampionSkinImagesProvider,
+  skinsProvider: ChampionSkinProvider,
   championColorCache: ChampionColorCache,
   onFavoritesClicked: () -> Unit,
   isFavourite: Boolean,
@@ -185,9 +186,9 @@ private fun ImageHeader(
     DominantColorCoilImage(
       modifier = Modifier.fillMaxSize(),
       championId = championId,
-      image = championSkins.imageInfo,
+      image = skinsProvider.image,
       championColorCache = championColorCache,
-      skipUpdateColorCache = true,
+      shouldUpdateColor = true,
     )
 
     Icon(
@@ -208,7 +209,7 @@ private fun ImageHeader(
         Modifier.padding(16.dp)
           .size(32.dp)
           .background(color = topActionIconBg, shape = MaterialTheme.shapes.small)
-          .clickable(onClick = championSkins::toggleSkin, enabled = loaded)
+          .clickable(onClick = skinsProvider::toggleSkin, enabled = loaded)
           .padding(4.dp)
           .align(Alignment.TopEnd),
       imageVector = Icons.Rounded.Refresh,
@@ -244,7 +245,7 @@ private fun ImageHeader(
 
       Text(
         modifier = Modifier.padding(top = 4.dp),
-        text = rememberLabeledString(championSkins.imageInfo?.skinName),
+        text = rememberLabeledString(skinsProvider.image?.skinName),
         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Light),
       )
     }

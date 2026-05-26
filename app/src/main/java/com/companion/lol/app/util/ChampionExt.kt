@@ -4,8 +4,19 @@ import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import com.companion.lol.app.R
 import com.companion.lol.storage.impl.model.other.ChampionTag
+import com.companion.lol.storage.impl.model.other.GridSize
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.model.other.SortOrder
+
+val GridSize.count: Int
+  get() =
+    when (this) {
+      GridSize.SMALL -> 5
+      GridSize.MEDIUM -> 4
+      GridSize.LARGE -> 3
+    }
+
+fun GridSize.next(): GridSize = GridSize.entries.run { get((ordinal + 1) % size) }
 
 val PartyType.color: Color
   get() =

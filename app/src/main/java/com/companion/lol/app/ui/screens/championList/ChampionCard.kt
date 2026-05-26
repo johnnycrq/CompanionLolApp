@@ -16,14 +16,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
@@ -38,18 +37,18 @@ import androidx.compose.ui.unit.sp
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.app.util.DominantColorCoilImage
 import com.companion.lol.app.util.LocalChampionColorCache
-import com.companion.lol.data.DdragonImage
+import com.companion.lol.data.io.images.DdragonImage
 import com.companion.lol.data.model.ChampionModel
 import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.storage.impl.model.other.GridSize
 
 @Composable
 fun ChampionCard(
   modifier: Modifier,
   champion: ChampionModel,
-  gridSize: Int,
+  gridSize: GridSize,
   onCardClick: (ChampionId) -> Unit,
 ) {
-
   val championColorCache: ChampionColorCache = LocalChampionColorCache.current
 
   val small =
@@ -59,39 +58,42 @@ fun ChampionCard(
   val large =
     MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp, fontWeight = FontWeight.Light)
 
-  val itemId = remember { derivedStateOf { champion.id } }
   val textStyle =
     when (gridSize) {
-      3 -> large
-      4 -> medium
-      else -> small
+      GridSize.SMALL -> small
+      GridSize.MEDIUM -> medium
+      GridSize.LARGE -> large
     }
 
   val textPaddingVertical =
     when (gridSize) {
-      3 -> 6.dp
-      4 -> 4.dp
-      else -> 2.dp
+      GridSize.SMALL -> 2.dp
+      GridSize.MEDIUM -> 4.dp
+      GridSize.LARGE -> 6.dp
     }
 
   val cardCornerRadius =
-    when (gridSize) {
-      3 -> 8.dp
-      4 -> 6.dp
-      else -> 4.dp
+    with(
+      when (gridSize) {
+        GridSize.SMALL -> 4.dp
+        GridSize.MEDIUM -> 6.dp
+        GridSize.LARGE -> 8.dp
+      }
+    ) {
+      RoundedCornerShape(bottomStart = this, bottomEnd = this)
     }
 
   ChampionCard(
     modifier = modifier,
     championId = champion.id,
-    championImage = champion.squareImageName,
+    squareImage = champion.squareImage,
     championName = champion.name,
     championIsFavorite = champion.isFavorite,
     championColorCache = championColorCache,
     textStyle = textStyle,
     textPaddingVertical = textPaddingVertical,
-    cardCornerRadius = cardCornerRadius,
-    onClick = { onCardClick(itemId.value) },
+    shape = cardCornerRadius,
+    onClick = onCardClick,
   )
 }
 
@@ -99,14 +101,14 @@ fun ChampionCard(
 fun ChampionCard(
   modifier: Modifier,
   championId: ChampionId,
-  championImage: DdragonImage,
+  squareImage: DdragonImage,
   championName: String,
   championIsFavorite: Boolean,
   championColorCache: ChampionColorCache,
   textStyle: TextStyle,
   textPaddingVertical: Dp,
-  cardCornerRadius: Dp = 8.dp,
-  onClick: () -> Unit,
+  shape: Shape,
+  onClick: (ChampionId) -> Unit,
 ) {
   val favoriteBorderBrush =
     Brush.verticalGradient(
@@ -125,10 +127,7 @@ fun ChampionCard(
       tileMode = TileMode.Mirror,
     )
 
-  Card(
-    modifier = modifier.clickable(onClick = onClick),
-    shape = RoundedCornerShape(bottomStart = cardCornerRadius, bottomEnd = cardCornerRadius),
-  ) {
+  Card(modifier = modifier.clickable(onClick = { onClick(championId) }), shape = shape) {
     OverLapColumn(
       modifier = Modifier.fillMaxWidth(),
       element = {
@@ -136,7 +135,7 @@ fun ChampionCard(
           DominantColorCoilImage(
             modifier = Modifier.fillMaxSize(),
             championId = championId,
-            image = championImage,
+            image = squareImage,
             championColorCache = championColorCache,
             imageModifier =
               Modifier.drawWithContent {
@@ -150,7 +149,7 @@ fun ChampionCard(
                     Modifier.border(BorderStroke(2.dp, favoriteBorderBrush), RectangleShape)
                   else Modifier
                 ),
-            skipUpdateColorCache = false,
+            shouldUpdateColor = false,
           )
         }
       },

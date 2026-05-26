@@ -12,6 +12,7 @@ import com.companion.lol.storage.impl.adapter.PartyTypeIdAdapter
 import com.companion.lol.storage.impl.adapter.SessionIdAdapter
 import com.companion.lol.storage.impl.adapter.SettingsIdAdapter
 import com.companion.lol.storage.impl.adapter.SkinIdAdapter
+import com.companion.lol.storage.impl.model.other.GridSize
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.model.other.SortOrder
 import com.companion.lol.storage.impl.util.DbDispatcher
@@ -67,7 +68,11 @@ internal object StorageModule {
       ChampionPartyTypeTableAdapter =
         ChampionPartyTypeTable.Adapter(PartyTypeIdAdapter, EnumColumnAdapter<PartyType>()),
       SettingsTableAdapter =
-        SettingsTable.Adapter(SettingsIdAdapter, IntColumnAdapter, EnumColumnAdapter<SortOrder>()),
+        SettingsTable.Adapter(
+          SettingsIdAdapter,
+          EnumColumnAdapter<GridSize>(),
+          EnumColumnAdapter<SortOrder>(),
+        ),
       SessionTableAdapter = SessionTable.Adapter(SessionIdAdapter),
       SkinTableAdapter = SkinTable.Adapter(ChampionIdAdapter, SkinIdAdapter, IntColumnAdapter),
       ChampionDetailsTableAdapter =

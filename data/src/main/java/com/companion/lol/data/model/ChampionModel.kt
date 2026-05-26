@@ -1,7 +1,7 @@
 package com.companion.lol.data.model
 
 import androidx.compose.runtime.Stable
-import com.companion.lol.data.DdragonImage
+import com.companion.lol.data.io.images.DdragonImage
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.other.PartyType
 
@@ -11,7 +11,7 @@ data class ChampionModel(
   val name: String,
   val keyName: String,
   val title: String,
-  val squareImageName: DdragonImage,
+  val squareImage: DdragonImage.Square,
   val partyType: PartyType,
   val isFavorite: Boolean,
 )

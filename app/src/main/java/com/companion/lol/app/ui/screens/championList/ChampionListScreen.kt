@@ -20,6 +20,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.companion.lol.app.util.count
 import com.companion.lol.storage.impl.model.ids.ChampionId
 
 @Composable
@@ -78,7 +79,7 @@ fun ChampionListScreen(
           state = listState,
           // prevent scrolling ON the list while refreshing
           userScrollEnabled = !state.isRefreshing,
-          columns = GridCells.Fixed(state.gridSize),
+          columns = GridCells.Fixed(state.gridSize.count),
           contentPadding =
             PaddingValues(
               start = 4.dp,
