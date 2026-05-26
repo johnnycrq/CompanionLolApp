@@ -24,11 +24,12 @@ interface BackStack<S : ScreenKey> {
   fun goBack(): Boolean
 
   companion object {
-    @Suppress("AssignedValueIsNeverRead")
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     inline fun <reified S : ScreenKey> SavedStateHandle.backStack(
-      initialHistory: List<S>
+      key: String = ScreenKey::class.java.canonicalName,
+      initialHistory: List<S>,
     ): BackStack<S> {
-      var saver: List<S> by this.saved { initialHistory }
+      var saver: List<S> by this.saved(key = key) { initialHistory }
       return Impl(initialValue = saver, saver = { saver = it })
     }
   }
@@ -46,13 +47,13 @@ class Impl<S : ScreenKey>(private val initialValue: List<S>, private val saver: 
 
   override fun setHistory(singleKey: S) {
     setHistory(listOf(singleKey))
-    saver(history)
+    save()
   }
 
   override fun setHistory(newHistory: List<S>) = withSnapshot {
     _history.clear()
     _history.addAll(newHistory)
-    saver(history)
+    save()
   }
 
   override fun goTo(key: S) = withSnapshot {
@@ -75,21 +76,19 @@ class Impl<S : ScreenKey>(private val initialValue: List<S>, private val saver: 
     } else {
       _history.add(key)
     }
-    saver(history)
+    save()
   }
 
   override fun goBack(): Boolean {
     if (_history.size > 1) {
       _history.removeAt(_history.size - 1)
-      saver(history)
+      save()
       return true
     }
     return false
   }
-}
 
-interface BackStackSaver<S : ScreenKey> {
-  fun get(): List<S>?
-
-  fun save(newHistory: List<S>)
+  private fun save() {
+    saver(history.toList())
+  }
 }

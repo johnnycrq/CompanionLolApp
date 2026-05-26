@@ -106,7 +106,10 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.io.timber)
 
+    implementation(libs.kotlinx.coroutines)
+
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
