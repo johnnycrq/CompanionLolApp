@@ -7,24 +7,41 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
+import coil3.Bitmap
 import com.companion.lol.app.compose.ui.theme.Gold1
 import com.companion.lol.storage.impl.model.ids.ChampionId
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-
-interface ChampionBitmap {
-  val bitmap: coil3.Bitmap
-
-  class Impl(override val bitmap: coil3.Bitmap) : ChampionBitmap
-}
+import kotlinx.coroutines.withContext
 
 val LocalChampionColorCache =
   compositionLocalOf<ChampionColorCache> { error("Not initialized yet") }
 
+@Stable interface ChampionColorCache : ChampionColorCacheExtractor<Bitmap>
+
+private val colorExtractor: (Bitmap) -> Color = { input ->
+  Color(
+    Palette.from(input).generate().let {
+      it.getVibrantColor(0).takeIf { color -> color != 0 } ?: it.getDominantColor(0)
+    }
+  )
+}
+
+fun ChampionColorCache(scope: CoroutineScope, defaultColor: Color = Gold1): ChampionColorCache =
+  object :
+    ChampionColorCache,
+    ChampionColorCacheExtractor<Bitmap> by ChampionColorCacheExtractor.Impl(
+      scope = scope,
+      extractDispatcher = Dispatchers.Default,
+      defaultColor = defaultColor,
+      extractColor = colorExtractor,
+    ) {}
+
 @Stable
-interface ChampionColorCache {
+interface ChampionColorCacheExtractor<T : Any> {
 
   val defaultColor: Color
 
@@ -34,28 +51,24 @@ interface ChampionColorCache {
 
   fun putColor(id: ChampionId, color: Color)
 
-  fun extractColor(input: coil3.Bitmap, championId: ChampionId)
+  fun extractColor(input: T, championId: ChampionId)
 
-  class Impl(
+  @VisibleForTesting
+  class Impl<T : Any>(
     scope: CoroutineScope,
-    override val defaultColor: Color = Gold1,
-    private val extractColor: (ChampionBitmap) -> Color = { input ->
-      Color(
-        Palette.from(input.bitmap).generate().let {
-          it.getVibrantColor(0).takeIf { color -> color != 0 } ?: it.getDominantColor(0)
-        }
-      )
-    },
-  ) : ChampionColorCache {
+    extractDispatcher: CoroutineDispatcher,
+    override val defaultColor: Color,
+    private val extractColor: (T) -> Color,
+  ) : ChampionColorCacheExtractor<T> {
     private val cache = hashMapOf<ChampionId, MutableState<Color>>()
-    private val extractChannel =
-      Channel<Pair<ChampionId, ChampionBitmap>>(capacity = Channel.UNLIMITED)
+    private val extractChannel = Channel<Pair<ChampionId, T>>(capacity = Channel.UNLIMITED)
 
     init {
-      scope.launch(Dispatchers.IO) {
+      scope.launch {
         for ((championId, input) in extractChannel) {
           if (!isDefaultColor(championId)) continue
-          putColor(id = championId, color = extractColor(input))
+          val color = withContext(extractDispatcher) { extractColor(input) }
+          putColor(id = championId, color = color)
         }
       }
     }
@@ -73,15 +86,10 @@ interface ChampionColorCache {
 
     override fun isDefaultColor(id: ChampionId): Boolean = getColor(id) == defaultColor
 
-    @VisibleForTesting
-    fun extractColor(input: ChampionBitmap, championId: ChampionId) {
+    override fun extractColor(input: T, championId: ChampionId) {
       if (!isDefaultColor(championId)) return
 
       extractChannel.trySend(championId to input)
-    }
-
-    override fun extractColor(input: coil3.Bitmap, championId: ChampionId) {
-      extractColor(ChampionBitmap.Impl(input), championId)
     }
   }
 }

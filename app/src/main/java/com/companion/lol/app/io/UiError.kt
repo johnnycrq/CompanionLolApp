@@ -1,5 +1,5 @@
 package com.companion.lol.app.io
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable data class UiError(val message: String)
+@Immutable data class UiError(val message: String)

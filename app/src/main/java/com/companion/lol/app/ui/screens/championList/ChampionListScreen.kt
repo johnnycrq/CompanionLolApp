@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -50,7 +49,6 @@ fun ChampionListScreen(
   onRetry: () -> Unit,
 ) {
 
-  val listState = rememberLazyGridState()
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
   Scaffold(
@@ -67,6 +65,8 @@ fun ChampionListScreen(
       )
     },
   ) { contentPadding ->
+    val topPadding = contentPadding.calculateTopPadding()
+
     ChampionListPullRefreshBox(
       modifier = Modifier.fillMaxWidth(),
       isRefreshing = state.isRefreshing,
@@ -76,17 +76,11 @@ fun ChampionListScreen(
       if (!state.showError) {
         LazyVerticalGrid(
           modifier = Modifier.fillMaxSize(),
-          state = listState,
           // prevent scrolling ON the list while refreshing
           userScrollEnabled = !state.isRefreshing,
           columns = GridCells.Fixed(state.gridSize.count),
           contentPadding =
-            PaddingValues(
-              start = 4.dp,
-              end = 4.dp,
-              top = 4.dp + contentPadding.calculateTopPadding(),
-              bottom = 4.dp,
-            ),
+            PaddingValues(start = 4.dp, end = 4.dp, top = 4.dp + topPadding, bottom = 4.dp),
           horizontalArrangement = Arrangement.spacedBy(16.dp),
           verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {

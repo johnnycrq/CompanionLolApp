@@ -7,8 +7,9 @@ import org.junit.Test
 
 class ChampionSkinProviderTest {
 
-  private fun createSkin(num: Int) =
+  private val createSkin = { num: Int ->
     DdragonImage.Skin(skinNumber = num, skinName = "Skin $num", keyName = "Champion")
+  }
 
   @Test
   fun `initial state with no skins returns null image`() {

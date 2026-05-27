@@ -5,7 +5,6 @@ package com.companion.lol.app.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.companion.lol.app.compose.ui.theme.Gold1
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.BackStack.Companion.backStack
 import com.companion.lol.app.navigation.keys.ChampionListKey
@@ -34,8 +33,7 @@ constructor(private val sessionStore: SessionStore, savedStateHandle: SavedState
    * color can change. Using rememberSaveable in the UI layer would need to save the whole list of
    * colors. There is no need. ViewModel just won't recreate the cache on rotation
    */
-  val colorCache: ChampionColorCache =
-    ChampionColorCache.Impl(scope = viewModelScope, defaultColor = Gold1)
+  val colorCache = ChampionColorCache(viewModelScope)
 
   init {
     viewModelScope.launch {

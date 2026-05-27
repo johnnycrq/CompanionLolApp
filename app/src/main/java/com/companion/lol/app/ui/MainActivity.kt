@@ -116,20 +116,21 @@ private fun NavDisplay(
   backStack: BackStack<ScreenKey>,
   snackBarManager: SnackBarManager,
 ) {
-  CompositionLocalProvider(
-    LocalContentPadding provides contentPadding,
-    LocalChampionColorCache provides colorCache,
-    LocalBackStack provides backStack,
-    LocalSnackBarManager provides snackBarManager,
-  ) {
-    SharedTransitionLayout {
-      val navigationBarDecoratorStrategy =
-        rememberNavigationBarDecoratorStrategy<ScreenKey>(
-          navBar = { NavigationBar(currentKey = { backStack.current }, goTo = backStack::goTo) },
-          sharedTransitionScope = this,
-        )
-      val bottomSheetStrategy = rememberBottomSheetSceneStrategy<ScreenKey>()
 
+  SharedTransitionLayout {
+    val navigationBarDecoratorStrategy =
+      rememberNavigationBarDecoratorStrategy<ScreenKey>(
+        navBar = { NavigationBar(currentKey = { backStack.current }, goTo = backStack::goTo) },
+        sharedTransitionScope = this,
+      )
+    val bottomSheetStrategy = rememberBottomSheetSceneStrategy<ScreenKey>()
+
+    CompositionLocalProvider(
+      LocalContentPadding provides contentPadding,
+      LocalChampionColorCache provides colorCache,
+      LocalBackStack provides backStack,
+      LocalSnackBarManager provides snackBarManager,
+    ) {
       NavDisplay(
         backStack = backStack.history,
         onBack = backStack::goBack,
