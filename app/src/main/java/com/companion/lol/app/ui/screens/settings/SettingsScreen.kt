@@ -97,7 +97,7 @@ fun SettingsScreen(
         modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
         onClick = onLogoutClicked,
       ) {
-        Text(text = stringResource(R.string.settings_logout).uppercase())
+        Text(text = stringResource(R.string.settings_logout))
       }
     }
   }
