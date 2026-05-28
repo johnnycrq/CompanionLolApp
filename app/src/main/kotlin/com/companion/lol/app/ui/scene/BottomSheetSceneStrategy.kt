@@ -9,11 +9,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.rememberLifecycleOwner
 import androidx.navigation3.runtime.NavEntry
@@ -22,8 +24,9 @@ import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
-import com.companion.lol.app.navigation.keys.ScreenKey
-import com.companion.lol.app.navigation.keys.ScreenKey.Type
+import androidx.window.core.layout.WindowSizeClass
+import com.companion.lol.app.compose.utils.isLandscape
+import com.companion.lol.app.navigation.ScreenMetadata
 
 /** An [OverlayScene] that renders an [entry] within a [ModalBottomSheet]. */
 private data class BottomSheetScene<T : Any>(
@@ -43,6 +46,7 @@ private data class BottomSheetScene<T : Any>(
       onDismissRequest = onBack,
       properties = modalBottomSheetProperties,
       sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+      sheetMaxWidth = if (isLandscape()) Dp.Unspecified else BottomSheetDefaults.SheetMaxWidth,
       contentWindowInsets = { WindowInsets(0) },
       containerColor = MaterialTheme.colorScheme.surface,
       dragHandle = null,
@@ -61,24 +65,23 @@ private data class BottomSheetScene<T : Any>(
  *
  * This strategy should always be added before any non-overlay scene strategies.
  */
-class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
+class BottomSheetSceneStrategy<T : Any>(private val windowSizeClass: WindowSizeClass) :
+  SceneStrategy<T> {
   override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
+    if (windowSizeClass.isLandscape()) return null
+
     val lastEntry: NavEntry<T> = entries.lastOrNull() ?: return null
 
-    val screenType = lastEntry.metadata[ScreenKey.Companion.Id]?.type()
+    val properties: ModalBottomSheetProperties =
+      lastEntry.metadata[ScreenMetadata.BottomSheet] ?: return null
 
-    if (screenType !is Type.BottomSheet) {
-      return null
-    }
-
-    val bottomSheetProperties = screenType.properties
     @Suppress("UNCHECKED_CAST")
     return BottomSheetScene(
       key = lastEntry.contentKey as T,
       previousEntries = entries.dropLast(1),
       overlaidEntries = entries.dropLast(1),
       entry = lastEntry,
-      modalBottomSheetProperties = bottomSheetProperties,
+      modalBottomSheetProperties = properties,
       onBack = onBack,
     )
   }
@@ -86,5 +89,6 @@ class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
 
 @Composable
 fun <T : Any> rememberBottomSheetSceneStrategy(): SceneStrategy<T> {
-  return remember { BottomSheetSceneStrategy() }
+  val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+  return remember(windowSizeClass) { BottomSheetSceneStrategy(windowSizeClass) }
 }

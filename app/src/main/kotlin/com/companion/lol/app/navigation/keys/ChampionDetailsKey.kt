@@ -17,7 +17,7 @@ data class ChampionDetailsKey(
 
   override fun requiresAuth(): Boolean = true
 
-  override fun type(): ScreenKey.Type = ScreenKey.Type.BottomSheet()
+  override fun isModal(): Boolean = true
 
   @Composable
   override fun Content(backStack: BackStack<ScreenKey>) {

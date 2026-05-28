@@ -31,6 +31,7 @@ import com.companion.lol.app.compose.animation.defaultNoTransition
 import com.companion.lol.app.compose.animation.predictiveBack
 import com.companion.lol.app.compose.ui.theme.CompanionAppTheme
 import com.companion.lol.app.navigation.BackStack
+import com.companion.lol.app.navigation.ScreenMetadata
 import com.companion.lol.app.navigation.keys.ChampionDetailsKey
 import com.companion.lol.app.navigation.keys.ChampionListKey
 import com.companion.lol.app.navigation.keys.InitialScreenKey
@@ -148,9 +149,9 @@ private fun NavDisplay(
           entryProvider {
             entryScreenKey<InitialScreenKey>()
             entryScreenKey<LoginKey>()
-            entryScreenKey<ChampionListKey>()
-            entryScreenKey<SettingsKey>()
-            entryScreenKey<ChampionDetailsKey>()
+            entryScreenKey<ChampionListKey>(metadata = ScreenMetadata.navBarEntry())
+            entryScreenKey<ChampionDetailsKey>(metadata = ScreenMetadata.bottomSheet())
+            entryScreenKey<SettingsKey>(metadata = ScreenMetadata.navBarEntry())
           },
       )
     }

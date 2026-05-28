@@ -50,6 +50,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.companion.lol.app.R
 import com.companion.lol.app.compose.app.TitleHeader
+import com.companion.lol.app.compose.utils.isLandscape
 import com.companion.lol.app.io.UiError
 import com.companion.lol.app.ui.LocalContentPadding
 import com.companion.lol.app.ui.LocalSnackBarManager
@@ -105,64 +106,85 @@ fun ChampionDetailsScreen(
     }
   }
 
-  Column(
-    modifier =
-      Modifier.fillMaxWidth()
-        .padding(
-          bottom =
-            LocalContentPadding.current
-              .calculateBottomPadding()
-              .plus(if (state.details == null) 0.dp else 32.dp)
-        )
-  ) {
-    ImageHeader(
-      championId = championId,
-      skinsProvider = skinsProvider,
-      championColorCache = championColorCache,
-      onFavoritesClicked = onFavoritesClicked,
-      isFavourite = state.champion?.isFavorite ?: false,
-      championName = state.champion?.name ?: EMPTY_STRING,
-      championTitle = state.champion?.title ?: EMPTY_STRING,
-      loaded = state.champion != null && state.details != null,
-    )
+  val isLandscape = isLandscape()
 
-    if (state.champion == null || state.details == null) {
-      LinearProgressIndicator(
-        modifier = Modifier.fillMaxWidth(),
-        color = championColorCache.getColor(championId),
-        trackColor = MaterialTheme.colorScheme.onSurface,
-        gapSize = 0.dp,
+  val header =
+    @Composable {
+      ImageHeader(
+        championId = championId,
+        skinsProvider = skinsProvider,
+        championColorCache = championColorCache,
+        onFavoritesClicked = onFavoritesClicked,
+        isFavourite = state.champion?.isFavorite ?: false,
+        championName = state.champion?.name ?: EMPTY_STRING,
+        championTitle = state.champion?.title ?: EMPTY_STRING,
+        loaded = state.champion != null && state.details != null,
       )
-    } else {
-      Row {
-        ChampionPartyType(
-          modifier = Modifier.padding(start = 16.dp, top = 16.dp).weight(1f),
-          header = stringResource(R.string.champion_details_party_type),
-          partyType = state.champion.partyType,
-        )
+    }
 
-        ChampionClass(
-          modifier = Modifier.padding(end = 16.dp, top = 16.dp),
-          headerTitle = stringResource(R.string.champion_details_class),
-          tags = state.details.tags,
-        )
+  val content =
+    @Composable {
+      Column(modifier = Modifier) {
+        if (state.champion == null || state.details == null) {
+          LinearProgressIndicator(
+            modifier = Modifier.fillMaxWidth(),
+            color = championColorCache.getColor(championId),
+            trackColor = MaterialTheme.colorScheme.onSurface,
+            gapSize = 0.dp,
+          )
+        } else {
+          Row {
+            ChampionPartyType(
+              modifier = Modifier.padding(start = 16.dp, top = 16.dp).weight(1f),
+              header = stringResource(R.string.champion_details_party_type),
+              partyType = state.champion.partyType,
+            )
+
+            ChampionClass(
+              modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+              headerTitle = stringResource(R.string.champion_details_class),
+              tags = state.details.tags,
+            )
+          }
+
+          Spacer(modifier = Modifier.height(16.dp))
+
+          TitleHeader(
+            modifier = Modifier.padding(bottom = 8.dp, top = 16.dp, start = 16.dp),
+            label = stringResource(id = R.string.champion_details_lore),
+          )
+
+          Spacer(modifier = Modifier.height(16.dp))
+
+          Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = state.details.lore,
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraLight),
+            textAlign = TextAlign.Justify,
+          )
+        }
       }
+    }
 
-      Spacer(modifier = Modifier.height(16.dp))
-
-      TitleHeader(
-        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp, start = 16.dp),
-        label = stringResource(id = R.string.champion_details_lore),
-      )
-
-      Spacer(modifier = Modifier.height(16.dp))
-
-      Text(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        text = state.details.lore,
-        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraLight),
-        textAlign = TextAlign.Justify,
-      )
+  if (!isLandscape) {
+    Column(
+      modifier =
+        Modifier.fillMaxWidth()
+          .background(MaterialTheme.colorScheme.surface)
+          .padding(
+            bottom =
+              LocalContentPadding.current
+                .calculateBottomPadding()
+                .plus(if (state.details == null) 0.dp else 32.dp)
+          )
+    ) {
+      Box(modifier = Modifier.fillMaxWidth().aspectRatio(1215f / 717f)) { header() }
+      content()
+    }
+  } else {
+    Row(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
+      Box(modifier = Modifier.weight(1f).fillMaxSize()) { header() }
+      Box(modifier = Modifier.weight(1f).fillMaxSize()) { content() }
     }
   }
 }
@@ -182,7 +204,7 @@ private fun ImageHeader(
   val iconTint = MaterialTheme.colorScheme.onSurface
   val dominantColor = championColorCache.getColor(championId)
 
-  Box(modifier = Modifier.fillMaxWidth().aspectRatio(1215f / 717f)) {
+  Box(modifier = Modifier.fillMaxSize()) {
     DominantColorCoilImage(
       modifier = Modifier.fillMaxSize(),
       championId = championId,

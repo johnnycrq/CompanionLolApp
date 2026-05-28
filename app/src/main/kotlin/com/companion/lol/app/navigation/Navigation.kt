@@ -5,7 +5,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.serialization.saved
 import com.companion.lol.app.navigation.keys.ScreenKey
-import com.companion.lol.app.navigation.keys.ScreenKey.Type
 import com.companion.lol.app.util.withSnapshot
 
 @Stable
@@ -63,8 +62,8 @@ class Impl<S : ScreenKey>(private val initialValue: List<S>, private val saver: 
     // no repeated keys allowed
     if (last == key) return@withSnapshot
 
-    // if last key is a bottomSheet, cannot go to any other screen
-    if (last.type() is Type.BottomSheet) {
+    // if last key is modal, cannot go to any other screen
+    if (last.isModal()) {
       return@withSnapshot
     }
 
