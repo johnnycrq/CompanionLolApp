@@ -35,6 +35,8 @@ constructor(private val sessionStore: SessionStore, savedStateHandle: SavedState
    */
   val colorCache = ChampionColorCache(viewModelScope)
 
+  val snackBarManager: SnackBarManager = SnackBarManager.Impl()
+
   init {
     viewModelScope.launch {
       sessionStore

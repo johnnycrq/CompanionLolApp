@@ -34,7 +34,6 @@ import com.companion.lol.app.compose.animation.predictiveBack
 import com.companion.lol.app.compose.ui.theme.CompanionAppTheme
 import com.companion.lol.app.compose.utils.isLandscape
 import com.companion.lol.app.navigation.BackStack
-import com.companion.lol.app.navigation.ScreenMetadata
 import com.companion.lol.app.navigation.keys.ChampionDetailsKey
 import com.companion.lol.app.navigation.keys.ChampionListKey
 import com.companion.lol.app.navigation.keys.InitialScreenKey
@@ -71,7 +70,7 @@ private fun MainScreen() {
     val viewModel = hiltViewModel<MainViewModel>()
 
     MainScreen(
-      snackBarManager = rememberSnackBarManager(),
+      snackBarManager = viewModel.snackBarManager,
       colorCache = viewModel.colorCache,
       backStack = viewModel.backStack,
     )
@@ -166,7 +165,7 @@ private fun NavDisplay(
             entryScreenKey<InitialScreenKey>()
             entryScreenKey<LoginKey>()
             entryScreenKey<ChampionListKey>()
-            entryScreenKey<ChampionDetailsKey>(metadata = ScreenMetadata.bottomSheet())
+            entryScreenKey<ChampionDetailsKey>()
             entryScreenKey<SettingsKey>()
           },
       )

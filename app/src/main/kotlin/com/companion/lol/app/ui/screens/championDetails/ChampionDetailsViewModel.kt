@@ -52,8 +52,12 @@ constructor(
   init {
     viewModelScope.launch {
       // refresh details
-      withRetry(times = 4, delayDuration = 5.seconds) { refreshUseCase.refresh(championId) }
-        .onFailure { uiErrors.emit(UiError(message = "Cannot load the details data")) }
+      withRetry(times = 1, delayDuration = 5.seconds) { refreshUseCase.refresh(championId) }
+        .onFailure {
+          uiErrors.emit(UiError(message = "Cannot load the details data"))
+          // if (state.value.champion == null || state.value.details == null)
+          // uiErrors.emit(UiError(message = "Cannot load the details data"))
+        }
     }
   }
 
