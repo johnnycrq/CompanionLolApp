@@ -17,12 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
 import com.companion.lol.app.R
 import com.companion.lol.app.compose.app.companionAppGradient
 import com.companion.lol.app.navigation.keys.ChampionListKey
 import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.navigation.keys.SettingsKey
+
+val navigationBarHeight = 80.dp
 
 @Composable
 fun NavigationBar(

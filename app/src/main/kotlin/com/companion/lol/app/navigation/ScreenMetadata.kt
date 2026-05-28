@@ -13,11 +13,7 @@ object ScreenMetadata {
 
   object BottomSheet : NavMetadataKey<ModalBottomSheetProperties>
 
-  object NavBarEntry : NavMetadataKey<Boolean>
-
   fun screenKey(key: ScreenKey) = metadata { put(ScreenId, key) }
-
-  fun navBarEntry() = metadata { put(NavBarEntry, true) }
 
   fun bottomSheet(
     properties: ModalBottomSheetProperties =

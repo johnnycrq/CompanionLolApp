@@ -18,6 +18,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -30,6 +32,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.companion.lol.app.compose.animation.defaultNoTransition
 import com.companion.lol.app.compose.animation.predictiveBack
 import com.companion.lol.app.compose.ui.theme.CompanionAppTheme
+import com.companion.lol.app.compose.utils.isLandscape
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.ScreenMetadata
 import com.companion.lol.app.navigation.keys.ChampionDetailsKey
@@ -42,6 +45,7 @@ import com.companion.lol.app.navigation.keys.entryScreenKey
 import com.companion.lol.app.ui.scene.rememberBottomSheetSceneStrategy
 import com.companion.lol.app.ui.scene.rememberNavigationBarDecoratorStrategy
 import com.companion.lol.app.ui.screens.NavigationBar
+import com.companion.lol.app.ui.screens.navigationBarHeight
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.app.util.LocalChampionColorCache
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,6 +88,18 @@ private fun MainScreen(
     showSnackbar(error.message, duration = SnackbarDuration.Short)
   }
 
+  val isLandscape = isLandscape()
+  val snackbarPadding =
+    remember(backStack, isLandscape) {
+      derivedStateOf {
+        if (backStack.current.isNavBarEntry() && !isLandscape) {
+          navigationBarHeight
+        } else {
+          0.dp
+        }
+      }
+    }
+
   Scaffold(
     containerColor = MaterialTheme.colorScheme.secondary,
     snackbarHost = {
@@ -91,7 +107,7 @@ private fun MainScreen(
         hostState = snackBarManager.snackBarHostState,
         snackbar = {
           Snackbar(
-            modifier = Modifier.padding(bottom = 80.dp),
+            modifier = Modifier.padding(bottom = snackbarPadding.value),
             snackbarData = it,
             containerColor = MaterialTheme.colorScheme.secondary,
             contentColor = MaterialTheme.colorScheme.onBackground,
@@ -149,9 +165,9 @@ private fun NavDisplay(
           entryProvider {
             entryScreenKey<InitialScreenKey>()
             entryScreenKey<LoginKey>()
-            entryScreenKey<ChampionListKey>(metadata = ScreenMetadata.navBarEntry())
+            entryScreenKey<ChampionListKey>()
             entryScreenKey<ChampionDetailsKey>(metadata = ScreenMetadata.bottomSheet())
-            entryScreenKey<SettingsKey>(metadata = ScreenMetadata.navBarEntry())
+            entryScreenKey<SettingsKey>()
           },
       )
     }

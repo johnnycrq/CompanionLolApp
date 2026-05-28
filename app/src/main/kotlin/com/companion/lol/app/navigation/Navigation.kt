@@ -62,11 +62,6 @@ class Impl<S : ScreenKey>(private val initialValue: List<S>, private val saver: 
     // no repeated keys allowed
     if (last == key) return@withSnapshot
 
-    // if last key is modal, cannot go to any other screen
-    if (last.isModal()) {
-      return@withSnapshot
-    }
-
     val index = _history.indexOf(key)
     if (index != -1) {
       while (_history.size > index + 1) {

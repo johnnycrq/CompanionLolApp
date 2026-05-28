@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface ScreenKey {
 
-  fun isModal(): Boolean {
+  fun isNavBarEntry(): Boolean {
     return false
   }
 

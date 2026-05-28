@@ -17,8 +17,6 @@ data class ChampionDetailsKey(
 
   override fun requiresAuth(): Boolean = true
 
-  override fun isModal(): Boolean = true
-
   @Composable
   override fun Content(backStack: BackStack<ScreenKey>) {
     ChampionDetailsScreen(championId = championId, goBack = backStack::goBack)
