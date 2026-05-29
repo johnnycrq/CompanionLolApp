@@ -8,9 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.get
-import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.ScreenMetadata
-import com.companion.lol.app.ui.LocalBackStack
+import kotlin.reflect.KClass
 import kotlinx.serialization.Serializable
 
 @Stable
@@ -27,12 +26,18 @@ sealed interface ScreenKey {
     return (metadata[ScreenMetadata.TopLevelDestination] ?: false)
   }
 
-  @Composable fun Content(backStack: BackStack<ScreenKey>)
+  @Composable fun Content()
+
+  companion object {
+    @Stable inline fun <reified S : ScreenKey> id(): String = id(S::class)
+
+    @Stable fun <S : ScreenKey> id(instance: KClass<S>): String = instance.simpleName!!
+  }
 }
 
 inline fun <reified K : ScreenKey> EntryProviderScope<ScreenKey>.entryScreenKey() {
   entry(
     metadata = { key -> ScreenMetadata.screenKey(key) + key.metadata },
-    content = { key: K -> key.Content(LocalBackStack.current) },
+    content = { key: K -> key.Content() },
   )
 }

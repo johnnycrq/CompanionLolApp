@@ -6,7 +6,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.navigation.BackStack
-import com.companion.lol.app.navigation.BackStack.Companion.backStack
 import com.companion.lol.app.navigation.keys.ChampionListKey
 import com.companion.lol.app.navigation.keys.InitialScreenKey
 import com.companion.lol.app.navigation.keys.LoginKey
@@ -23,21 +22,23 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MainViewModel
 @Inject
-constructor(private val sessionStore: SessionStore, savedStateHandle: SavedStateHandle) :
-  ViewModel() {
-  val backStack: BackStack<ScreenKey> =
-    savedStateHandle.backStack(initialHistory = listOf(InitialScreenKey))
-
+constructor(
+  savedStateHandle: SavedStateHandle,
+  val backStack: BackStack<ScreenKey>,
+  private val sessionStore: SessionStore,
+  val snackBarManager: SnackBarManager,
+) : ViewModel() {
   /**
    * we need this to survive rotation but not process death because the images will be refetched and
    * color can change. Using rememberSaveable in the UI layer would need to save the whole list of
    * colors. There is no need. ViewModel just won't recreate the cache on rotation
    */
   val colorCache = ChampionColorCache(viewModelScope)
-
-  val snackBarManager: SnackBarManager = SnackBarManager.Impl()
+  private val backStackSaver = BackStackSaver<ScreenKey>(savedStateHandle)
 
   init {
+    backStackSaver.attackBackStack(backStack = backStack, restore = true)
+
     viewModelScope.launch {
       sessionStore
         .observeEmailAddress()

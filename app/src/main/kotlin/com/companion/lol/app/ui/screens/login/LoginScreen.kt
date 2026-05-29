@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -33,6 +34,8 @@ import com.companion.lol.app.compose.ui.tooling.CompanionAppPreview
 import com.companion.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
 import com.companion.lol.app.compose.ui.tooling.LandscapePreview
 import com.companion.lol.app.compose.utils.isLandscape
+import com.companion.lol.app.navigation.keys.LoginKey
+import com.companion.lol.app.util.modifier.reportSnackBarPosition
 
 @Composable
 fun LoginScreen() {
@@ -52,7 +55,7 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
   val widthModifier = Modifier.fillMaxWidth(if (isLandscape) 0.5f else 1f)
 
   CompanionAppSurface(modifier = Modifier.fillMaxSize()) {
-    Column {
+    Column(modifier = Modifier.systemBarsPadding()) {
       Column(
         modifier = widthModifier.weight(1f),
         verticalArrangement = Arrangement.Center,
@@ -97,7 +100,11 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
       Button(
         onClick = onLoginClicked,
         enabled = state.isEmailValid,
-        modifier = widthModifier.imePadding().padding(32.dp).fillMaxWidth(),
+        modifier =
+          Modifier.reportSnackBarPosition<LoginKey>()
+            .fillMaxWidth()
+            .then(if (isLandscape) Modifier else Modifier.imePadding())
+            .padding(horizontal = 16.dp),
       ) {
         Text(text = stringResource(R.string.login_continue))
       }

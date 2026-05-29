@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -28,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -53,14 +51,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.companion.lol.app.R
 import com.companion.lol.app.compose.app.TitleHeader
 import com.companion.lol.app.compose.utils.isLandscape
-import com.companion.lol.app.io.UiError
-import com.companion.lol.app.ui.LocalMessagePoster
-import com.companion.lol.app.ui.MessagePoster
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.app.util.DominantColorCoilImage
 import com.companion.lol.app.util.EMPTY_STRING
 import com.companion.lol.app.util.LocalChampionColorCache
-import com.companion.lol.app.util.UiMessageEventFlow
 import com.companion.lol.app.util.color
 import com.companion.lol.app.util.icon
 import com.companion.lol.storage.impl.model.ids.ChampionId
@@ -68,22 +62,18 @@ import com.companion.lol.storage.impl.model.other.ChampionTag
 import com.companion.lol.storage.impl.model.other.PartyType
 
 @Composable
-fun ChampionDetailsScreen(championId: ChampionId, goBack: () -> Unit) {
+fun ChampionDetailsScreen(championId: ChampionId) {
   val viewModel =
     hiltViewModel<ChampionDetailsViewModel, ChampionDetailsViewModel.Factory>(
       creationCallback = { factory -> factory.create(championId) }
     )
   val state by viewModel.state.collectAsStateWithLifecycle()
-  val messagePoster = LocalMessagePoster.current
   val championSkinsProvider =
     rememberChampionSkinProvider(championId = championId, skins = state.details?.skins)
 
   ChampionDetailsScreen(
     state = state,
-    messagePoster = messagePoster,
     skinsProvider = championSkinsProvider,
-    uiErrors = viewModel.uiErrors,
-    goBack = goBack,
     onFavoritesClicked = viewModel::onFavoritesClicked,
   )
 }
@@ -91,21 +81,11 @@ fun ChampionDetailsScreen(championId: ChampionId, goBack: () -> Unit) {
 @Composable
 fun ChampionDetailsScreen(
   state: ChampionDetailsState,
-  messagePoster: MessagePoster,
   skinsProvider: ChampionSkinProvider,
-  uiErrors: UiMessageEventFlow<UiError>,
-  goBack: () -> Unit,
   onFavoritesClicked: () -> Unit,
 ) {
   val championId = state.championId
   val championColorCache = LocalChampionColorCache.current
-
-  LaunchedEffect(uiErrors) {
-    uiErrors.collect {
-      messagePoster.addError(it)
-      goBack()
-    }
-  }
 
   val isLandscape = isLandscape()
 
@@ -163,9 +143,7 @@ fun ChampionDetailsScreen(
   if (!isLandscape) {
     Column(
       modifier =
-        Modifier.fillMaxWidth()
-          .background(MaterialTheme.colorScheme.surface)
-          .navigationBarsPadding()
+        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).systemBarsPadding()
     ) {
       Box(modifier = Modifier.fillMaxWidth().aspectRatio(1215f / 717f)) { header() }
       content()
@@ -244,7 +222,7 @@ private fun ImageHeader(
     val textOverlapGradient =
       remember(dominantColor) {
         Brush.verticalGradient(
-          colors = listOf(Color.Transparent, dominantColor.copy(alpha = 0.7f)),
+          colors = listOf(Color.Transparent, dominantColor),
           tileMode = TileMode.Mirror,
         )
       }

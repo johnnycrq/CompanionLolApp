@@ -37,6 +37,8 @@ import com.companion.lol.app.R
 import com.companion.lol.app.compose.ui.tooling.CompanionAppPreviewWrapperProvider
 import com.companion.lol.app.compose.ui.tooling.LandscapePreview
 import com.companion.lol.app.compose.utils.isLandscape
+import com.companion.lol.app.navigation.keys.SettingsKey
+import com.companion.lol.app.util.modifier.reportSnackBarPosition
 
 private val rowShape = RoundedCornerShape(12.dp)
 
@@ -95,7 +97,8 @@ fun SettingsScreen(
 
       Button(
         modifier =
-          widthModifier.align(if (isLandscape) Alignment.BottomStart else Alignment.BottomCenter),
+          Modifier.reportSnackBarPosition<SettingsKey>()
+            .then(widthModifier.align(Alignment.BottomCenter)),
         onClick = onLogoutClicked,
       ) {
         Text(text = stringResource(R.string.settings_logout))

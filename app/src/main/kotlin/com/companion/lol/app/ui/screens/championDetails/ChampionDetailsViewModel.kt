@@ -3,7 +3,9 @@ package com.companion.lol.app.ui.screens.championDetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.io.UiError
-import com.companion.lol.app.util.UiMessageEventFlow
+import com.companion.lol.app.navigation.BackStack
+import com.companion.lol.app.navigation.keys.ScreenKey
+import com.companion.lol.app.ui.MessagePoster
 import com.companion.lol.data.usecase.ChampionWithDetailsUseCase
 import com.companion.lol.data.usecase.RefreshChampionDetailsUseCase
 import com.companion.lol.data.util.withRetry
@@ -26,6 +28,8 @@ class ChampionDetailsViewModel
 constructor(
   @Assisted private val championId: ChampionId,
   detailsUseCase: ChampionWithDetailsUseCase,
+  private val messagePoster: MessagePoster,
+  private val backStack: BackStack<ScreenKey>,
   private val refreshUseCase: RefreshChampionDetailsUseCase,
   private val favoritesStore: ChampionFavoritesStore,
 ) : ViewModel() {
@@ -33,9 +37,6 @@ constructor(
   interface Factory {
     fun create(championId: ChampionId): ChampionDetailsViewModel
   }
-
-  val uiErrors: UiMessageEventFlow<UiError>
-    field = UiMessageEventFlow.Impl()
 
   val state: StateFlow<ChampionDetailsState> =
     detailsUseCase
@@ -52,10 +53,12 @@ constructor(
   init {
     viewModelScope.launch {
       // refresh details
-      withRetry(times = 2, delayDuration = 5.seconds) { refreshUseCase.refresh(championId) }
+      withRetry(times = 1, delayDuration = 1.seconds) { refreshUseCase.refresh(championId) }
         .onFailure {
-          if (state.value.champion == null || state.value.details == null)
-            uiErrors.emit(UiError(message = "Cannot load the details data"))
+          if (state.value.champion == null || state.value.details == null) {
+            messagePoster.emitMessage(UiError(message = "Cannot load the details data"))
+            backStack.goBack()
+          }
         }
     }
   }

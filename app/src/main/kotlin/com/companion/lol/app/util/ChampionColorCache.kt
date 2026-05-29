@@ -76,9 +76,7 @@ interface ChampionColorCacheExtractor<T : Any> {
     private fun getColorState(id: ChampionId): MutableState<Color> =
       cache.getOrPut(id) { mutableStateOf(defaultColor) }
 
-    override fun getColor(id: ChampionId): Color {
-      return getColorState(id).value
-    }
+    override fun getColor(id: ChampionId): Color = getColorState(id).value
 
     override fun putColor(id: ChampionId, color: Color) {
       getColorState(id).value = color

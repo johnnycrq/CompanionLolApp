@@ -22,17 +22,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.companion.lol.app.compose.utils.isLandscape
+import com.companion.lol.app.navigation.keys.ChampionListKey
 import com.companion.lol.app.util.count
+import com.companion.lol.app.util.modifier.SnackBarPosition
+import com.companion.lol.app.util.modifier.reportSnackBarPosition
 import com.companion.lol.storage.impl.model.ids.ChampionId
 
 @Composable
-fun ChampionListScreen(onCardClick: (ChampionId) -> Unit) {
+fun ChampionListScreen() {
   val viewModel = hiltViewModel<ChampionListViewModel>()
   val state by viewModel.state.collectAsStateWithLifecycle()
 
   ChampionListScreen(
     state = state,
-    onCardClick = onCardClick,
+    onCardClick = viewModel::onCardClick,
     onGridSizeItemMenuClicked = viewModel::changeGridSize,
     onSortMenuItemClicked = viewModel::onSortMenuItemClicked,
     onFavoritesClearClicked = viewModel::onFavoritesClearClicked,
@@ -57,7 +60,9 @@ fun ChampionListScreen(
   val gridCells = GridCells.Fixed(if (isLandscape) 8 else state.gridSize.count)
 
   Scaffold(
-    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    modifier =
+      Modifier.reportSnackBarPosition<ChampionListKey>(SnackBarPosition.BOTTOM)
+        .nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
       if (!isLandscape) {
         ChampionListToolbar(

@@ -66,7 +66,8 @@ composeCompiler {
 
 tasks.withType<KotlinCompile> {
     compilerOptions.freeCompilerArgs.addAll(
-        "-XXLanguage:+ExplicitBackingFields"
+        "-XXLanguage:+ExplicitBackingFields",
+        "-XXLanguage:+ContextParameters"
     )
 }
 

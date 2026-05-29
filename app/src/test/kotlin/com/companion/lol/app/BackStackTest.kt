@@ -1,7 +1,6 @@
 package com.companion.lol.app
 
-import androidx.lifecycle.SavedStateHandle
-import com.companion.lol.app.navigation.BackStack.Companion.backStack
+import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.keys.ChampionDetailsKey
 import com.companion.lol.app.navigation.keys.InitialScreenKey
 import com.companion.lol.app.navigation.keys.LoginKey
@@ -19,10 +18,8 @@ class BackStackTest {
   private val screenC = SettingsKey
   private val bottomSheetScreen = ChampionDetailsKey(ChampionId(1))
 
-  private fun createBackStack(
-    savedStateHandle: SavedStateHandle = SavedStateHandle(),
-    initialHistory: List<ScreenKey>,
-  ) = savedStateHandle.backStack(initialHistory = initialHistory)
+  private fun createBackStack(initialHistory: List<ScreenKey>) =
+    BackStack.Impl(initialValue = initialHistory)
 
   @Test
   fun `initial history is set correctly`() {

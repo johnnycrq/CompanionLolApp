@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -42,7 +41,6 @@ fun NavigationBar(
   NavigationBar(
     containerColor = Color.Transparent,
     modifier = modifier.background(brush = companionAppGradient),
-    windowInsets = NavigationBarDefaults.windowInsets,
   ) {
     CompanionLolNavigationBarItem(
       icon = Icons.AutoMirrored.Filled.List,

@@ -4,7 +4,6 @@ package com.companion.lol.app.navigation.keys
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.ScreenMetadata
 import com.companion.lol.app.navigation.serializer.ChampionIdSerializer
 import com.companion.lol.app.ui.screens.championDetails.ChampionDetailsScreen
@@ -24,7 +23,7 @@ data class ChampionDetailsKey(
   override fun requiresAuth(): Boolean = true
 
   @Composable
-  override fun Content(backStack: BackStack<ScreenKey>) {
-    ChampionDetailsScreen(championId = championId, goBack = backStack::goBack)
+  override fun Content() {
+    ChampionDetailsScreen(championId = championId)
   }
 }

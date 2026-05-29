@@ -3,6 +3,9 @@ package com.companion.lol.app.ui.screens.championList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.BuildConfig
+import com.companion.lol.app.navigation.BackStack
+import com.companion.lol.app.navigation.keys.ChampionDetailsKey
+import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.ui.screens.RefreshState
 import com.companion.lol.app.util.awaitAtLeast
 import com.companion.lol.app.util.next
@@ -11,6 +14,7 @@ import com.companion.lol.app.util.toggle
 import com.companion.lol.data.mapper.model
 import com.companion.lol.data.usecase.RefreshChampionsUseCase
 import com.companion.lol.data.util.listMap
+import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.store.ChampionFavoritesStore
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.SettingsStore
@@ -36,6 +40,7 @@ private val showcaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 2.seconds 
 class ChampionListViewModel
 @Inject
 constructor(
+  private val backStack: BackStack<ScreenKey>,
   private val championStore: ChampionStore,
   private val favoritesStore: ChampionFavoritesStore,
   private val settingsStore: SettingsStore,
@@ -98,5 +103,9 @@ constructor(
 
   fun onFavoritesClearClicked() {
     viewModelScope.launch { favoritesStore.clearAll() }
+  }
+
+  fun onCardClick(championId: ChampionId) {
+    backStack.goTo(ChampionDetailsKey(championId))
   }
 }
