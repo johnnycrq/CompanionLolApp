@@ -56,7 +56,7 @@ constructor(
       withRetry(times = 1, delayDuration = 1.seconds) { refreshUseCase.refresh(championId) }
         .onFailure {
           if (state.value.champion == null || state.value.details == null) {
-            messagePoster.emitMessage(UiError(message = "Cannot load the details data"))
+            messagePoster.postMessage(UiError(message = "Cannot load the details data"))
             backStack.goBack()
           }
         }

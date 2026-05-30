@@ -8,11 +8,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
 import coil3.Bitmap
-import com.companion.lol.app.compose.ui.theme.Gold1
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,12 +28,15 @@ private val colorExtractor: (Bitmap) -> Color = { input ->
   )
 }
 
-fun ChampionColorCache(scope: CoroutineScope, defaultColor: Color = Gold1): ChampionColorCache =
+fun CoroutineScope.ChampionColorCache(
+  extractDispatcher: CoroutineDispatcher,
+  defaultColor: Color,
+): ChampionColorCache =
   object :
     ChampionColorCache,
     ChampionColorCacheExtractor<Bitmap> by ChampionColorCacheExtractor.Impl(
-      scope = scope,
-      extractDispatcher = Dispatchers.Default,
+      scope = this,
+      extractDispatcher = extractDispatcher,
       defaultColor = defaultColor,
       extractColor = colorExtractor,
     ) {}

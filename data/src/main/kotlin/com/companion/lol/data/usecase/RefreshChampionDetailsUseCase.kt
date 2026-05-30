@@ -10,7 +10,7 @@ import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.store.ChampionDetailsStore
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.SkinStore
-import com.companion.lol.storage.impl.util.DbDispatcher
+import com.companion.lol.storage.impl.util.AppDispatchers
 import com.companion.lol.storage.impl.util.DbTransacter
 import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
 import com.companion.lol.storage.sqldelight.tables.SkinTable
@@ -26,10 +26,10 @@ constructor(
   private val skinsStore: SkinStore,
   private val dDragonApi: DDragonApi,
   private val transacter: DbTransacter,
-  private val dbDispatcher: DbDispatcher,
+  private val dispatchers: AppDispatchers,
 ) {
   suspend fun refresh(championId: ChampionId): CompletableResult =
-    withContext(dbDispatcher) {
+    withContext(dispatchers.io) {
       val championKeyName = championStore.findKeyNameById(championId)
 
       val champion =

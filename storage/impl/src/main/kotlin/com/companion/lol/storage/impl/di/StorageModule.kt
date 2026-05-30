@@ -16,7 +16,6 @@ import com.companion.lol.storage.impl.adapter.SkinIdAdapter
 import com.companion.lol.storage.impl.model.other.GridSize
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.model.other.SortOrder
-import com.companion.lol.storage.impl.util.DbDispatcher
 import com.companion.lol.storage.impl.util.DbTransacter
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
@@ -32,9 +31,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Runnable
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -63,16 +59,6 @@ internal object StorageModule {
   @Provides
   @Singleton
   internal fun transacter(app: LolAppDb): DbTransacter = object : DbTransacter, Transacter by app {}
-
-  @Provides
-  @Singleton
-  internal fun dispatcher(): DbDispatcher =
-    object : DbDispatcher() {
-      private val dispatcher = Dispatchers.IO
-
-      override fun dispatch(context: CoroutineContext, block: Runnable) =
-        dispatcher.dispatch(context, block)
-    }
 
   @Provides
   @Singleton

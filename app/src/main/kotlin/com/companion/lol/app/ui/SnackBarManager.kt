@@ -44,7 +44,7 @@ interface SnackBarManager : MessagePoster {
     val message: Flow<UiError> =
       _message.map { it.firstOrNull() }.distinctUntilChanged().filterNotNull()
 
-    override fun emitMessage(message: UiError) {
+    override fun postMessage(message: UiError) {
       _message.update { it + message }
     }
 
@@ -78,5 +78,5 @@ interface SnackBarManager : MessagePoster {
 
 @Stable
 interface MessagePoster {
-  fun emitMessage(message: UiError)
+  fun postMessage(message: UiError)
 }

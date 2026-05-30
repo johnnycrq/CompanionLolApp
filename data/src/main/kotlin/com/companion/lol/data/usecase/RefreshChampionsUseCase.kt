@@ -8,7 +8,7 @@ import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.PartyTypeStore
-import com.companion.lol.storage.impl.util.DbDispatcher
+import com.companion.lol.storage.impl.util.AppDispatchers
 import com.companion.lol.storage.impl.util.DbTransacter
 import com.companion.lol.storage.sqldelight.tables.ChampionPartyTypeTable
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
@@ -25,10 +25,10 @@ constructor(
   private val partyTypeStore: PartyTypeStore,
   private val api: DDragonApi,
   private val transacter: DbTransacter,
-  private val dbDispatcher: DbDispatcher,
+  private val dispatchers: AppDispatchers,
 ) {
   suspend fun refresh(): CompletableResult =
-    withContext(dbDispatcher) {
+    withContext(dispatchers.io) {
       val champions =
         api.getChampionList().getOrPropagate {
           Timber.e(it)

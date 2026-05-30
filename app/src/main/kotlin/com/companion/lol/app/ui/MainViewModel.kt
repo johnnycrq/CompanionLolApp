@@ -5,6 +5,7 @@ package com.companion.lol.app.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.companion.lol.app.compose.ui.theme.Gold1
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.keys.ChampionListKey
 import com.companion.lol.app.navigation.keys.InitialScreenKey
@@ -12,7 +13,9 @@ import com.companion.lol.app.navigation.keys.LoginKey
 import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.storage.impl.store.SessionStore
+import com.companion.lol.storage.impl.util.AppDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -24,9 +27,10 @@ class MainViewModel
 @Inject
 constructor(
   savedStateHandle: SavedStateHandle,
+  dispatchers: AppDispatchers,
   val backStack: BackStack<ScreenKey>,
-  private val sessionStore: SessionStore,
   val snackBarManager: SnackBarManager,
+  private val sessionStore: SessionStore
 ) : ViewModel() {
   /**
    * we need this to survive rotation but not process death because the images will be refetched and
@@ -34,11 +38,17 @@ constructor(
    * colors and would survive process death. There is no need. ViewModel just won't recreate the
    * cache on rotation
    */
-  val colorCache = ChampionColorCache(viewModelScope)
+  val colorCache = viewModelScope.ChampionColorCache(
+      extractDispatcher = dispatchers.computation,
+      defaultColor = Gold1
+  )
   private val backStackSaver = BackStackSaver<ScreenKey>(savedStateHandle)
 
   init {
-    backStackSaver.attackBackStack(backStack = backStack, restore = true)
+    backStackSaver.attackBackStack(
+      backStack = backStack,
+      restore = true
+    )
 
     viewModelScope.launch {
       sessionStore
@@ -51,7 +61,7 @@ constructor(
           val currentHistory = backStack.history
           if (!isLoggedIn) {
             // if we are logged out we rewrite the history.
-            // we drop private screens and ensure we don't stay on Initial (placeHolder)
+            // we drop private screens and ensure we don't stay on Initial
             backStack.setHistory(
               currentHistory
                 .dropLastWhile { it.requiresAuth() }

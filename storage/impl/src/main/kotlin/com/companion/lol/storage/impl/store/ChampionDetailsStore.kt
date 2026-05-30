@@ -4,7 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.store.base.SqldelightStore
-import com.companion.lol.storage.impl.util.DbDispatcher
+import com.companion.lol.storage.impl.util.AppDispatchers
 import com.companion.lol.storage.impl.util.RequiresDispatcher
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionDetailsQueries
@@ -16,11 +16,11 @@ import kotlinx.coroutines.flow.Flow
 @Singleton
 class ChampionDetailsStore
 @Inject
-constructor(database: LolAppDb, private val dbDispatcher: DbDispatcher) :
+constructor(database: LolAppDb, private val dispatchers: AppDispatchers) :
   SqldelightStore<ChampionDetailsQueries>(database.championDetailsQueries) {
 
   @RequiresDispatcher fun insertSync(details: ChampionDetailsTable) = queries.insert(details)
 
   fun observeByID(championId: ChampionId): Flow<ChampionDetailsTable?> =
-    queries.findById(championId).asFlow().mapToOneOrNull(dbDispatcher)
+    queries.findById(championId).asFlow().mapToOneOrNull(dispatchers.io)
 }

@@ -4,7 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.store.base.SqldelightStore
-import com.companion.lol.storage.impl.util.DbDispatcher
+import com.companion.lol.storage.impl.util.AppDispatchers
 import com.companion.lol.storage.impl.util.RequiresDispatcher
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.SkinTable
@@ -16,11 +16,11 @@ import kotlinx.coroutines.flow.Flow
 @Singleton
 class SkinStore
 @Inject
-constructor(private val database: LolAppDb, private val dbDispatcher: DbDispatcher) :
+constructor(private val database: LolAppDb, private val dispatchers: AppDispatchers) :
   SqldelightStore<SkinTableQueries>(database.skinTableQueries) {
 
   fun observeByChampionId(championId: ChampionId): Flow<List<SkinTable>> {
-    return queries.findByChampionId(championId).asFlow().mapToList(dbDispatcher)
+    return queries.findByChampionId(championId).asFlow().mapToList(dispatchers.io)
   }
 
   @RequiresDispatcher
