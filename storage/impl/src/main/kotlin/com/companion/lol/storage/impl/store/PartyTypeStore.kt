@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class PartyTypeStore @Inject constructor(database: LolAppDb) :
   SqldelightStore<ChampionPartyTypeQueries>(database.championPartyTypeQueries) {
   @RequiresDispatcher
-  fun insertAllSync(partyTypes: List<ChampionPartyTypeTable>) {
+  fun insertAll(partyTypes: List<ChampionPartyTypeTable>) {
     queries.transaction { partyTypes.forEach(queries::insert) }
   }
 }

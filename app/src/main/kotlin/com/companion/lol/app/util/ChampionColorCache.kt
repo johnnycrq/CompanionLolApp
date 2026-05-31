@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
 import coil3.Bitmap
 import com.companion.lol.storage.impl.model.ids.ChampionId
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -29,14 +29,14 @@ private val colorExtractor: (Bitmap) -> Color = { input ->
 }
 
 fun CoroutineScope.ChampionColorCache(
-  extractDispatcher: CoroutineDispatcher,
+  extractContext: CoroutineContext,
   defaultColor: Color,
 ): ChampionColorCache =
   object :
     ChampionColorCache,
     ChampionColorCacheExtractor<Bitmap> by ChampionColorCacheExtractor.Impl(
       scope = this,
-      extractDispatcher = extractDispatcher,
+      extractContext = extractContext,
       defaultColor = defaultColor,
       extractColor = colorExtractor,
     ) {}
@@ -57,7 +57,7 @@ interface ChampionColorCacheExtractor<T : Any> {
   @VisibleForTesting
   class Impl<T : Any>(
     scope: CoroutineScope,
-    extractDispatcher: CoroutineDispatcher,
+    extractContext: CoroutineContext,
     override val defaultColor: Color,
     private val extractColor: (T) -> Color,
   ) : ChampionColorCacheExtractor<T> {
@@ -68,7 +68,7 @@ interface ChampionColorCacheExtractor<T : Any> {
       scope.launch {
         for ((championId, input) in extractChannel) {
           if (!isDefaultColor(championId)) continue
-          val color = withContext(extractDispatcher) { extractColor(input) }
+          val color = withContext(extractContext) { extractColor(input) }
           putColor(id = championId, color = color)
         }
       }

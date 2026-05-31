@@ -27,9 +27,7 @@ internal object NetworkModule {
   @OptIn(ExperimentalSerializationApi::class)
   @Provides
   @Singleton
-  internal fun baseRetrofit(
-    okhttpClient: OkHttpClient
-  ): Retrofit {
+  internal fun baseRetrofit(okhttpClient: OkHttpClient): Retrofit {
     // This is an ugly hack
     // But StrictMode identifies violation here
     // somewhere in the initialization. We could theoretically

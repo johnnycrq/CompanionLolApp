@@ -2,7 +2,7 @@
 
 package com.companion.lol.data.usecase
 
-import com.companion.lol.data.mapper.model
+import com.companion.lol.data.mapper.toModel
 import com.companion.lol.data.model.ChampionDetailsModel
 import com.companion.lol.data.model.ChampionWithDetailsModel
 import com.companion.lol.storage.impl.model.ids.ChampionId
@@ -30,9 +30,9 @@ constructor(
     flow { emit(championStore.findKeyNameById(championId)) }
       .flatMapLatest { keyName ->
         combine(
-          championStore.observeWithFavoritesById(championId).map { it.model() },
-          observeChampionDetails(championId, keyName),
-          ::ChampionWithDetailsModel,
+          flow = championStore.observeWithFavoritesById(championId).map { it.toModel() },
+          flow2 = observeChampionDetails(championId, keyName),
+          transform = ::ChampionWithDetailsModel,
         )
       }
 
@@ -44,6 +44,6 @@ constructor(
       championDetailsStore.observeByID(championId),
       skinsStore.observeByChampionId(championId),
     ) { details, skins ->
-      details?.model(keyName, skins)
+      details?.toModel(keyName, skins)
     }
 }

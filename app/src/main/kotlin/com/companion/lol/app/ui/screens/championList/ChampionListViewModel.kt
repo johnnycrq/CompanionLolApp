@@ -11,7 +11,7 @@ import com.companion.lol.app.util.awaitAtLeast
 import com.companion.lol.app.util.next
 import com.companion.lol.app.util.sortBy
 import com.companion.lol.app.util.toggle
-import com.companion.lol.data.mapper.model
+import com.companion.lol.data.mapper.toModel
 import com.companion.lol.data.usecase.RefreshChampionsUseCase
 import com.companion.lol.data.util.listMap
 import com.companion.lol.storage.impl.model.ids.ChampionId
@@ -50,7 +50,7 @@ constructor(
 
   val state: StateFlow<ChampionListState> =
     combine(
-        flow = championStore.observeAllWithFavorites().listMap(ChampionWithFavoritesView::model),
+        flow = championStore.observeAllWithFavorites().listMap(ChampionWithFavoritesView::toModel),
         flow2 = settingsStore.observeOrDefault(),
         flow3 = refreshState,
         transform = { champion, settings, refreshState ->

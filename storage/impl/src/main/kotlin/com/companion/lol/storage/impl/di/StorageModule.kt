@@ -16,7 +16,8 @@ import com.companion.lol.storage.impl.adapter.SkinIdAdapter
 import com.companion.lol.storage.impl.model.other.GridSize
 import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.impl.model.other.SortOrder
-import com.companion.lol.storage.impl.util.DbTransacter
+import com.companion.lol.storage.impl.util.DatabaseContext
+import com.companion.lol.storage.impl.util.DatabaseTransacter
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
 import com.companion.lol.storage.sqldelight.tables.ChampionFavoritesTable
@@ -31,6 +32,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Dispatchers
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -58,7 +61,13 @@ internal object StorageModule {
 
   @Provides
   @Singleton
-  internal fun transacter(app: LolAppDb): DbTransacter = object : DbTransacter, Transacter by app {}
+  fun transacter(app: LolAppDb): DatabaseTransacter =
+    object : DatabaseTransacter, Transacter by app {}
+
+  @Provides
+  @Singleton
+  fun coroutineContext(): DatabaseContext =
+    object : DatabaseContext, CoroutineContext by Dispatchers.IO {}
 
   @Provides
   @Singleton

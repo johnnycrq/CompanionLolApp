@@ -6,7 +6,7 @@ import com.companion.lol.storage.impl.model.ids.SettingsId
 import com.companion.lol.storage.impl.model.other.GridSize
 import com.companion.lol.storage.impl.model.other.SortOrder
 import com.companion.lol.storage.impl.store.base.SqldelightStore
-import com.companion.lol.storage.impl.util.AppDispatchers
+import com.companion.lol.storage.impl.util.DatabaseContext
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.SettingsQueries
 import com.companion.lol.storage.sqldelight.tables.SettingsTable
@@ -18,17 +18,15 @@ import kotlinx.coroutines.withContext
 private val default = SettingsTable(SettingsId, GridSize.MEDIUM, SortOrder.ASC)
 
 @Singleton
-class SettingsStore
-@Inject
-constructor(database: LolAppDb, private val dispatchers: AppDispatchers) :
+class SettingsStore @Inject constructor(database: LolAppDb, private val context: DatabaseContext) :
   SqldelightStore<SettingsQueries>(database.settingsQueries) {
   private fun findOrDefaultSync(): SettingsTable = queries.findAll().executeAsOneOrNull() ?: default
 
   fun observeOrDefault(): Flow<SettingsTable> =
-    queries.findAll().asFlow().mapToOneOrDefault(default, dispatchers.io)
+    queries.findAll().asFlow().mapToOneOrDefault(default, context)
 
   suspend fun insert(championGridSize: GridSize? = null, championSortOrder: SortOrder? = null) =
-    withContext(dispatchers.io) {
+    withContext(context) {
       queries.transaction {
         val current = findOrDefaultSync()
         queries.insert(
