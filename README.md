@@ -33,10 +33,10 @@ To build and run the application, you must provide a Riot Games API key.
 The following screenshots demonstrate the core functionality and design of the app:
 
 ### Login & Settings
-| Login | Settings |
-|:---:|:---:|
+|                        Login                         | Settings |
+|:----------------------------------------------------:|:---:|
 | ![Login](screenshots/Screenshot_20260601_112805.png) | ![Settings](screenshots/Screenshot_20260601_113402.png) |
-| *Secure authentication.* | *App configuration and preferences.* |
+|                 *Basic Login Flow.*                  | *App configuration and preferences.* |
 
 ### Champion List
 | Portrait | Landscape |
@@ -45,10 +45,10 @@ The following screenshots demonstrate the core functionality and design of the a
 | *Browsing all available champions.* | *Optimized landscape layout.* |
 
 ### Champion Details
-| Portrait | Landscape |
-|:---:|:---:|
+|                            Portrait                             | Landscape |
+|:---------------------------------------------------------------:|:---:|
 | ![Champion Details](screenshots/Screenshot_20260601_113209.png) | ![Champion Details Landscape](screenshots/Screenshot_20260601_113008.png) |
-| *Stats, lore, and abilities.* | *Immersive landscape view.* |
+|                 *Stats, lore, and skin images.*                 | *Immersive landscape view.* |
 
 --- 
 
