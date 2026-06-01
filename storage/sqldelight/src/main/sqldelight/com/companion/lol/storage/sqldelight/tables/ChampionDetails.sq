@@ -19,6 +19,6 @@ SELECT * FROM ChampionDetailsTable WHERE id = :championId;
 
 hasDetailsForId:
 SELECT details AND skins FROM(
-(SELECT EXISTS( SELECT 1 FROM ChampionDetailsTable WHERE id = :championId ) AS details),
-(SELECT EXISTS( SELECT 1 FROM SkinTable WHERE id = :championId ) AS skins)
+(SELECT EXISTS( SELECT 1 FROM ChampionDetailsTable WHERE id = ? ) AS details),
+(SELECT EXISTS( SELECT 1 FROM SkinTable WHERE id = ? ) AS skins)
 );

@@ -11,5 +11,9 @@ data class AppDispatchers(
   val computation: CoroutineContext,
   val main: CoroutineContext,
 ) {
-  @Inject constructor() : this(Dispatchers.IO, Dispatchers.Default, Dispatchers.Main)
+  @Inject constructor() : this(
+      io = Dispatchers.IO,
+      computation = Dispatchers.Default,
+      main = Dispatchers.Main
+  )
 }

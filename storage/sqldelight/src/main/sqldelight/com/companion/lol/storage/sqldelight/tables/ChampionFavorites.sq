@@ -9,5 +9,13 @@ CREATE TABLE ChampionFavoritesTable (
 insert:
 INSERT OR REPLACE INTO ChampionFavoritesTable VALUES ?;
 
+updateIsFavorite {
+  UPDATE ChampionFavoritesTable
+  SET isFavorite = ?2 WHERE id = ?1;
+
+  INSERT OR IGNORE INTO ChampionFavoritesTable (id, isFavorite)
+  VALUES (?1, ?2);
+}
+
 clearAll:
 DELETE FROM ChampionFavoritesTable;

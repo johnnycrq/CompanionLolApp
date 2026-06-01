@@ -23,7 +23,6 @@ class ChampionStore @Inject constructor(database: LolAppDb, private val context:
   fun insertAll(champions: List<ChampionTable>) {
     queries.transaction { champions.forEach(queries::insert) }
   }
-
   suspend fun hasData(): Boolean = withContext(context) { queries.hasData().executeAsOne() }
 
   fun observeAllWithFavorites(): Flow<List<ChampionWithFavoritesView>> =

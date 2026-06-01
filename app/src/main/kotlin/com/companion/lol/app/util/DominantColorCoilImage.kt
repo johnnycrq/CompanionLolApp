@@ -11,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil3.Bitmap
+import coil3.asImage
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.transformations
@@ -82,7 +84,7 @@ private data class DominantColorTransformation(
 
   override suspend fun transform(input: Bitmap, size: Size): Bitmap {
     if (shouldExtractColor) {
-      championColorCache.extractColor(input, championId)
+      championColorCache.extractColor(input.asImage(true), championId)
     }
     return input
   }

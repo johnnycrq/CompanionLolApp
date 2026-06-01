@@ -36,7 +36,7 @@ findAll:
 SELECT * FROM ChampionWithFavoritesView;
 
 findKeyNameById:
-SELECT keyName FROM ChampionTable WHERE id = :championId LIMIT 1;
+SELECT keyName FROM ChampionTable WHERE id = ? LIMIT 1;
 
 findById:
-SELECT * FROM ChampionWithFavoritesView WHERE id = :championId LIMIT 1;
+SELECT * FROM ChampionWithFavoritesView WHERE id = ? LIMIT 1;

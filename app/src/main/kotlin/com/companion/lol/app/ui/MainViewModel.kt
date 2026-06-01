@@ -34,8 +34,8 @@ constructor(
   /**
    * we need this to survive rotation but not process death because the images will be refetched and
    * color can change. Using rememberSaveable in the UI layer would need to save the whole list of
-   * colors and would survive process death. There is no need. ViewModel just won't recreate the
-   * cache on rotation
+   * colors, using retain would work but the scope would break on rotation.
+   * ViewModel scope usage here is the best option imo
    */
   val colorCache =
     viewModelScope.ChampionColorCache(

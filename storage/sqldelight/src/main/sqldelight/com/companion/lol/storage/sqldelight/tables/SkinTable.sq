@@ -16,4 +16,4 @@ insert:
 INSERT OR REPLACE INTO SkinTable VALUES ?;
 
 findByChampionId:
-SELECT * FROM SkinTable WHERE id = :championId;
+SELECT * FROM SkinTable WHERE id = ?;

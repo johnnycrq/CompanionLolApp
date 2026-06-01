@@ -1,6 +1,8 @@
 package com.companion.lol.app.util
 
 import androidx.compose.ui.graphics.Color
+import coil3.Canvas
+import coil3.Image
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,10 +20,20 @@ class ChampionColorCacheTest {
   private val championId = ChampionId(1)
   private val blueColor = Color.Blue
   private val greenColor = Color.Green
-  private val fakeInput: String = "fake"
+  private val fakeInput: Image =
+    object : Image {
+      override val size: Long = 0L
+      override val width: Int = 0
+      override val height: Int = 0
+      override val shareable: Boolean = true
 
-  private fun TestScope.createCache(extractColor: (String) -> Color = { blueColor }) =
-    ChampionColorCacheExtractor.Impl(
+      override fun draw(canvas: Canvas) = Unit
+    }
+
+  private fun TestScope.createCache(
+    extractColor: (Image) -> Result<Color> = { Result.success(blueColor) }
+  ) =
+    ChampionColorCache.Impl(
       scope = backgroundScope,
       extractContext = Dispatchers.Unconfined,
       defaultColor = defaultColor,
@@ -64,7 +76,7 @@ class ChampionColorCacheTest {
 
   @Test
   fun `extractColor updates cache when current color is default`() = runTest {
-    val cache = createCache { blueColor }
+    val cache = createCache { Result.success(blueColor) }
 
     cache.extractColor(fakeInput, championId)
     runCurrent()
@@ -73,7 +85,7 @@ class ChampionColorCacheTest {
 
   @Test
   fun `extractColor does nothing when current color is already non-default`() = runTest {
-    val cache = createCache { blueColor }
+    val cache = createCache { Result.success(blueColor) }
     cache.putColor(championId, greenColor)
 
     cache.extractColor(fakeInput, championId)
@@ -86,7 +98,7 @@ class ChampionColorCacheTest {
     var callCount = 0
     val cache = createCache {
       callCount++
-      blueColor
+      Result.success(blueColor)
     }
 
     // Both calls happen before the background worker processes the first one

@@ -5,10 +5,9 @@ import com.companion.lol.storage.impl.store.base.SqldelightStore
 import com.companion.lol.storage.impl.util.DatabaseContext
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionFavoritesQueries
-import com.companion.lol.storage.sqldelight.tables.ChampionFavoritesTable
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.withContext
 
 @Singleton
 class ChampionFavoritesStore
@@ -16,7 +15,7 @@ class ChampionFavoritesStore
 constructor(database: LolAppDb, private val context: DatabaseContext) :
   SqldelightStore<ChampionFavoritesQueries>(database.championFavoritesQueries) {
   suspend fun markFavorite(championId: ChampionId, isFavorite: Boolean) =
-    withContext(context) { queries.insert(ChampionFavoritesTable(championId, isFavorite)) }
+    withContext(context) { queries.updateIsFavorite(championId, isFavorite) }
 
   suspend fun clearAll() = withContext(context) { queries.clearAll() }
 }

@@ -22,7 +22,6 @@ constructor(private val database: LolAppDb, private val context: DatabaseContext
   fun observeByChampionId(championId: ChampionId): Flow<List<SkinTable>> {
     return queries.findByChampionId(championId).asFlow().mapToList(context)
   }
-
   @RequiresDispatcher
   fun insertAll(skins: List<SkinTable>) = database.transaction { skins.forEach(queries::insert) }
 }
