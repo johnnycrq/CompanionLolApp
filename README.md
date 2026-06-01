@@ -32,10 +32,23 @@ To build and run the application, you must provide a Riot Games API key.
 ## 📸 Screenshots
 The following screenshots demonstrate the core functionality and design of the app:
 
-| Login & Logout |                         Champion List                           |                       Champion Details                        |
-| :---: |:---------------------------------------------------------------:|:-------------------------------------------------------------:|
-| ![Champion List](screenshots/Screenshot_20260520_104534.png) | ![Champion Details](screenshots/Screenshot_20260520_104555.png) | ![Login & Logout](screenshots/Screenshot_20260520_104641.png) |
-| *Basic Login Logout feature.* |     *Browsing all available champions with a smooth scrolling experience.*     |                 *Detailed view of champion stats, lore, and abilities.*                 |
+### Login & Settings
+| Login | Settings |
+|:---:|:---:|
+| ![Login](screenshots/Screenshot_20260601_112805.png) | ![Settings](screenshots/Screenshot_20260601_113402.png) |
+| *Secure authentication.* | *App configuration and preferences.* |
+
+### Champion List
+| Portrait | Landscape |
+|:---:|:---:|
+| ![Champion List](screenshots/Screenshot_20260601_113149.png) | ![Champion List Landscape](screenshots/Screenshot_20260601_113158.png) |
+| *Browsing all available champions.* | *Optimized landscape layout.* |
+
+### Champion Details
+| Portrait | Landscape |
+|:---:|:---:|
+| ![Champion Details](screenshots/Screenshot_20260601_113209.png) | ![Champion Details Landscape](screenshots/Screenshot_20260601_113008.png) |
+| *Stats, lore, and abilities.* | *Immersive landscape view.* |
 
 --- 
 

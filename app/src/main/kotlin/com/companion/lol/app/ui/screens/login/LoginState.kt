@@ -5,6 +5,6 @@ import com.companion.lol.app.base.ComposeState
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginState(val email: String = "johnny.crq@gmail.com") : ComposeState {
+data class LoginState(val email: String = "") : ComposeState {
   val isEmailValid: Boolean = email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
