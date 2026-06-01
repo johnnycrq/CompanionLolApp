@@ -1,25 +1,31 @@
 import com.companion.lol.storage.impl.model.ids.SingleId;
 import kotlin.Boolean;
 
-CREATE TABLE SessionTable (
+CREATE TABLE SingletonSessionTable (
   id INTEGER AS SingleId NOT NULL PRIMARY KEY CHECK(id = 1),
   emailAddress TEXT NOT NULL,
   autoSync INTEGER AS Boolean NOT NULL
 );
 
+CREATE VIEW SessionTable AS
+SELECT
+  emailAddress,
+  autoSync
+FROM SingletonSessionTable
+WHERE id = 1;
 
 insert:
-INSERT OR REPLACE INTO SessionTable
+INSERT OR REPLACE INTO SingletonSessionTable
 VALUES ?;
 
 get:
 SELECT * FROM SessionTable LIMIT 1;
 
 updateAutoSync:
-UPDATE SessionTable SET autoSync = ? WHERE id = 1;
+UPDATE SingletonSessionTable SET autoSync = ? WHERE id = 1;
 
 delete:
-DELETE FROM SessionTable;
+DELETE FROM SingletonSessionTable;
 
 emailAddress:
 SELECT emailAddress FROM SessionTable LIMIT 1;

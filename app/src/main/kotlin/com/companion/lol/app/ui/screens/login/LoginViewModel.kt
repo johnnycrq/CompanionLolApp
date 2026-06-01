@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.util.persistedFlow
-import com.companion.lol.storage.impl.model.ids.SingleId
 import com.companion.lol.storage.impl.store.SessionStore
 import com.companion.lol.storage.sqldelight.tables.SessionTable
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,9 +29,7 @@ constructor(private val sessionStore: SessionStore, savedStateHandle: SavedState
     if (!currentState.isEmailValid) return
 
     viewModelScope.launch {
-      sessionStore.insert(
-        value = SessionTable(id = SingleId, emailAddress = currentState.email, autoSync = false)
-      )
+      sessionStore.insert(value = SessionTable(emailAddress = currentState.email, autoSync = false))
     }
   }
 }

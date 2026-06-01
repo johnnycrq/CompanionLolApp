@@ -22,8 +22,8 @@ import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
 import com.companion.lol.storage.sqldelight.tables.ChampionFavoritesTable
 import com.companion.lol.storage.sqldelight.tables.ChampionPartyTypeTable
 import com.companion.lol.storage.sqldelight.tables.ChampionTable
-import com.companion.lol.storage.sqldelight.tables.SessionTable
-import com.companion.lol.storage.sqldelight.tables.SettingsTable
+import com.companion.lol.storage.sqldelight.tables.SingletonSessionTable
+import com.companion.lol.storage.sqldelight.tables.SingletonSettingsTable
 import com.companion.lol.storage.sqldelight.tables.SkinTable
 import dagger.Module
 import dagger.Provides
@@ -77,13 +77,13 @@ internal object StorageModule {
       ChampionFavoritesTableAdapter = ChampionFavoritesTable.Adapter(ChampionIdAdapter),
       ChampionPartyTypeTableAdapter =
         ChampionPartyTypeTable.Adapter(PartyTypeIdAdapter, EnumColumnAdapter<PartyType>()),
-      SettingsTableAdapter =
-        SettingsTable.Adapter(
+      SingletonSettingsTableAdapter =
+        SingletonSettingsTable.Adapter(
           SingleIdAdapter,
           EnumColumnAdapter<GridSize>(),
           EnumColumnAdapter<SortOrder>(),
         ),
-      SessionTableAdapter = SessionTable.Adapter(SingleIdAdapter),
+      SingletonSessionTableAdapter = SingletonSessionTable.Adapter(SingleIdAdapter),
       SkinTableAdapter = SkinTable.Adapter(ChampionIdAdapter, SkinIdAdapter, IntColumnAdapter),
       ChampionDetailsTableAdapter =
         ChampionDetailsTable.Adapter(

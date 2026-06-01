@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.companion.lol.storage.impl.store.base.SqldelightStore
 import com.companion.lol.storage.impl.util.DatabaseContext
+import com.companion.lol.storage.impl.util.toSingleton
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.SessionQueries
 import com.companion.lol.storage.sqldelight.tables.SessionTable
@@ -16,7 +17,8 @@ import kotlinx.coroutines.withContext
 class SessionStore @Inject constructor(database: LolAppDb, private val context: DatabaseContext) :
   SqldelightStore<SessionQueries>(database.sessionQueries) {
 
-  suspend fun insert(value: SessionTable) = withContext(context) { queries.insert(value) }
+  suspend fun insert(value: SessionTable) =
+    withContext(context) { queries.insert(value.toSingleton()) }
 
   fun observe(): Flow<SessionTable?> = queries.get().asFlow().mapToOneOrNull(context)
 
