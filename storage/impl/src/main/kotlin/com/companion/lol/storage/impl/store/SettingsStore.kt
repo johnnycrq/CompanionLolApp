@@ -12,10 +12,10 @@ import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.SettingsQueries
 import com.companion.lol.storage.sqldelight.tables.SettingsTable
 import com.companion.lol.storage.sqldelight.tables.SingletonSettingsTable
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 private val default =
   SettingsTable(championGridSize = GridSize.MEDIUM, championSortOrder = SortOrder.ASC)
@@ -24,6 +24,7 @@ private val default =
 class SettingsStore @Inject constructor(database: LolAppDb, private val context: DatabaseContext) :
   SqldelightStore<SettingsQueries>(database.settingsQueries) {
   @RequiresDispatcher private fun findAdd(): SettingsTable? = queries.findAll().executeAsOneOrNull()
+
   fun observeOrDefault(): Flow<SettingsTable> =
     queries.findAll().asFlow().mapToOneOrDefault(default, context)
 

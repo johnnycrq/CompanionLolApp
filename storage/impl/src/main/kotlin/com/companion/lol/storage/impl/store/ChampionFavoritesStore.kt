@@ -5,9 +5,9 @@ import com.companion.lol.storage.impl.store.base.SqldelightStore
 import com.companion.lol.storage.impl.util.DatabaseContext
 import com.companion.lol.storage.sqldelight.LolAppDb
 import com.companion.lol.storage.sqldelight.tables.ChampionFavoritesQueries
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.withContext
 
 @Singleton
 class ChampionFavoritesStore

@@ -2,6 +2,7 @@ package com.companion.lol.app.ui.screens.championList
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -31,12 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.companion.lol.app.R
-import com.companion.lol.app.compose.app.AppBarNavIcon
-import com.companion.lol.app.compose.app.CompanionLolTopAppbar
 import com.companion.lol.app.compose.app.companionAppGradientInverted
 import com.companion.lol.storage.impl.model.other.SortOrder
 
@@ -65,8 +66,9 @@ fun ChampionListToolbar(
       }
     }
 
-  CompanionLolTopAppbar(
+  TopAppBar(
     modifier = modifier.drawBehind { drawRect(brush = gradient, alpha = alpha.value) },
+    title = { Text(text = stringResource(id = R.string.champion_list)) },
     colors =
       TopAppBarDefaults.topAppBarColors(
         containerColor = Color.Transparent,
@@ -75,9 +77,9 @@ fun ChampionListToolbar(
         navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
         actionIconContentColor = MaterialTheme.colorScheme.onSurface,
       ),
-    scrollBehavior = scrollBehavior,
-    navIcon = AppBarNavIcon.CLOSE,
-    titleRes = R.string.champion_list,
+    navigationIcon = {
+      Image(painter = painterResource(id = R.mipmap.ic_launcher_round), contentDescription = null)
+    },
     actions = {
       var expanded by remember { mutableStateOf(false) }
 
@@ -128,6 +130,7 @@ fun ChampionListToolbar(
         )
       }
     },
+    scrollBehavior = scrollBehavior,
   )
 }
 

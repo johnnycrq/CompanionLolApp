@@ -10,12 +10,12 @@ import androidx.palette.graphics.Palette
 import coil3.Image
 import coil3.toBitmap
 import com.companion.lol.storage.impl.model.ids.ChampionId
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import kotlin.coroutines.CoroutineContext
 
 val LocalChampionColorCache =
   compositionLocalOf<ChampionColorCache> { error("Not initialized yet") }
