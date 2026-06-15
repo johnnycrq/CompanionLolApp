@@ -47,8 +47,7 @@ class SnackBarPositionReporter(private val backStack: BackStack<ScreenKey>) {
       .map { -it }
 }
 
-val LocalSnackBarPositionReporter =
-  staticCompositionLocalOf<SnackBarPositionReporter> { error("not provided") }
+val LocalSnackBarPositionReporter = staticCompositionLocalOf<SnackBarPositionReporter?> { null }
 
 @Stable
 enum class SnackBarPosition {
@@ -101,7 +100,7 @@ private class SaveLayoutTopNode(
       val root = coordinates.findRootCoordinates().size.height
       val distance = root - value
 
-      currentValueOf(LocalSnackBarPositionReporter).updatePosition(screenId, distance.roundToInt())
+      currentValueOf(LocalSnackBarPositionReporter)?.updatePosition(screenId, distance.roundToInt())
     }
   }
 }
