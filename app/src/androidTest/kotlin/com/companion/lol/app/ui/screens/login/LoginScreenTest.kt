@@ -42,14 +42,11 @@ class LoginScreenTest {
     val continueButton = composeTestRule.onNodeWithText("Continue")
     val emailField = composeTestRule.onNodeWithText("Email Address")
 
-    // Initially disabled
     continueButton.assertIsNotEnabled()
 
-    // Invalid email
     emailField.performTextInput("invalid-email")
     continueButton.assertIsNotEnabled()
 
-    // Valid email
     emailField.performTextClearance()
     emailField.performTextInput("test@example.com")
     continueButton.assertIsEnabled()
