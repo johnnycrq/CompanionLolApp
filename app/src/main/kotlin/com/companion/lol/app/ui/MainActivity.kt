@@ -52,19 +52,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MainScreen() {
-  CompanionAppTheme {
-    val viewModel = hiltViewModel<MainViewModel>()
-
-    MainScreen(
-      snackBarManager = viewModel.snackBarManager,
-      colorCache = viewModel.colorCache,
-      backStack = viewModel.backStack,
-    )
-  }
-}
-
-@Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 private fun MainScreen(
   snackBarManager: SnackBarManager,
@@ -84,6 +71,19 @@ private fun MainScreen(
     ) {
       NavDisplay(backStack = backStack)
     }
+  }
+}
+
+@Composable
+private fun MainScreen() {
+  CompanionAppTheme {
+    val viewModel = hiltViewModel<MainViewModel>()
+
+    MainScreen(
+      snackBarManager = viewModel.snackBarManager,
+      colorCache = viewModel.colorCache,
+      backStack = viewModel.backStack,
+    )
   }
 }
 
