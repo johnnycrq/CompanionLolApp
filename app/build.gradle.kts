@@ -108,6 +108,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.io.timber)
 
+    ksp(libs.kotlinMetadataJvm)
     implementation(libs.kotlinx.coroutines)
 
     testImplementation(libs.junit)
