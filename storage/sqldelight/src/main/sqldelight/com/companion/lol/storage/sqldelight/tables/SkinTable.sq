@@ -9,7 +9,8 @@ CREATE TABLE SkinTable (
   number INTEGER AS Int NOT NULL,
   name TEXT NOT NULL,
   isChroma INTEGER AS Boolean  NOT NULL,
-  PRIMARY KEY (id, skinId)
+  PRIMARY KEY (id, skinId),
+  FOREIGN KEY (id) REFERENCES ChampionTable(id) ON DELETE CASCADE
 );
 
 insert:

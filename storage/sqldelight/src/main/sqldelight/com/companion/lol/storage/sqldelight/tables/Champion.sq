@@ -7,7 +7,8 @@ CREATE TABLE ChampionTable (
   name TEXT NOT NULL,
   title TEXT NOT NULL,
   squareImageName TEXT NOT NULL,
-  partTypeId INTEGER AS PartyTypeId NOT NULL
+  partTypeId INTEGER AS PartyTypeId NOT NULL,
+  FOREIGN KEY (partTypeId) REFERENCES ChampionPartyTypeTable(id)
 );
 
 CREATE VIEW ChampionView AS
@@ -30,7 +31,7 @@ hasData:
 SELECT EXISTS (SELECT 1 FROM ChampionTable);
 
 insert:
-INSERT OR REPLACE INTO ChampionTable VALUES ?;
+INSERT OR IGNORE INTO ChampionTable VALUES ?;
 
 findAll:
 SELECT * FROM ChampionWithFavoritesView;

@@ -1,5 +1,4 @@
 import com.companion.lol.storage.impl.model.ids.ChampionId;
-import com.companion.lol.storage.impl.model.ids.PartyTypeId;
 import com.companion.lol.storage.impl.model.other.ChampionTag;
 import kotlin.collections.List;
 
@@ -8,7 +7,7 @@ CREATE TABLE ChampionDetailsTable (
   lore TEXT NOT NULL,
   blurb TEXT NOT NULL,
   tags TEXT AS List<ChampionTag> NOT NULL,
-  partyTypeId INTEGER AS PartyTypeId NOT NULL
+  FOREIGN KEY (id) REFERENCES ChampionTable(id) ON DELETE CASCADE
 );
 
 insert:
@@ -16,9 +15,3 @@ INSERT OR REPLACE INTO ChampionDetailsTable VALUES ?;
 
 findById:
 SELECT * FROM ChampionDetailsTable WHERE id = :championId;
-
-hasDetailsForId:
-SELECT details AND skins FROM(
-(SELECT EXISTS( SELECT 1 FROM ChampionDetailsTable WHERE id = ? ) AS details),
-(SELECT EXISTS( SELECT 1 FROM SkinTable WHERE id = ? ) AS skins)
-);

@@ -3,11 +3,9 @@ import kotlin.Boolean;
 
 CREATE TABLE ChampionFavoritesTable (
   id INTEGER AS ChampionId PRIMARY KEY NOT NULL,
-  isFavorite INTEGER AS Boolean NOT NULL
+  isFavorite INTEGER AS Boolean NOT NULL,
+  FOREIGN KEY (id) REFERENCES ChampionTable(id) ON DELETE CASCADE
 );
-
-insert:
-INSERT OR REPLACE INTO ChampionFavoritesTable VALUES ?;
 
 updateIsFavorite {
   UPDATE ChampionFavoritesTable

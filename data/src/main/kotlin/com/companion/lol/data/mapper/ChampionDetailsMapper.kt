@@ -34,8 +34,7 @@ fun ChampionDetailsDto.toTable(championId: ChampionId): ChampionDetailsTable {
       id = championId,
       lore = it.lore,
       blurb = it.blurb,
-      tags = it.tags.map { ChampionTag.from(it) },
-      partyTypeId = PartyType.from(it.partyType).dbId,
+      tags = it.tags.map { ChampionTag.from(it) }
     )
   }
 }

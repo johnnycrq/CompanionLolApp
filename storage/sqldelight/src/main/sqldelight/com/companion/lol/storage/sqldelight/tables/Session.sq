@@ -29,6 +29,3 @@ DELETE FROM SingletonSessionTable;
 
 emailAddress:
 SELECT emailAddress FROM SessionTable LIMIT 1;
-
-isAutoSync:
-SELECT autoSync FROM SessionTable LIMIT 1;
