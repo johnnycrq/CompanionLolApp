@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import com.companion.lol.app.navigation.ScreenMetadata
 import com.companion.lol.app.navigation.serializer.ChampionIdSerializer
 import com.companion.lol.app.ui.screens.championDetails.ChampionDetailsScreen
-import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.core.model.ChampionId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 

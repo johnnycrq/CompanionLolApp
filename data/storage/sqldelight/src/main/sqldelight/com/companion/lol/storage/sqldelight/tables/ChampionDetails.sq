@@ -1,0 +1,17 @@
+import com.companion.lol.core.model.ChampionId;
+import com.companion.lol.core.model.ChampionTag;
+import kotlin.collections.List;
+
+CREATE TABLE ChampionDetailsTable (
+  id INTEGER AS ChampionId PRIMARY KEY NOT NULL,
+  lore TEXT NOT NULL,
+  blurb TEXT NOT NULL,
+  tags TEXT AS List<ChampionTag> NOT NULL,
+  FOREIGN KEY (id) REFERENCES ChampionTable(id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO ChampionDetailsTable VALUES ?;
+
+findById:
+SELECT * FROM ChampionDetailsTable WHERE id = :championId;

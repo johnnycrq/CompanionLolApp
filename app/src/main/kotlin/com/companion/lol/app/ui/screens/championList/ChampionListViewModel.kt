@@ -1,3 +1,5 @@
+@file:Suppress("CanBeParameter")
+
 package com.companion.lol.app.ui.screens.championList
 
 import androidx.lifecycle.ViewModel
@@ -9,14 +11,12 @@ import com.companion.lol.app.ui.screens.DataRefreshState
 import com.companion.lol.app.util.next
 import com.companion.lol.app.util.sortBy
 import com.companion.lol.app.util.toggle
-import com.companion.lol.data.mapper.toModel
-import com.companion.lol.data.usecase.RefreshChampionsUseCase
-import com.companion.lol.data.util.listMap
-import com.companion.lol.storage.impl.model.ids.ChampionId
-import com.companion.lol.storage.impl.store.ChampionFavoritesStore
-import com.companion.lol.storage.impl.store.ChampionStore
-import com.companion.lol.storage.impl.store.SettingsStore
-import com.companion.lol.storage.sqldelight.tables.ChampionWithFavoritesView
+import com.companion.lol.core.model.ChampionId
+import com.companion.lol.domain.usecase.DeleteFavorites
+import com.companion.lol.domain.usecase.ObserveChampion
+import com.companion.lol.domain.usecase.ObserveSettings
+import com.companion.lol.domain.usecase.RefreshChampion
+import com.companion.lol.domain.usecase.UpdateSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,17 +34,18 @@ class ChampionListViewModel
 @Inject
 constructor(
   private val backStack: BackStack<ScreenKey>,
-  private val championStore: ChampionStore,
-  private val favoritesStore: ChampionFavoritesStore,
-  private val settingsStore: SettingsStore,
-  private val refreshChampionsUseCase: RefreshChampionsUseCase,
+  private val refreshChampions: RefreshChampion,
+  private val updateSettings: UpdateSettings,
+  private val deleteFavorites: DeleteFavorites,
+  private val observeChampions: ObserveChampion,
+  observeSession: ObserveSettings,
 ) : ViewModel() {
   private val refreshState = MutableStateFlow(DataRefreshState())
 
   val state: StateFlow<ChampionListState> =
     combine(
-        flow = championStore.observeAllWithFavorites().listMap(ChampionWithFavoritesView::toModel),
-        flow2 = settingsStore.observeOrDefault(),
+        flow = observeChampions(),
+        flow2 = observeSession(),
         flow3 = refreshState,
         transform = { champion, settings, refreshState ->
           ChampionListState(
@@ -72,29 +73,22 @@ constructor(
   fun onRetry() = onRefresh()
 
   private suspend fun refresh(userTriggered: Boolean) {
-    if (userTriggered || !championStore.hasData()) {
-      val success = refreshChampionsUseCase.refresh().isSuccess
+    val success = refreshChampions(userTriggered)
 
-      refreshState.value =
-        DataRefreshState(refreshing = false, userTriggered = userTriggered, hasError = !success)
-    } else {
-      refreshState.value =
-        DataRefreshState(refreshing = false, userTriggered = false, hasError = false)
-    }
+    refreshState.value =
+      DataRefreshState(refreshing = false, userTriggered = userTriggered, hasError = !success)
   }
 
   fun changeGridSize() {
-    viewModelScope.launch { settingsStore.insert(championGridSize = state.value.gridSize.next()) }
+    viewModelScope.launch { updateSettings(gridSize = state.value.gridSize.next()) }
   }
 
   fun onSortMenuItemClicked() {
-    viewModelScope.launch {
-      settingsStore.insert(championSortOrder = state.value.sortOrder.toggle())
-    }
+    viewModelScope.launch { updateSettings(sortOrder = state.value.sortOrder.toggle()) }
   }
 
   fun onFavoritesClearClicked() {
-    viewModelScope.launch { favoritesStore.clearAll() }
+    viewModelScope.launch { deleteFavorites() }
   }
 
   fun onCardClick(championId: ChampionId) {

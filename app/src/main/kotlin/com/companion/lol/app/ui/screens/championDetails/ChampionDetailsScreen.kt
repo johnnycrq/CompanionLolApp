@@ -57,9 +57,9 @@ import com.companion.lol.app.util.EMPTY_STRING
 import com.companion.lol.app.util.LocalChampionColorCache
 import com.companion.lol.app.util.color
 import com.companion.lol.app.util.icon
-import com.companion.lol.storage.impl.model.ids.ChampionId
-import com.companion.lol.storage.impl.model.other.ChampionTag
-import com.companion.lol.storage.impl.model.other.PartyType
+import com.companion.lol.core.model.ChampionId
+import com.companion.lol.core.model.ChampionTag
+import com.companion.lol.core.model.PartyType
 
 @Composable
 fun ChampionDetailsScreen(championId: ChampionId) {

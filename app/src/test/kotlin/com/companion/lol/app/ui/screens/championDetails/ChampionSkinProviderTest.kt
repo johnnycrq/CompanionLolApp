@@ -1,6 +1,6 @@
 package com.companion.lol.app.ui.screens.championDetails
 
-import com.companion.lol.data.io.images.DdragonImage
+import com.companion.lol.domain.model.DdragonImage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

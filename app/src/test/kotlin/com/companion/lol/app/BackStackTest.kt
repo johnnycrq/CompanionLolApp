@@ -6,7 +6,7 @@ import com.companion.lol.app.navigation.keys.InitialScreenKey
 import com.companion.lol.app.navigation.keys.LoginKey
 import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.navigation.keys.SettingsKey
-import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.core.model.ChampionId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

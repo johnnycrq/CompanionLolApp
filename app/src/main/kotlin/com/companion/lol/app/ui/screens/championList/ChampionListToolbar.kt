@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.companion.lol.app.R
 import com.companion.lol.app.compose.app.companionAppGradientInverted
-import com.companion.lol.storage.impl.model.other.SortOrder
+import com.companion.lol.core.model.SortOrder
 
 @ExperimentalMaterial3Api
 @Composable

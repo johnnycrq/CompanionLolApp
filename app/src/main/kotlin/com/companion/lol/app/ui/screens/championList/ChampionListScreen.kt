@@ -28,7 +28,7 @@ import com.companion.lol.app.util.LocalChampionColorCache
 import com.companion.lol.app.util.count
 import com.companion.lol.app.util.modifier.SnackBarPosition
 import com.companion.lol.app.util.modifier.reportSnackBarPosition
-import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.core.model.ChampionId
 
 @Composable
 fun ChampionListScreen() {

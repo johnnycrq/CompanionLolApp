@@ -24,7 +24,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "CompanionLolApp"
 include(":app")
-include(":storage:sqldelight")
-include(":storage:impl")
-include(":network")
-include(":data")
+include(":data:storage:sqldelight")
+include(":data:storage:impl")
+include(":data:network")
+include(":domain")
+include(":core:model")
+include(":core:io")

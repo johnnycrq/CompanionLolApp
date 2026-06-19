@@ -1,0 +1,19 @@
+import com.companion.lol.core.model.ChampionId;
+import kotlin.Boolean;
+
+CREATE TABLE ChampionFavoritesTable (
+  id INTEGER AS ChampionId PRIMARY KEY NOT NULL,
+  isFavorite INTEGER AS Boolean NOT NULL,
+  FOREIGN KEY (id) REFERENCES ChampionTable(id) ON DELETE CASCADE
+);
+
+updateIsFavorite {
+  UPDATE ChampionFavoritesTable
+  SET isFavorite = ?2 WHERE id = ?1;
+
+  INSERT OR IGNORE INTO ChampionFavoritesTable (id, isFavorite)
+  VALUES (?1, ?2);
+}
+
+clearAll:
+DELETE FROM ChampionFavoritesTable;

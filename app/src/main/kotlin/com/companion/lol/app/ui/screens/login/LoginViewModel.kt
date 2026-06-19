@@ -4,8 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.util.persistedFlow
-import com.companion.lol.storage.impl.store.SessionStore
-import com.companion.lol.storage.sqldelight.tables.SessionTable
+import com.companion.lol.domain.usecase.UpdateSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class LoginViewModel
 @Inject
-constructor(private val sessionStore: SessionStore, savedStateHandle: SavedStateHandle) :
+constructor(private val updateSession: UpdateSession, savedStateHandle: SavedStateHandle) :
   ViewModel() {
   val state: StateFlow<LoginState>
     field = savedStateHandle.persistedFlow(key = "LoginState", LoginState())
@@ -28,8 +27,6 @@ constructor(private val sessionStore: SessionStore, savedStateHandle: SavedState
     // fail-safe
     if (!currentState.isEmailValid) return
 
-    viewModelScope.launch {
-      sessionStore.insert(value = SessionTable(emailAddress = currentState.email, autoSync = false))
-    }
+    viewModelScope.launch { updateSession(emailAddress = currentState.email, autoSync = false) }
   }
 }

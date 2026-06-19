@@ -72,7 +72,9 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    implementation(project(":data"))
+    implementation(project(":core:model"))
+    implementation(project(":core:io"))
+    implementation(project(":domain"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.animation.core)

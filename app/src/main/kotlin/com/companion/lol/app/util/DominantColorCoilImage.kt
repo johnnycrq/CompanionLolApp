@@ -21,8 +21,8 @@ import coil3.request.ImageRequest
 import coil3.request.transformations
 import coil3.size.Size
 import coil3.transform.Transformation
-import com.companion.lol.data.io.images.DdragonImage
-import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.core.model.ChampionId
+import com.companion.lol.domain.model.DdragonImage
 
 private val noPainter = ColorPainter(Color.Transparent)
 

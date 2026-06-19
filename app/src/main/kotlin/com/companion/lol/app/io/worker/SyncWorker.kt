@@ -10,14 +10,12 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.companion.lol.app.AppConst
-import com.companion.lol.data.usecase.RefreshChampionsUseCase
-import com.companion.lol.data.util.getOrPropagate
+import com.companion.lol.domain.usecase.RefreshChampion
 import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlin.time.Duration
 import kotlin.time.toJavaDuration
-import timber.log.Timber
 
 @HiltWorker
 class SyncWorker
@@ -25,7 +23,7 @@ class SyncWorker
 constructor(
   @Assisted context: Context,
   @Assisted workerParams: WorkerParameters,
-  private val refreshChampions: Lazy<RefreshChampionsUseCase>,
+  private val refreshChampions: Lazy<RefreshChampion>,
 ) : CoroutineWorker(context, workerParams) {
   companion object {
 
@@ -86,11 +84,8 @@ constructor(
   }
 
   override suspend fun doWork(): Result {
-    refreshChampions.get().refresh().getOrPropagate {
-      Timber.e(it)
-      return@doWork Result.retry()
+    return refreshChampions.get().invoke(forceRefresh = true).let {
+      if (it) Result.success() else Result.retry()
     }
-
-    return Result.success()
   }
 }

@@ -1,6 +1,6 @@
 package com.companion.lol.app.navigation.serializer
 
-import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.core.model.ChampionId
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor

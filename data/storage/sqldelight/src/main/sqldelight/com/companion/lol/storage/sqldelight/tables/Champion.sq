@@ -1,0 +1,43 @@
+import com.companion.lol.core.model.ChampionId;
+import com.companion.lol.storage.impl.model.ids.PartyTypeId;
+
+CREATE TABLE ChampionTable (
+  id INTEGER AS ChampionId PRIMARY KEY NOT NULL,
+  keyName TEXT NOT NULL,
+  name TEXT NOT NULL,
+  title TEXT NOT NULL,
+  squareImageName TEXT NOT NULL,
+  partTypeId INTEGER AS PartyTypeId NOT NULL,
+  FOREIGN KEY (partTypeId) REFERENCES ChampionPartyTypeTable(id)
+);
+
+CREATE VIEW ChampionView AS
+SELECT ChampionTable.id, keyName, name, title, squareImageName, partyType
+FROM ChampionTable INNER JOIN ChampionPartyTypeTable ON ChampionTable.partTypeId == ChampionPartyTypeTable.id;
+
+CREATE VIEW ChampionWithFavoritesView AS
+SELECT
+  ChampionView.id,
+  ChampionView.name,
+  ChampionView.keyName,
+  ChampionView.title,
+  ChampionView.squareImageName,
+  ChampionView.partyType,
+  ChampionFavoritesTable.isFavorite
+FROM ChampionView
+LEFT JOIN ChampionFavoritesTable USING(id);
+
+hasData:
+SELECT EXISTS (SELECT 1 FROM ChampionTable);
+
+insert:
+INSERT OR IGNORE INTO ChampionTable VALUES ?;
+
+findAll:
+SELECT * FROM ChampionWithFavoritesView;
+
+findKeyNameById:
+SELECT keyName FROM ChampionTable WHERE id = ? LIMIT 1;
+
+findById:
+SELECT * FROM ChampionWithFavoritesView WHERE id = ? LIMIT 1;

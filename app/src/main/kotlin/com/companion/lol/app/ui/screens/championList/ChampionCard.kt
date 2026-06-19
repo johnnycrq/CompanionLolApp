@@ -36,16 +36,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.app.util.DominantColorCoilImage
-import com.companion.lol.data.io.images.DdragonImage
-import com.companion.lol.data.model.ChampionModel
-import com.companion.lol.storage.impl.model.ids.ChampionId
-import com.companion.lol.storage.impl.model.other.GridSize
+import com.companion.lol.core.model.ChampionId
+import com.companion.lol.core.model.GridSize
+import com.companion.lol.domain.model.Champion
+import com.companion.lol.domain.model.DdragonImage
 
 @Composable
 fun ChampionCard(
   modifier: Modifier,
   championColorCache: ChampionColorCache,
-  champion: ChampionModel,
+  champion: Champion,
   gridSize: GridSize,
   onCardClick: (ChampionId) -> Unit,
 ) {

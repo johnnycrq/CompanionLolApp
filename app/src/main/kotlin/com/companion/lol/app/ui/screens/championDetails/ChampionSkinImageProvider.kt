@@ -9,9 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.Snapshot
-import com.companion.lol.data.io.images.DdragonImage
-import com.companion.lol.data.model.other.ChampionSkin
-import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.core.model.ChampionId
+import com.companion.lol.domain.model.ChampionSkin
+import com.companion.lol.domain.model.DdragonImage
 
 @Stable
 interface ChampionSkinProvider {

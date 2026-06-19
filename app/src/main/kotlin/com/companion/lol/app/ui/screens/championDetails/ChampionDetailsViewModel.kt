@@ -6,11 +6,10 @@ import com.companion.lol.app.io.UiError
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.ui.MessagePoster
-import com.companion.lol.data.usecase.ChampionWithDetailsUseCase
-import com.companion.lol.data.usecase.RefreshChampionDetailsUseCase
-import com.companion.lol.data.util.withRetry
-import com.companion.lol.storage.impl.model.ids.ChampionId
-import com.companion.lol.storage.impl.store.ChampionFavoritesStore
+import com.companion.lol.core.model.ChampionId
+import com.companion.lol.domain.usecase.ObserveChampionDetails
+import com.companion.lol.domain.usecase.RefreshChampionDetails
+import com.companion.lol.domain.usecase.UpdateFavorites
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -27,11 +26,11 @@ class ChampionDetailsViewModel
 @AssistedInject
 constructor(
   @Assisted private val championId: ChampionId,
-  detailsUseCase: ChampionWithDetailsUseCase,
   private val messagePoster: MessagePoster,
   private val backStack: BackStack<ScreenKey>,
-  private val refreshUseCase: RefreshChampionDetailsUseCase,
-  private val favoritesStore: ChampionFavoritesStore,
+  private val refreshChampionDetails: RefreshChampionDetails,
+  private val observeChampionDetails: ObserveChampionDetails,
+  private val updateFavorites: UpdateFavorites,
 ) : ViewModel() {
   @AssistedFactory
   interface Factory {
@@ -39,11 +38,8 @@ constructor(
   }
 
   val state: StateFlow<ChampionDetailsState> =
-    detailsUseCase
-      .observeChampionWithDetails(championId = championId)
-      .map {
-        ChampionDetailsState(championId = championId, champion = it.champion, details = it.details)
-      }
+    observeChampionDetails(championId = championId)
+      .map { ChampionDetailsState(championId = championId, championWithDetails = it) }
       .stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
@@ -53,13 +49,15 @@ constructor(
   init {
     viewModelScope.launch {
       // refresh details
-      withRetry(times = 1, delayDuration = 1.seconds) { refreshUseCase.refresh(championId) }
-        .onFailure {
-          if (state.value.champion == null || state.value.details == null) {
-            messagePoster.postMessage(UiError(message = "Cannot load the details data"))
-            backStack.goBack()
-          }
-        }
+      val success =
+        refreshChampionDetails(retry = 3, retryDelay = 5.seconds, championId = championId)
+
+      if (success) return@launch
+
+      if (!state.value.hasData) {
+        messagePoster.postMessage(UiError(message = "Cannot load the details data"))
+        backStack.goBack()
+      }
     }
   }
 
@@ -67,7 +65,7 @@ constructor(
     val champion = state.value.champion ?: return
 
     viewModelScope.launch {
-      favoritesStore.markFavorite(championId = champion.id, isFavorite = champion.isFavorite.not())
+      updateFavorites(championId = champion.id, isFavorite = champion.isFavorite.not())
     }
   }
 }

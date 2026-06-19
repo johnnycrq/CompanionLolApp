@@ -12,8 +12,8 @@ import com.companion.lol.app.navigation.keys.InitialScreenKey
 import com.companion.lol.app.navigation.keys.LoginKey
 import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.util.ChampionColorCache
-import com.companion.lol.data.AppDispatchers
-import com.companion.lol.storage.impl.store.SessionStore
+import com.companion.lol.core.io.AppDispatchers
+import com.companion.lol.domain.usecase.ObserveAuthenticatedEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
@@ -29,7 +29,7 @@ constructor(
   dispatchers: AppDispatchers,
   val backStack: BackStack<ScreenKey>,
   val snackBarManager: SnackBarManager,
-  private val sessionStore: SessionStore,
+  private val observeLoggedInEmailAddress: ObserveAuthenticatedEmail,
 ) : ViewModel() {
   /**
    * we need this to survive rotation but not process death because the images will be refetched and
@@ -48,8 +48,7 @@ constructor(
     backStackSaver.attackBackStack(backStack = backStack, restore = true)
 
     viewModelScope.launch {
-      sessionStore
-        .observeEmailAddress()
+      observeLoggedInEmailAddress()
         .map { it != null }
         .distinctUntilChanged()
         .collectLatest { isLoggedIn ->

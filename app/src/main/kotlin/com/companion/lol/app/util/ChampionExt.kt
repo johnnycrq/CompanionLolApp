@@ -3,10 +3,10 @@ package com.companion.lol.app.util
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import com.companion.lol.app.R
-import com.companion.lol.storage.impl.model.other.ChampionTag
-import com.companion.lol.storage.impl.model.other.GridSize
-import com.companion.lol.storage.impl.model.other.PartyType
-import com.companion.lol.storage.impl.model.other.SortOrder
+import com.companion.lol.core.model.ChampionTag
+import com.companion.lol.core.model.GridSize
+import com.companion.lol.core.model.PartyType
+import com.companion.lol.core.model.SortOrder
 
 val GridSize.count: Int
   get() =

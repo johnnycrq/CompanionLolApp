@@ -1,9 +1,9 @@
 package com.companion.lol.app.util
 
-import com.companion.lol.data.model.ChampionModel
-import com.companion.lol.storage.impl.model.other.SortOrder
+import com.companion.lol.core.model.SortOrder
+import com.companion.lol.domain.model.Champion
 
-fun List<ChampionModel>.sortBy(order: SortOrder): List<ChampionModel> {
+fun List<Champion>.sortBy(order: SortOrder): List<Champion> {
   return when (order) {
     SortOrder.FAVORITES ->
       this.sortedWith(

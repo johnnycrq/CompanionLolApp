@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
 import coil3.Image
 import coil3.toBitmap
-import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.core.model.ChampionId
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel

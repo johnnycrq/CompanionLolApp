@@ -3,7 +3,7 @@ package com.companion.lol.app.util
 import androidx.compose.ui.graphics.Color
 import coil3.Canvas
 import coil3.Image
-import com.companion.lol.storage.impl.model.ids.ChampionId
+import com.companion.lol.core.model.ChampionId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope

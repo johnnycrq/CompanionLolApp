@@ -1,0 +1,22 @@
+import com.companion.lol.core.model.GridSize;
+import com.companion.lol.core.model.SortOrder;
+import com.companion.lol.storage.impl.model.ids.SingleId;
+
+CREATE TABLE SingletonSettingsTable (
+  id INTEGER AS SingleId NOT NULL PRIMARY KEY CHECK(id = 1),
+  championGridSize TEXT AS GridSize NOT NULL,
+  championSortOrder TEXT AS SortOrder NOT NULL
+);
+
+CREATE VIEW SettingsTable AS
+SELECT
+  championGridSize,
+  championSortOrder
+FROM SingletonSettingsTable
+WHERE id = 1;
+
+insert:
+INSERT OR REPLACE INTO SingletonSettingsTable VALUES ?;
+
+findAll:
+SELECT * FROM SettingsTable;
