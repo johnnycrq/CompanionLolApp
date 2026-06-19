@@ -2,12 +2,10 @@ package com.companion.lol.app.ui.screens.championList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.companion.lol.app.BuildConfig
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.keys.ChampionDetailsKey
 import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.ui.screens.RefreshState
-import com.companion.lol.app.util.awaitAtLeast
 import com.companion.lol.app.util.next
 import com.companion.lol.app.util.sortBy
 import com.companion.lol.app.util.toggle
@@ -21,9 +19,6 @@ import com.companion.lol.storage.impl.store.SettingsStore
 import com.companion.lol.storage.sqldelight.tables.ChampionWithFavoritesView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -33,8 +28,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-private val showcaseArtificialAnimationDelay = if (BuildConfig.DEBUG) 1.5.seconds else Duration.ZERO
 
 @HiltViewModel
 class ChampionListViewModel
@@ -80,14 +73,11 @@ constructor(
 
   private suspend fun refresh(userTriggered: Boolean) {
     if (userTriggered || !championStore.hasData()) {
-      val success =
-        awaitAtLeast(showcaseArtificialAnimationDelay) { refreshChampionsUseCase.refresh() }
-          .isSuccess
+      val success = refreshChampionsUseCase.refresh().isSuccess
 
       refreshState.value =
         RefreshState(refreshing = false, userTriggered = userTriggered, hasError = !success)
     } else {
-      delay(showcaseArtificialAnimationDelay)
       refreshState.value = RefreshState(refreshing = false, userTriggered = false, hasError = false)
     }
   }

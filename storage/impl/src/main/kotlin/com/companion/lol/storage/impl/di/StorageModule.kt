@@ -88,7 +88,7 @@ internal object StorageModule {
       ChampionDetailsTableAdapter =
         ChampionDetailsTable.Adapter(
           idAdapter = ChampionIdAdapter,
-          tagsAdapter = ChampionTagAdapter
+          tagsAdapter = ChampionTagAdapter,
         ),
     )
 }

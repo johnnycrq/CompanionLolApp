@@ -8,7 +8,6 @@ import com.companion.lol.network.dto.other.ChampionSkins
 import com.companion.lol.storage.impl.model.ids.ChampionId
 import com.companion.lol.storage.impl.model.ids.SkinId
 import com.companion.lol.storage.impl.model.other.ChampionTag
-import com.companion.lol.storage.impl.model.other.PartyType
 import com.companion.lol.storage.sqldelight.tables.ChampionDetailsTable
 import com.companion.lol.storage.sqldelight.tables.SkinTable
 
@@ -34,7 +33,7 @@ fun ChampionDetailsDto.toTable(championId: ChampionId): ChampionDetailsTable {
       id = championId,
       lore = it.lore,
       blurb = it.blurb,
-      tags = it.tags.map { ChampionTag.from(it) }
+      tags = it.tags.map { ChampionTag.from(it) },
     )
   }
 }
