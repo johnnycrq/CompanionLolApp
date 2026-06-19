@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-  namespace = "com.companion.lol.impl"
+  namespace = "com.companion.lol.storage.impl"
   compileSdk { version = release(36) }
 }
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.navigation.BackStack
 import com.companion.lol.app.navigation.keys.ChampionDetailsKey
 import com.companion.lol.app.navigation.keys.ScreenKey
-import com.companion.lol.app.ui.screens.RefreshState
+import com.companion.lol.app.ui.screens.DataRefreshState
 import com.companion.lol.app.util.next
 import com.companion.lol.app.util.sortBy
 import com.companion.lol.app.util.toggle
@@ -39,7 +39,7 @@ constructor(
   private val settingsStore: SettingsStore,
   private val refreshChampionsUseCase: RefreshChampionsUseCase,
 ) : ViewModel() {
-  private val refreshState = MutableStateFlow(RefreshState())
+  private val refreshState = MutableStateFlow(DataRefreshState())
 
   val state: StateFlow<ChampionListState> =
     combine(
@@ -66,7 +66,7 @@ constructor(
   }
 
   fun onRefresh() {
-    refreshState.value = RefreshState(refreshing = true, userTriggered = true, hasError = false)
+    refreshState.value = DataRefreshState(refreshing = true, userTriggered = true, hasError = false)
   }
 
   fun onRetry() = onRefresh()
@@ -76,9 +76,10 @@ constructor(
       val success = refreshChampionsUseCase.refresh().isSuccess
 
       refreshState.value =
-        RefreshState(refreshing = false, userTriggered = userTriggered, hasError = !success)
+        DataRefreshState(refreshing = false, userTriggered = userTriggered, hasError = !success)
     } else {
-      refreshState.value = RefreshState(refreshing = false, userTriggered = false, hasError = false)
+      refreshState.value =
+        DataRefreshState(refreshing = false, userTriggered = false, hasError = false)
     }
   }
 
