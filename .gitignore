@@ -26,3 +26,7 @@ local.properties
 /.idea/
 /composeReports/
 /keystore1
+/core/io/build/
+/core/model/build/
+/domain/build/
+/.kotlin/
