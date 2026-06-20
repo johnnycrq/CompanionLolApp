@@ -4,8 +4,9 @@ package com.companion.lol.app.ui
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.serialization.saved
-import com.companion.lol.app.navigation.BackStack
-import com.companion.lol.app.navigation.keys.ScreenKey
+import com.companion.lol.app.navigation.BackstackImpl
+import com.companion.lol.core.ui.screen.BackStack
+import com.companion.lol.core.ui.screen.ScreenKey
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
 
@@ -26,7 +27,7 @@ class BackStackSaver<S : ScreenKey>(
     )
 
   fun attackBackStack(backStack: BackStack<S>, restore: Boolean) {
-    (backStack as BackStack.Impl<S>).saver = { saverDelegate = it }
+    (backStack as BackstackImpl<S>).saver = { saverDelegate = it }
     if (restore) saverDelegate?.let(backStack::setHistory)
   }
 }

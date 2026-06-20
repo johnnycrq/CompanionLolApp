@@ -25,8 +25,8 @@ import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
 import androidx.window.core.layout.WindowSizeClass
-import com.companion.lol.app.compose.utils.isLandscape
-import com.companion.lol.app.navigation.ScreenMetadata
+import com.companion.lol.core.ui.screen.ScreenMetadata
+import com.companion.lol.core.ui.window.isLandscape
 
 /** An [OverlayScene] that renders an [entry] within a [ModalBottomSheet]. */
 private data class BottomSheetScene<T : Any>(
@@ -73,7 +73,7 @@ class BottomSheetSceneStrategy<T : Any>(private val windowSizeClass: WindowSizeC
     val lastEntry: NavEntry<T> = entries.lastOrNull() ?: return null
 
     val properties: ModalBottomSheetProperties =
-      lastEntry.metadata[ScreenMetadata.BottomSheet] ?: return null
+      lastEntry.metadata.get(ScreenMetadata.BottomSheet) ?: return null
 
     @Suppress("UNCHECKED_CAST")
     return BottomSheetScene(

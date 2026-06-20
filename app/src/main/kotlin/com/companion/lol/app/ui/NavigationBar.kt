@@ -19,10 +19,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.dropUnlessResumed
 import com.companion.lol.app.R
-import com.companion.lol.app.compose.app.companionAppGradient
-import com.companion.lol.app.navigation.keys.ChampionListKey
-import com.companion.lol.app.navigation.keys.ScreenKey
-import com.companion.lol.app.navigation.keys.SettingsKey
+import com.companion.lol.core.ui.material3.companionAppGradient
+import com.companion.lol.core.ui.screen.ChampionKey
+import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.screen.SettingsKey
 
 @Composable
 fun NavigationBar(
@@ -45,9 +45,9 @@ fun NavigationBar(
     CompanionLolNavigationBarItem(
       icon = Icons.AutoMirrored.Filled.List,
       label = stringResource(R.string.champion_list),
-      selected = { currentKey() is ChampionListKey },
+      selected = { currentKey() is ChampionKey },
       colors = colors,
-      onClick = { goTo(ChampionListKey) },
+      onClick = { goTo(ChampionKey) },
     )
 
     CompanionLolNavigationBarItem(

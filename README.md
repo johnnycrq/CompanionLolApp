@@ -8,7 +8,7 @@ The application is a League of Legends companion tool that allows users to explo
 This project leverages the cutting-edge Android ecosystem:
 
 - **UI Framework**: [Jetpack Compose](https://developer.android.com/jetpack/compose) with [Material 3](https://m3.material.io/) for a modern, declarative UI.
-- **Architecture**: Multi-module architecture following Clean Architecture principles (App, Data, Network, Storage).
+- **Architecture**: Multi-module architecture following **Android** Clean Architecture principles (App, Domain, Data [Network, Storage]. Its not **Pure Clean Architecture**
 - **Dependency Injection**: [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for robust and testable DI.
 - **Navigation**: [Navigation 3](https://developer.android.com/guide/navigation/navigation-3) (Experimental) showcasing the future of Android navigation.
 - **Database**: [SQLDelight](https://cashapp.github.io/sqldelight/) for typesafe local storage.

@@ -5,14 +5,14 @@ package com.companion.lol.app.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.companion.lol.app.compose.ui.theme.Gold1
-import com.companion.lol.app.navigation.BackStack
-import com.companion.lol.app.navigation.keys.ChampionListKey
-import com.companion.lol.app.navigation.keys.InitialScreenKey
-import com.companion.lol.app.navigation.keys.LoginKey
-import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.core.io.AppDispatchers
+import com.companion.lol.core.ui.screen.BackStack
+import com.companion.lol.core.ui.screen.ChampionKey
+import com.companion.lol.core.ui.screen.InitialScreenKey
+import com.companion.lol.core.ui.screen.LoginKey
+import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.theme.Gold1
 import com.companion.lol.domain.usecase.ObserveAuthenticatedEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -67,7 +67,7 @@ constructor(
           } else {
             // if we are logged in and on a public-only stack, go to main content
             if (currentHistory.none { it.requiresAuth() }) {
-              backStack.setHistory(ChampionListKey)
+              backStack.setHistory(ChampionKey)
             }
           }
         }

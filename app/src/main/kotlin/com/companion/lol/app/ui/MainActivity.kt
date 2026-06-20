@@ -22,38 +22,51 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.companion.lol.app.compose.ui.theme.CompanionAppTheme
-import com.companion.lol.app.navigation.BackStack
-import com.companion.lol.app.navigation.keys.ChampionDetailsKey
-import com.companion.lol.app.navigation.keys.ChampionListKey
-import com.companion.lol.app.navigation.keys.InitialScreenKey
-import com.companion.lol.app.navigation.keys.LoginKey
-import com.companion.lol.app.navigation.keys.ScreenKey
-import com.companion.lol.app.navigation.keys.SettingsKey
-import com.companion.lol.app.navigation.keys.entryScreenKey
 import com.companion.lol.app.ui.scene.rememberBottomSheetSceneStrategy
 import com.companion.lol.app.ui.scene.rememberNavigationBarDecoratorStrategy
-import com.companion.lol.app.util.ChampionColorCache
-import com.companion.lol.app.util.LocalChampionColorCache
-import com.companion.lol.app.util.modifier.LocalSnackBarPositionReporter
-import com.companion.lol.app.util.modifier.SnackBarPositionReporter
+import com.companion.lol.core.ui.ChampionColorCache
+import com.companion.lol.core.ui.LocalChampionColorCache
+import com.companion.lol.core.ui.modifier.LocalSnackBarPositionReporter
+import com.companion.lol.core.ui.modifier.SnackBarPositionReporter
+import com.companion.lol.core.ui.screen.BackStack
+import com.companion.lol.core.ui.screen.EntryProviderScopesCollector
+import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.theme.CompanionAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+  @Inject lateinit var entryScopeCollector: EntryProviderScopesCollector
+
   override fun onCreate(savedInstanceState: Bundle?) {
     installSplashScreen()
 
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
-    setContent { MainScreen() }
+    setContent { MainScreen(entryScopeCollector) }
+  }
+}
+
+@Composable
+private fun MainScreen(entryScopeCollector: EntryProviderScopesCollector) {
+  CompanionAppTheme {
+    val viewModel = hiltViewModel<MainViewModel>()
+
+    MainScreen(
+      entryScopeCollector = entryScopeCollector,
+      snackBarManager = viewModel.snackBarManager,
+      colorCache = viewModel.colorCache,
+      backStack = viewModel.backStack,
+    )
   }
 }
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 private fun MainScreen(
+  entryScopeCollector: EntryProviderScopesCollector,
   snackBarManager: SnackBarManager,
   colorCache: ChampionColorCache,
   backStack: BackStack<ScreenKey>,
@@ -69,28 +82,20 @@ private fun MainScreen(
       snackbarHost = { snackBarManager.SnackBarHost(posReporter) },
       contentWindowInsets = WindowInsets(),
     ) {
-      NavDisplay(backStack = backStack)
+      NavDisplay(entryScopeCollector = entryScopeCollector, backStack = backStack)
     }
   }
 }
 
 @Composable
-private fun MainScreen() {
-  CompanionAppTheme {
-    val viewModel = hiltViewModel<MainViewModel>()
-
-    MainScreen(
-      snackBarManager = viewModel.snackBarManager,
-      colorCache = viewModel.colorCache,
-      backStack = viewModel.backStack,
-    )
-  }
-}
-
-@Composable
-private fun NavDisplay(backStack: BackStack<ScreenKey>) {
+private fun NavDisplay(
+  entryScopeCollector: EntryProviderScopesCollector,
+  backStack: BackStack<ScreenKey>,
+) {
   val navigationBar =
     @Composable { NavigationBar(currentKey = { backStack.current }, goTo = backStack::goTo) }
+
+  val entryScopes = remember(entryScopeCollector) { entryScopeCollector.values }
 
   SharedTransitionLayout {
     NavDisplay(
@@ -110,13 +115,7 @@ private fun NavDisplay(backStack: BackStack<ScreenKey>) {
           )
         ),
       entryProvider =
-        entryProvider {
-          entryScreenKey<InitialScreenKey>()
-          entryScreenKey<LoginKey>()
-          entryScreenKey<ChampionListKey>()
-          entryScreenKey<ChampionDetailsKey>()
-          entryScreenKey<SettingsKey>()
-        },
+        entryProvider { entryScopes.forEach { builder -> this.builder() } },
     )
   }
 }

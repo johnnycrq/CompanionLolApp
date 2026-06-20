@@ -9,7 +9,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.companion.lol.app.AppConst
+import com.companion.lol.core.io.SyncWorkerDispatcher
 import com.companion.lol.domain.usecase.RefreshChampion
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -25,14 +25,14 @@ constructor(
   @Assisted workerParams: WorkerParameters,
   private val refreshChampions: Lazy<RefreshChampion>,
 ) : CoroutineWorker(context, workerParams) {
-  companion object {
+  companion object : SyncWorkerDispatcher {
 
     private const val PERIODIC_WORK_NAME = "periodic_sync"
 
-    fun schedulePeriodicSync(
+    override fun schedulePeriodicSync(
       context: Context,
-      repeatInterval: Duration = AppConst.syncRepeatDuration,
-      startAfterInterval: Boolean = true,
+      repeatInterval: Duration,
+      startAfterInterval: Boolean,
     ) {
       val workManager = WorkManager.getInstance(context)
 
@@ -78,7 +78,7 @@ constructor(
       )
     }
 
-    fun cancelPeriodicSync(context: Context) {
+    override fun cancelPeriodicSync(context: Context) {
       WorkManager.getInstance(context).cancelUniqueWork(PERIODIC_WORK_NAME)
     }
   }

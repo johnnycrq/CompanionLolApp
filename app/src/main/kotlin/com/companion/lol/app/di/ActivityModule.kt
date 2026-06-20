@@ -1,10 +1,11 @@
 package com.companion.lol.app.di
 
-import com.companion.lol.app.navigation.BackStack
-import com.companion.lol.app.navigation.keys.InitialScreenKey
-import com.companion.lol.app.navigation.keys.ScreenKey
-import com.companion.lol.app.ui.MessagePoster
+import com.companion.lol.app.navigation.BackstackImpl
 import com.companion.lol.app.ui.SnackBarManager
+import com.companion.lol.core.ui.MessagePoster
+import com.companion.lol.core.ui.screen.BackStack
+import com.companion.lol.core.ui.screen.InitialScreenKey
+import com.companion.lol.core.ui.screen.ScreenKey
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,7 +22,7 @@ abstract class ActivityModule {
   companion object {
     @Provides
     @ActivityRetainedScoped
-    fun backStack(): BackStack<ScreenKey> = BackStack.Impl(listOf(InitialScreenKey))
+    fun backStack(): BackStack<ScreenKey> = BackstackImpl(listOf(InitialScreenKey))
 
     @Provides
     @ActivityRetainedScoped

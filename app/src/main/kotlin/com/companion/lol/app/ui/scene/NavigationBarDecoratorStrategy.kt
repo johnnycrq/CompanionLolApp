@@ -20,9 +20,9 @@ import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
-import com.companion.lol.app.navigation.ScreenMetadata
-import com.companion.lol.app.navigation.keys.ScreenKey
 import com.companion.lol.app.util.modifier.cacheSize
+import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.screen.ScreenMetadata
 
 data class NavigationBarDecoratorScene<T : Any>(
   private val scene: Scene<T>,
@@ -81,7 +81,7 @@ class NavigationBarDecoratorStrategy<T : Any>(
 
     val lastEntry: NavEntry<T> = scene.entries.firstOrNull() ?: return scene
 
-    val key: ScreenKey = lastEntry.metadata[ScreenMetadata.ScreenId] ?: return scene
+    val key: ScreenKey = lastEntry.metadata.get(ScreenMetadata.ScreenId) ?: return scene
 
     return if (key.metadata[ScreenMetadata.TopLevelDestination] ?: false) {
       NavigationBarDecoratorScene(scene, sharedTransitionScope, navBarContent)

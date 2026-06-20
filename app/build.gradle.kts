@@ -73,8 +73,13 @@ tasks.withType<KotlinCompile> {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:ui"))
     implementation(project(":core:io"))
     implementation(project(":domain"))
+    implementation(project(":ui:login"))
+    implementation(project(":ui:settings"))
+    implementation(project(":ui:champion"))
+    implementation(project(":ui:details"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.animation.core)
@@ -82,7 +87,6 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.adaptive.layout)
     implementation(libs.androidx.core.ktx)
@@ -94,7 +98,7 @@ dependencies {
     implementation(libs.io.coil.okhttp)
     implementation(libs.androidx.palette)
 
-    implementation(libs.io.lottie)
+
 
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)

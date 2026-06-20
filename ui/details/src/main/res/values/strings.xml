@@ -1,0 +1,7 @@
+<resources>
+    <string name="champion_details_party_type">Party Type:</string>
+    <string name="champion_details_class">Class:</string>
+    <string name="champion_details_lore">Lore:</string>
+    <string name="champion_skin_prefix">Skin:</string>
+    <string name="champion_skin_unavailable">[N/A]</string>
+</resources>

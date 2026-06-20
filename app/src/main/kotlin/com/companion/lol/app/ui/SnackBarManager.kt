@@ -14,8 +14,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import com.companion.lol.app.io.UiError
-import com.companion.lol.app.util.modifier.SnackBarPositionReporter
+import com.companion.lol.core.ui.MessagePoster
+import com.companion.lol.core.ui.UiError
+import com.companion.lol.core.ui.modifier.SnackBarPositionReporter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -74,9 +75,4 @@ interface SnackBarManager : MessagePoster {
       }
     }
   }
-}
-
-@Stable
-interface MessagePoster {
-  fun postMessage(message: UiError)
 }

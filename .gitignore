@@ -30,3 +30,4 @@ local.properties
 /core/model/build/
 /domain/build/
 /.kotlin/
+/core/ui/build/

@@ -1,0 +1,12 @@
+<resources>
+    <string name="champion">Champions</string>
+    <string name="champion_grid_count">Toggle Grid Size</string>
+    <string name="champion_sort_favorites">Sort by Favorites</string>
+    <string name="champion_sort_alphabetically">Sort Alphabetically</string>
+    <string name="champion_clear_favorites">Clear Favorites</string>
+
+    <string name="sync_error_title">Teemo blinded the servers!</string>
+    <string name="sync_error_description">We couldn\'t get the champion list. Maybe they are hiding in a brush? Try to find them again!</string>
+    <string name="sync_error_retry_button">Ward the area (Retry)</string>
+
+</resources>
