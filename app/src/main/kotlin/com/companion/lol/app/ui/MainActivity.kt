@@ -28,16 +28,15 @@ import com.companion.lol.core.ui.ChampionColorCache
 import com.companion.lol.core.ui.LocalChampionColorCache
 import com.companion.lol.core.ui.modifier.LocalSnackBarPositionReporter
 import com.companion.lol.core.ui.modifier.SnackBarPositionReporter
-import com.companion.lol.core.ui.screen.BackStack
-import com.companion.lol.core.ui.screen.EntryProviderScopesCollector
-import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.navigation.BackStack
+import com.companion.lol.core.ui.navigation.ScreenEntryProviderScope
 import com.companion.lol.core.ui.theme.CompanionAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-  @Inject lateinit var entryScopeCollector: EntryProviderScopesCollector
+  @Inject lateinit var entryProviderScope: ScreenEntryProviderScope
 
   override fun onCreate(savedInstanceState: Bundle?) {
     installSplashScreen()
@@ -45,17 +44,17 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
-    setContent { MainScreen(entryScopeCollector) }
+    setContent { MainScreen(entryProviderScope) }
   }
 }
 
 @Composable
-private fun MainScreen(entryScopeCollector: EntryProviderScopesCollector) {
+private fun MainScreen(entryProviderScope: ScreenEntryProviderScope) {
   CompanionAppTheme {
     val viewModel = hiltViewModel<MainViewModel>()
 
     MainScreen(
-      entryScopeCollector = entryScopeCollector,
+      entryProviderScope = entryProviderScope,
       snackBarManager = viewModel.snackBarManager,
       colorCache = viewModel.colorCache,
       backStack = viewModel.backStack,
@@ -66,10 +65,10 @@ private fun MainScreen(entryScopeCollector: EntryProviderScopesCollector) {
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 private fun MainScreen(
-  entryScopeCollector: EntryProviderScopesCollector,
+  entryProviderScope: ScreenEntryProviderScope,
   snackBarManager: SnackBarManager,
   colorCache: ChampionColorCache,
-  backStack: BackStack<ScreenKey>,
+  backStack: BackStack,
 ) {
   val posReporter = remember(backStack) { SnackBarPositionReporter(backStack) }
 
@@ -82,20 +81,17 @@ private fun MainScreen(
       snackbarHost = { snackBarManager.SnackBarHost(posReporter) },
       contentWindowInsets = WindowInsets(),
     ) {
-      NavDisplay(entryScopeCollector = entryScopeCollector, backStack = backStack)
+      NavDisplay(entryProviderScope = entryProviderScope, backStack = backStack)
     }
   }
 }
 
 @Composable
-private fun NavDisplay(
-  entryScopeCollector: EntryProviderScopesCollector,
-  backStack: BackStack<ScreenKey>,
-) {
+private fun NavDisplay(entryProviderScope: ScreenEntryProviderScope, backStack: BackStack) {
   val navigationBar =
     @Composable { NavigationBar(currentKey = { backStack.current }, goTo = backStack::goTo) }
 
-  val entryScopes = remember(entryScopeCollector) { entryScopeCollector.values }
+  val entryScopes = remember(entryProviderScope) { entryProviderScope.scopes }
 
   SharedTransitionLayout {
     NavDisplay(
@@ -114,8 +110,7 @@ private fun NavDisplay(
             sharedTransitionScope = this,
           )
         ),
-      entryProvider =
-        entryProvider { entryScopes.forEach { builder -> this.builder() } },
+      entryProvider = entryProvider { entryScopes.forEach { builder -> this.builder() } },
     )
   }
 }

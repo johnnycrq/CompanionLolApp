@@ -1,6 +1,6 @@
-package com.companion.lol.app.ui.screens.championDetails
+package com.companion.lol.ui.details
 
-import com.companion.lol.domain.model.DdragonImage
+import com.companion.lol.core.model.DdragonImage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -8,7 +8,7 @@ import org.junit.Test
 class ChampionSkinProviderTest {
 
   private val createSkin = { num: Int ->
-    DdragonImage.Skin(skinNumber = num, skinName = "Skin $num", keyName = "Champion")
+    DdragonImage.Skin(skinName = "Skin $num", imageUrl = "Champion")
   }
 
   @Test

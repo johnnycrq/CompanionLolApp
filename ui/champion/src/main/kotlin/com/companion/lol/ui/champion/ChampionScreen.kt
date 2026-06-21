@@ -26,7 +26,6 @@ import com.companion.lol.core.ui.ChampionColorCache
 import com.companion.lol.core.ui.LocalChampionColorCache
 import com.companion.lol.core.ui.modifier.SnackBarPosition
 import com.companion.lol.core.ui.modifier.reportSnackBarPosition
-import com.companion.lol.core.ui.screen.ChampionKey
 import com.companion.lol.core.ui.window.isLandscape
 
 @Composable

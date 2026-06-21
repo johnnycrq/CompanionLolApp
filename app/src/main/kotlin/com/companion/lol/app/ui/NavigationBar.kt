@@ -20,9 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.dropUnlessResumed
 import com.companion.lol.app.R
 import com.companion.lol.core.ui.material3.companionAppGradient
-import com.companion.lol.core.ui.screen.ChampionKey
-import com.companion.lol.core.ui.screen.ScreenKey
-import com.companion.lol.core.ui.screen.SettingsKey
+import com.companion.lol.core.ui.navigation.ScreenKey
+import com.companion.lol.ui.champion.ChampionKey
+import com.companion.lol.ui.settings.SettingsKey
 
 @Composable
 fun NavigationBar(

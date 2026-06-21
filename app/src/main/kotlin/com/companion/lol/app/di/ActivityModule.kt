@@ -1,11 +1,12 @@
 package com.companion.lol.app.di
 
 import com.companion.lol.app.navigation.BackstackImpl
+import com.companion.lol.app.navigation.NavigatorImpl
 import com.companion.lol.app.ui.SnackBarManager
 import com.companion.lol.core.ui.MessagePoster
-import com.companion.lol.core.ui.screen.BackStack
-import com.companion.lol.core.ui.screen.InitialScreenKey
-import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.navigation.BackStack
+import com.companion.lol.core.ui.navigation.InitialScreenKey
+import com.companion.lol.core.ui.navigation.Navigator
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -19,10 +20,14 @@ abstract class ActivityModule {
 
   @Binds @ActivityRetainedScoped abstract fun messagePoster(impl: SnackBarManager): MessagePoster
 
+  @Binds @ActivityRetainedScoped abstract fun backStack(backStack: BackstackImpl): BackStack
+
   companion object {
+    @Provides @ActivityRetainedScoped fun backStack() = BackstackImpl(listOf(InitialScreenKey))
+
     @Provides
     @ActivityRetainedScoped
-    fun backStack(): BackStack<ScreenKey> = BackstackImpl(listOf(InitialScreenKey))
+    fun navigator(backStack: BackStack): Navigator = NavigatorImpl(backStack)
 
     @Provides
     @ActivityRetainedScoped

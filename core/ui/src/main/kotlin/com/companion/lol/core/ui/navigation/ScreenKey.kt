@@ -1,12 +1,10 @@
-package com.companion.lol.core.ui.screen
+package com.companion.lol.core.ui.navigation
 
 import androidx.compose.runtime.Stable
 import kotlin.reflect.KClass
-import kotlinx.serialization.Serializable
 
 @Stable
-@Serializable
-sealed interface ScreenKey {
+interface ScreenKey {
   val metadata: Map<String, Any>
     get() = emptyMap()
 

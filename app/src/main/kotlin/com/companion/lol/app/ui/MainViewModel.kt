@@ -5,15 +5,15 @@ package com.companion.lol.app.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.companion.lol.app.navigation.BackstackImpl
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.core.io.AppDispatchers
-import com.companion.lol.core.ui.screen.BackStack
-import com.companion.lol.core.ui.screen.ChampionKey
-import com.companion.lol.core.ui.screen.InitialScreenKey
-import com.companion.lol.core.ui.screen.LoginKey
-import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.navigation.InitialScreenKey
+import com.companion.lol.core.ui.navigation.ScreenKeySerializerModule
 import com.companion.lol.core.ui.theme.Gold1
 import com.companion.lol.domain.usecase.ObserveAuthenticatedEmail
+import com.companion.lol.ui.champion.ChampionKey
+import com.companion.lol.ui.login.LoginKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
@@ -27,7 +27,8 @@ class MainViewModel
 constructor(
   savedStateHandle: SavedStateHandle,
   dispatchers: AppDispatchers,
-  val backStack: BackStack<ScreenKey>,
+  screenKeySerializerModule: ScreenKeySerializerModule,
+  val backStack: BackstackImpl,
   val snackBarManager: SnackBarManager,
   private val observeLoggedInEmailAddress: ObserveAuthenticatedEmail,
 ) : ViewModel() {
@@ -42,10 +43,13 @@ constructor(
       extractContext = dispatchers.computation,
       defaultColor = Gold1,
     )
-  private val backStackSaver = BackStackSaver<ScreenKey>(savedStateHandle)
 
   init {
-    backStackSaver.attackBackStack(backStack = backStack, restore = true)
+    backStack.attachSaver(
+      savedStateHandle = savedStateHandle,
+      serializerModule = screenKeySerializerModule,
+      restore = true,
+    )
 
     viewModelScope.launch {
       observeLoggedInEmailAddress()

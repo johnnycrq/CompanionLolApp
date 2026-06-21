@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.companion.lol.core.model.ChampionId
 import com.companion.lol.core.ui.MessagePoster
 import com.companion.lol.core.ui.UiError
-import com.companion.lol.core.ui.screen.BackStack
-import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.navigation.BackStack
 import com.companion.lol.domain.usecase.ObserveChampionDetails
 import com.companion.lol.domain.usecase.RefreshChampionDetails
 import com.companion.lol.domain.usecase.UpdateFavorites
@@ -27,7 +26,7 @@ class ChampionDetailsViewModel
 constructor(
   @Assisted private val championId: ChampionId,
   private val messagePoster: MessagePoster,
-  private val backStack: BackStack<ScreenKey>,
+  private val backStack: BackStack,
   private val refreshChampionDetails: RefreshChampionDetails,
   private val observeChampionDetails: ObserveChampionDetails,
   private val updateFavorites: UpdateFavorites,

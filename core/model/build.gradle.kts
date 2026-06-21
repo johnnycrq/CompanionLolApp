@@ -9,4 +9,5 @@ android {
 
 dependencies {
   compileOnly(libs.androidx.compose.runtime.annotation)
+  implementation(libs.kotlinx.serialization.json)
 }

@@ -1,12 +1,12 @@
 package com.companion.lol.app
 
-import com.companion.lol.app.navigation.BackStack
-import com.companion.lol.app.navigation.keys.ChampionDetailsKey
-import com.companion.lol.app.navigation.keys.InitialScreenKey
-import com.companion.lol.app.navigation.keys.LoginKey
-import com.companion.lol.app.navigation.keys.ScreenKey
-import com.companion.lol.app.navigation.keys.SettingsKey
+import com.companion.lol.app.navigation.BackstackImpl
 import com.companion.lol.core.model.ChampionId
+import com.companion.lol.core.ui.navigation.InitialScreenKey
+import com.companion.lol.core.ui.navigation.ScreenKey
+import com.companion.lol.ui.details.ChampionDetailsKey
+import com.companion.lol.ui.login.LoginKey
+import com.companion.lol.ui.settings.SettingsKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -19,7 +19,7 @@ class BackStackTest {
   private val bottomSheetScreen = ChampionDetailsKey(ChampionId(1))
 
   private fun createBackStack(initialHistory: List<ScreenKey>) =
-    BackStack.Impl(initialValue = initialHistory)
+    BackstackImpl(initialValue = initialHistory)
 
   @Test
   fun `initial history is set correctly`() {

@@ -26,7 +26,6 @@ constructor(
   private val refreshChampions: Lazy<RefreshChampion>,
 ) : CoroutineWorker(context, workerParams) {
   companion object : SyncWorkerDispatcher {
-
     private const val PERIODIC_WORK_NAME = "periodic_sync"
 
     override fun schedulePeriodicSync(
@@ -35,29 +34,6 @@ constructor(
       startAfterInterval: Boolean,
     ) {
       val workManager = WorkManager.getInstance(context)
-
-      /*// we use the existence of the periodic sync work to
-      // check if we need the initial sync (first time)
-      val workInfos = workManager.getWorkInfosForUniqueWork(PERIODIC_WORK_NAME).get()
-
-      val hasExistingWork =
-        workInfos.any { info ->
-          info.state == WorkInfo.State.ENQUEUED ||
-            info.state == WorkInfo.State.RUNNING ||
-            info.state == WorkInfo.State.BLOCKED
-        }
-
-      if (!hasExistingWork) {
-        // 1) Immediate sync (runs ASAP once)
-        workManager.enqueue(
-          OneTimeWorkRequestBuilder<SyncWorker>()
-            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-            .setConstraints(
-              Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-            )
-            .build()
-        )
-      }*/
       val duration = repeatInterval.toJavaDuration()
       val periodicSync =
         PeriodicWorkRequestBuilder<SyncWorker>(duration)

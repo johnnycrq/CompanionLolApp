@@ -5,9 +5,7 @@ package com.companion.lol.ui.champion
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.core.model.ChampionId
-import com.companion.lol.core.ui.screen.BackStack
-import com.companion.lol.core.ui.screen.ChampionDetailsKey
-import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.navigation.Navigator
 import com.companion.lol.domain.usecase.DeleteFavorites
 import com.companion.lol.domain.usecase.ObserveChampion
 import com.companion.lol.domain.usecase.ObserveSettings
@@ -29,11 +27,11 @@ import kotlinx.coroutines.launch
 class ChampionViewModel
 @Inject
 constructor(
-  private val backStack: BackStack<ScreenKey>,
   private val refreshChampions: RefreshChampion,
   private val updateSettings: UpdateSettings,
   private val deleteFavorites: DeleteFavorites,
   private val observeChampions: ObserveChampion,
+  private val navigator: Navigator,
   observeSession: ObserveSettings,
 ) : ViewModel() {
   private val refreshState = MutableStateFlow(ChampionRefreshState())
@@ -89,6 +87,6 @@ constructor(
   }
 
   fun onCardClick(championId: ChampionId) {
-    backStack.goTo(ChampionDetailsKey(championId))
+    navigator.navigateToChampionDetails(championId)
   }
 }

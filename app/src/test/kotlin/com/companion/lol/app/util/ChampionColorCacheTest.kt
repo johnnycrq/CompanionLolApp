@@ -33,7 +33,7 @@ class ChampionColorCacheTest {
   private fun TestScope.createCache(
     extractColor: (Image) -> Result<Color> = { Result.success(blueColor) }
   ) =
-    ChampionColorCache.Impl(
+    ChampionColorCacheImpl(
       scope = backgroundScope,
       extractContext = Dispatchers.Unconfined,
       defaultColor = defaultColor,

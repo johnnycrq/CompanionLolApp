@@ -13,8 +13,8 @@ import androidx.compose.ui.node.GlobalPositionAwareModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.currentValueOf
 import androidx.compose.ui.platform.InspectorInfo
-import com.companion.lol.core.ui.screen.BackStack
-import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.navigation.BackStack
+import com.companion.lol.core.ui.navigation.ScreenKey
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.map
  *
  * TODO() find better way
  */
-class SnackBarPositionReporter(private val backStack: BackStack<ScreenKey>) {
+class SnackBarPositionReporter(private val backStack: BackStack) {
   private val positions = mutableStateMapOf<String, Int>()
 
   fun updatePosition(screenId: String, position: Int) {

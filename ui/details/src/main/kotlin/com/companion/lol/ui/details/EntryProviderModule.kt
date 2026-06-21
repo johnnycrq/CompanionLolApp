@@ -1,7 +1,6 @@
 package com.companion.lol.ui.details
 
-import com.companion.lol.core.ui.screen.ChampionDetailsKey
-import com.companion.lol.core.ui.screen.entryProviderInstaller
+import com.companion.lol.core.ui.navigation.entryProviderInstaller
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -21,8 +21,8 @@ import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 import com.companion.lol.app.util.modifier.cacheSize
-import com.companion.lol.core.ui.screen.ScreenKey
-import com.companion.lol.core.ui.screen.ScreenMetadata
+import com.companion.lol.core.ui.navigation.ScreenKey
+import com.companion.lol.core.ui.navigation.ScreenMetadata
 
 data class NavigationBarDecoratorScene<T : Any>(
   private val scene: Scene<T>,

@@ -1,38 +1,49 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.companion.lol.app.navigation
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation3.runtime.get
 import com.companion.lol.app.util.withSnapshot
-import com.companion.lol.core.ui.screen.BackStack
-import com.companion.lol.core.ui.screen.ScreenKey
+import com.companion.lol.core.ui.navigation.BackStack
+import com.companion.lol.core.ui.navigation.ScreenKey
+import com.companion.lol.core.ui.navigation.ScreenKeySaver
+import com.companion.lol.core.ui.navigation.ScreenKeySerializerModule
+import com.companion.lol.core.ui.navigation.ScreenMetadata
 
-class BackstackImpl<S : ScreenKey>(private val initialValue: List<S>) : BackStack<S> {
-  var saver: ((List<S>) -> Unit) = {}
-  override val history = SnapshotStateList<S>().apply { addAll(initialValue) }
-
-  override val current: S
+class BackstackImpl(private val initialValue: List<ScreenKey>) : BackStack {
+  override val history = SnapshotStateList<ScreenKey>().apply { addAll(initialValue) }
+  override val current: ScreenKey
     get() = history.last()
 
-  override fun setHistory(singleKey: S) =
+  override fun setHistory(singleKey: ScreenKey) =
     withSnapshot {
         history.clear()
         history.add(singleKey)
       }
       .also { save() }
 
-  override fun setHistory(newHistory: List<S>) =
+  override fun setHistory(newHistory: List<ScreenKey>) =
     withSnapshot {
         history.clear()
         history.addAll(newHistory)
       }
       .also { save() }
 
-  override fun goTo(key: S) =
+  override fun goTo(key: ScreenKey) =
     withSnapshot {
         val last =
           history.lastOrNull() ?: error("Cannot use goTo without having a valid non-empty history")
 
         // no repeated keys allowed
         if (last == key) return@withSnapshot
+
+        // cant navigate from bottom sheet
+        if (last.metadata[ScreenMetadata.BottomSheet] != null) {
+          return@withSnapshot
+        }
 
         val index = history.indexOf(key)
         if (index != -1) {
@@ -54,7 +65,25 @@ class BackstackImpl<S : ScreenKey>(private val initialValue: List<S>) : BackStac
     return false
   }
 
+  private var saver: ScreenKeySaver? = null
+
+  fun attachSaver(
+    savedStateHandle: SavedStateHandle,
+    serializerModule: ScreenKeySerializerModule,
+    restore: Boolean,
+  ) {
+    this.saver = serializerModule.ScreenKeySaver(savedStateHandle)
+
+    if (restore) {
+      restore()
+    }
+  }
+
+  private fun restore() {
+    saver?.restore()?.let(::setHistory)
+  }
+
   private fun save() {
-    saver(this.history.toList())
+    saver?.save(history.toList())
   }
 }

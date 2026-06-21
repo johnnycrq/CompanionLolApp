@@ -27,7 +27,7 @@ internal object NetworkModule {
   @OptIn(ExperimentalSerializationApi::class)
   @Provides
   @Singleton
-  internal fun baseRetrofit(okhttpClient: OkHttpClient): Retrofit {
+  internal fun baseRetrofit(okhttpClient: OkHttpClient, json: Json): Retrofit {
     // This is an ugly hack
     // But StrictMode identifies violation here
     // somewhere in the initialization. We could theoretically
@@ -36,9 +36,7 @@ internal object NetworkModule {
     return runBlocking(Dispatchers.IO) {
       Retrofit.Builder()
         .baseUrl(EndPoints.DDragon.BASE)
-        .addConverterFactory(
-          Json { ignoreUnknownKeys = true }.asConverterFactory("application/json".toMediaType())
-        )
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .addCallAdapterFactory(ResultCallAdapterFactory.create())
         .client(okhttpClient)
         .build()

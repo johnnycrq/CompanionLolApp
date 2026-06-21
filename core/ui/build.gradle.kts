@@ -17,6 +17,7 @@ dependencies {
   implementation(libs.androidx.compose.adaptive.layout)
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.navigation3.runtime)
+  implementation(libs.androidx.lifecycle.viewmodel.navigation3)
   implementation(libs.io.coil)
   implementation(libs.io.timber)
   implementation(libs.kotlinx.serialization.json)

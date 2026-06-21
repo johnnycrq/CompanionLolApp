@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.companion.lol.core.ui.modifier.reportSnackBarPosition
-import com.companion.lol.core.ui.screen.SettingsKey
 import com.companion.lol.core.ui.tooling.CompanionAppPreviewWrapperProvider
 import com.companion.lol.core.ui.tooling.LandscapePreview
 import com.companion.lol.core.ui.window.isLandscape

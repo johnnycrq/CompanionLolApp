@@ -37,4 +37,6 @@ dependencies {
   implementation(libs.androidx.compose.ui.tooling.preview)
 
   ksp(libs.dagger.hilt.compiler)
+
+  testImplementation(libs.junit)
 }
