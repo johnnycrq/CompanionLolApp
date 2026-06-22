@@ -8,10 +8,8 @@ import kotlinx.serialization.modules.plus
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.serializer
 
-inline fun <reified S : ScreenKey> entryProviderInstaller(
-  crossinline content: @Composable (key: S) -> Unit
-) =
-  EntryProvider(
+inline fun <reified S : ScreenKey> screenEntry(crossinline content: @Composable (key: S) -> Unit) =
+  ScreenEntry(
     scope = {
       entry<S>(
         metadata = { key: S -> ScreenMetadata.screenKey(key) + key.metadata },
@@ -22,13 +20,13 @@ inline fun <reified S : ScreenKey> entryProviderInstaller(
       SerializersModule { polymorphic(ScreenKey::class) { subclass(S::class, serializer<S>()) } },
   )
 
-data class EntryProvider(
+data class ScreenEntry(
   val scope: EntryProviderScope<ScreenKey>.() -> Unit,
   val serializableModule: SerializersModule,
 )
 
 @Immutable
-data class EntryProviderCollector(val values: Set<EntryProvider>) :
+data class EntryProviderCollector(val values: Set<ScreenEntry>) :
   ScreenKeySerializerModule, ScreenEntryProviderScope {
   override val scopes: Set<EntryProviderScope<ScreenKey>.() -> Unit> =
     values.map { it.scope }.toSet()

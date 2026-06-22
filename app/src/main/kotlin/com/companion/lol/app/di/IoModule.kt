@@ -55,7 +55,7 @@ abstract class IoModule {
 
     @Provides
     @Singleton
-    internal fun appDispatchers(): AppDispatchers =
+    internal fun appDispatchers() =
       AppDispatchers(
         io = Dispatchers.IO,
         computation = Dispatchers.Default,

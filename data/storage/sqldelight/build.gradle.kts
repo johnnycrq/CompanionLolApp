@@ -5,7 +5,7 @@ plugins {
 
 android {
   namespace = "com.companion.lol.sqldelight"
-  compileSdk { version = release(36) }
+  compileSdk = 37
 }
 
 sqldelight {

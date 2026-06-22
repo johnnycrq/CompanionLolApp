@@ -4,6 +4,10 @@ kotlin = "2.4.0"
 agp = "9.2.1"
 ksp = "2.3.9"
 
+compileSdk = "37"
+minSdk = "24"
+targetSdk = "36"
+
 detekt = "1.23.8"
 junit = "4.13.2"
 
@@ -104,6 +108,10 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-compiler-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

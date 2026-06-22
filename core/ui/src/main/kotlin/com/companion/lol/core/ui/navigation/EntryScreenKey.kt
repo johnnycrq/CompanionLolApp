@@ -2,4 +2,4 @@ package com.companion.lol.core.ui.navigation
 
 import kotlinx.serialization.Serializable
 
-@Serializable data object InitialScreenKey : ScreenKey
+@Serializable data object EntryScreenKey : ScreenKey

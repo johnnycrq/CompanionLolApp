@@ -5,14 +5,13 @@ plugins {
 
 android {
   namespace = "com.companion.lol.storage.impl"
-  compileSdk { version = release(36) }
+  compileSdk = 37
 }
 
 dependencies {
+  implementation(project(":core:io"))
   implementation(project(":core:model"))
   api(project(":data:storage:sqldelight"))
-  implementation(libs.androidx.appcompat)
-  implementation(libs.androidx.core.ktx)
 
   implementation(libs.dagger.hilt.android)
   ksp(libs.dagger.hilt.compiler)

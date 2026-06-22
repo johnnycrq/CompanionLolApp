@@ -2,7 +2,7 @@ package com.companion.lol.app
 
 import com.companion.lol.app.navigation.BackstackImpl
 import com.companion.lol.core.model.ChampionId
-import com.companion.lol.core.ui.navigation.InitialScreenKey
+import com.companion.lol.core.ui.navigation.EntryScreenKey
 import com.companion.lol.core.ui.navigation.ScreenKey
 import com.companion.lol.ui.details.ChampionDetailsKey
 import com.companion.lol.ui.login.LoginKey
@@ -13,7 +13,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class BackStackTest {
-  private val screenA = InitialScreenKey
+  private val screenA = EntryScreenKey
   private val screenB = LoginKey
   private val screenC = SettingsKey
   private val bottomSheetScreen = ChampionDetailsKey(ChampionId(1))
@@ -101,12 +101,6 @@ class BackStackTest {
     val result = backStack.goBack()
 
     assertFalse(result)
-    assertEquals(listOf(screenA), backStack.history)
-  }
-
-  @Test
-  fun `SavedStateHandle backStack extension initializes correctly`() {
-    val backStack = createBackStack(initialHistory = listOf(screenA))
     assertEquals(listOf(screenA), backStack.history)
   }
 }

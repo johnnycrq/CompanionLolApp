@@ -1,6 +1,7 @@
 package com.companion.lol.ui.details
 
-import com.companion.lol.core.ui.navigation.entryProviderInstaller
+import com.companion.lol.core.ui.navigation.ScreenEntryModule
+import com.companion.lol.core.ui.navigation.screenEntry
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,13 +11,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object EntryProviderModule {
+object ChampionDetailsEntryModule : ScreenEntryModule {
 
   @IntoSet
   @Provides
   @Singleton
-  fun provideEntryProviderInstaller() =
-    entryProviderInstaller<ChampionDetailsKey> { key ->
-      ChampionDetailsScreen(championId = key.championId)
-    }
+  override fun provideEntry() =
+    screenEntry<ChampionDetailsKey> { key -> ChampionDetailsScreen(championId = key.championId) }
 }

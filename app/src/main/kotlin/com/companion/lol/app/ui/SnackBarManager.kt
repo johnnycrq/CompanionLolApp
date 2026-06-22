@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import com.companion.lol.core.ui.MessagePoster
 import com.companion.lol.core.ui.UiError
 import com.companion.lol.core.ui.modifier.SnackBarPositionReporter
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -38,40 +40,41 @@ interface SnackBarManager : MessagePoster {
       )
     },
   )
+}
 
-  class Impl : SnackBarManager {
-    @Stable private val snackBarHostState: SnackbarHostState = SnackbarHostState()
-    private val _message = MutableStateFlow(emptyList<UiError>())
-    val message: Flow<UiError> =
-      _message.map { it.firstOrNull() }.distinctUntilChanged().filterNotNull()
+@ActivityRetainedScoped
+class SnackBarManagerImpl @Inject constructor() : SnackBarManager {
+  @Stable private val snackBarHostState: SnackbarHostState = SnackbarHostState()
+  private val _message = MutableStateFlow(emptyList<UiError>())
+  val message: Flow<UiError> =
+    _message.map { it.firstOrNull() }.distinctUntilChanged().filterNotNull()
 
-    override fun postMessage(message: UiError) {
-      _message.update { it + message }
-    }
+  override fun postMessage(message: UiError) {
+    _message.update { it + message }
+  }
 
-    private fun clearMessage(id: Long) {
-      _message.update { messages -> messages.filterNot { it.id == id } }
-    }
+  private fun clearMessage(id: Long) {
+    _message.update { messages -> messages.filterNot { it.id == id } }
+  }
 
-    @Composable
-    override fun SnackBarHost(
-      positionReporter: SnackBarPositionReporter,
-      snackBar: @Composable ((SnackbarData) -> Unit),
-    ) {
-      val translationY by positionReporter.translationY.collectAsState(0f)
-      val animatedTranslationY = animateFloatAsState(translationY)
+  @Composable
+  override fun SnackBarHost(
+    positionReporter: SnackBarPositionReporter,
+    snackBar: @Composable ((SnackbarData) -> Unit),
+  ) {
+    val translationY by positionReporter.translationY.collectAsState(0f)
+    val animatedTranslationY = animateFloatAsState(translationY)
 
-      SnackbarHost(
-        modifier = Modifier.graphicsLayer { this.translationY = animatedTranslationY.value },
-        hostState = snackBarHostState,
-        snackbar = snackBar,
-      )
+    SnackbarHost(
+      modifier = Modifier.graphicsLayer { this.translationY = animatedTranslationY.value },
+      hostState = snackBarHostState,
+      snackbar = snackBar,
+    )
 
-      LaunchedEffect(Unit) {
-        message.collectLatest { error ->
-          snackBarHostState.showSnackbar(error.message, duration = SnackbarDuration.Short)
-          clearMessage(error.id)
-        }
+    LaunchedEffect(Unit) {
+      message.collectLatest { error ->
+        snackBarHostState.showSnackbar(error.message, duration = SnackbarDuration.Short)
+        clearMessage(error.id)
       }
     }
   }

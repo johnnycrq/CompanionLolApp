@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.companion.lol.app.navigation.BackstackImpl
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.core.io.AppDispatchers
-import com.companion.lol.core.ui.navigation.InitialScreenKey
+import com.companion.lol.core.ui.navigation.EntryScreenKey
 import com.companion.lol.core.ui.navigation.ScreenKeySerializerModule
 import com.companion.lol.core.ui.theme.Gold1
 import com.companion.lol.domain.usecase.ObserveAuthenticatedEmail
@@ -65,7 +65,7 @@ constructor(
             backStack.setHistory(
               currentHistory
                 .dropLastWhile { it.requiresAuth() }
-                .filterNot { it is InitialScreenKey }
+                .filterNot { it is EntryScreenKey }
                 .ifEmpty { listOf(LoginKey) }
             )
           } else {

@@ -1,6 +1,7 @@
 package com.companion.lol.ui.settings
 
-import com.companion.lol.core.ui.navigation.entryProviderInstaller
+import com.companion.lol.core.ui.navigation.ScreenEntryModule
+import com.companion.lol.core.ui.navigation.screenEntry
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,10 +11,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object EntryProviderModule {
+object SettingsEntryModule : ScreenEntryModule {
 
   @IntoSet
   @Provides
   @Singleton
-  fun provideEntryProviderInstaller() = entryProviderInstaller<SettingsKey> { SettingsScreen() }
+  override fun provideEntry() = screenEntry<SettingsKey> { SettingsScreen() }
 }

@@ -6,7 +6,7 @@ plugins {
 
 android {
   namespace = "com.companion.lol.core.ui"
-  compileSdk { version = release(36) }
+  compileSdk = 37
 }
 
 dependencies {
@@ -22,4 +22,7 @@ dependencies {
   implementation(libs.io.timber)
   implementation(libs.kotlinx.serialization.json)
   compileOnly(libs.androidx.compose.runtime.annotation)
+
+  testImplementation(libs.junit)
+
 }

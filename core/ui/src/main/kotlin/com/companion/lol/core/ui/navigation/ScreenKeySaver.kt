@@ -20,7 +20,7 @@ interface ScreenKeySaver {
   fun restore(): List<ScreenKey>?
 }
 
-fun ScreenKeySerializerModule.ScreenKeySaver(savedStateHandle: SavedStateHandle): ScreenKeySaver =
+fun ScreenKeySaver(module: SerializersModule, savedStateHandle: SavedStateHandle): ScreenKeySaver =
   Impl(
     savedStateHandle = savedStateHandle,
     serializer = module.serializer<List<ScreenKey>>().nullable,

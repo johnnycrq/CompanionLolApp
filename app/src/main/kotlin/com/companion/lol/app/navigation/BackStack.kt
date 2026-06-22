@@ -8,12 +8,19 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation3.runtime.get
 import com.companion.lol.app.util.withSnapshot
 import com.companion.lol.core.ui.navigation.BackStack
+import com.companion.lol.core.ui.navigation.EntryScreenKey
 import com.companion.lol.core.ui.navigation.ScreenKey
 import com.companion.lol.core.ui.navigation.ScreenKeySaver
 import com.companion.lol.core.ui.navigation.ScreenKeySerializerModule
 import com.companion.lol.core.ui.navigation.ScreenMetadata
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import javax.inject.Inject
 
+@ActivityRetainedScoped
 class BackstackImpl(private val initialValue: List<ScreenKey>) : BackStack {
+
+  @Inject constructor() : this(listOf(EntryScreenKey))
+
   override val history = SnapshotStateList<ScreenKey>().apply { addAll(initialValue) }
   override val current: ScreenKey
     get() = history.last()
@@ -72,7 +79,8 @@ class BackstackImpl(private val initialValue: List<ScreenKey>) : BackStack {
     serializerModule: ScreenKeySerializerModule,
     restore: Boolean,
   ) {
-    this.saver = serializerModule.ScreenKeySaver(savedStateHandle)
+    this.saver =
+      ScreenKeySaver(module = serializerModule.module, savedStateHandle = savedStateHandle)
 
     if (restore) {
       restore()
