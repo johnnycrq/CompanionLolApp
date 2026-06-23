@@ -5,13 +5,13 @@ package com.companion.lol.app.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.companion.lol.app.navigation.BackstackImpl
+import com.companion.lol.app.navigation.BackStackImpl
 import com.companion.lol.app.util.ChampionColorCache
 import com.companion.lol.core.io.AppDispatchers
 import com.companion.lol.core.ui.navigation.EntryScreenKey
 import com.companion.lol.core.ui.navigation.ScreenKeySerializerModule
 import com.companion.lol.core.ui.theme.Gold1
-import com.companion.lol.domain.usecase.ObserveAuthenticatedEmail
+import com.companion.lol.domain.usecase.impl.ObserveAuthenticatedEmail
 import com.companion.lol.ui.champion.ChampionKey
 import com.companion.lol.ui.login.LoginKey
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ constructor(
   savedStateHandle: SavedStateHandle,
   dispatchers: AppDispatchers,
   screenKeySerializerModule: ScreenKeySerializerModule,
-  val backStack: BackstackImpl,
+  val backStack: BackStackImpl,
   val snackBarManager: SnackBarManager,
   private val observeLoggedInEmailAddress: ObserveAuthenticatedEmail,
 ) : ViewModel() {

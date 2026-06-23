@@ -22,7 +22,7 @@ private val LightColorScheme =
   )
 
 // TODO
-// private val DarkColorScheme
+// add DarkColorScheme
 
 @Composable
 fun CompanionAppTheme(content: @Composable () -> Unit) {

@@ -8,9 +8,9 @@ import com.companion.lol.core.model.ChampionId
 import com.companion.lol.core.ui.navigation.Navigator
 import com.companion.lol.domain.usecase.DeleteFavorites
 import com.companion.lol.domain.usecase.ObserveChampion
-import com.companion.lol.domain.usecase.ObserveSettings
 import com.companion.lol.domain.usecase.RefreshChampion
 import com.companion.lol.domain.usecase.UpdateSettings
+import com.companion.lol.domain.usecase.impl.ObserveSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

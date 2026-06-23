@@ -19,7 +19,10 @@ class ChampionDetailsStore
 constructor(database: LolAppDb, private val context: DatabaseContext) :
   SqldelightStore<ChampionDetailsQueries>(database.championDetailsQueries) {
 
-  @RequiresDispatcher fun insert(details: ChampionDetailsTable) = queries.insert(details)
+  @RequiresDispatcher
+  fun insert(details: ChampionDetailsTable) {
+    queries.insert(details)
+  }
 
   fun observeByID(championId: ChampionId): Flow<ChampionDetailsTable?> =
     queries.findById(championId).asFlow().mapToOneOrNull(context)

@@ -6,9 +6,9 @@ import com.companion.lol.core.model.ChampionId
 import com.companion.lol.core.ui.MessagePoster
 import com.companion.lol.core.ui.UiError
 import com.companion.lol.core.ui.navigation.BackStack
-import com.companion.lol.domain.usecase.ObserveChampionDetails
 import com.companion.lol.domain.usecase.RefreshChampionDetails
 import com.companion.lol.domain.usecase.UpdateFavorites
+import com.companion.lol.domain.usecase.impl.ObserveChampionDetails
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

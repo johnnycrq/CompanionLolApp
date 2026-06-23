@@ -54,6 +54,9 @@ class AndroidLibraryUiConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("androidx.compose.ui.tooling.preview").get())
 
                 add("ksp", libs.findLibrary("dagger.hilt.compiler").get())
+
+                add("testImplementation", libs.findLibrary("junit").get())
+                add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
             }
         }
     }

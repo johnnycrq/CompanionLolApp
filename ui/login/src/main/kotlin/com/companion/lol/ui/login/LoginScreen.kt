@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -50,17 +52,17 @@ fun LoginScreen() {
 @Composable
 fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClicked: () -> Unit) {
   val isLandscape = isLandscape()
-  val widthModifier = Modifier.Companion.fillMaxWidth(if (isLandscape) 0.5f else 1f)
+  val widthModifier = Modifier.fillMaxWidth(if (isLandscape) 0.5f else 1f)
 
-  CompanionAppSurface(modifier = Modifier.Companion.fillMaxSize()) {
-    Column(modifier = Modifier.Companion.systemBarsPadding()) {
+  CompanionAppSurface(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.systemBarsPadding()) {
       Column(
         modifier = widthModifier.weight(1f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
       ) {
         Text(
-          text = "Welcome",
+          text = stringResource(R.string.login_welcome),
           style = MaterialTheme.typography.displaySmall,
           fontWeight = FontWeight.ExtraBold,
           color = MaterialTheme.colorScheme.onBackground,
@@ -68,13 +70,13 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
         )
 
         Text(
-          text = "Sign in to your account",
+          text = stringResource(R.string.login_sign_in),
           style = MaterialTheme.typography.bodyLarge,
           color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
           textAlign = TextAlign.Center,
         )
 
-        Spacer(modifier = Modifier.Companion.height(48.dp))
+        Spacer(modifier = Modifier.height(48.dp))
 
         OutlinedTextField(
           value = state.email,
@@ -82,7 +84,7 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
           label = {
             Text("Email Address", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
           },
-          modifier = Modifier.Companion.padding(horizontal = 32.dp).fillMaxWidth(),
+          modifier = Modifier.padding(horizontal = 32.dp).fillMaxWidth(),
           singleLine = true,
           shape = RoundedCornerShape(16.dp),
           colors =
@@ -91,7 +93,9 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
               focusedContainerColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
               unfocusedContainerColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
             ),
-          keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+          keyboardOptions =
+            KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
+          keyboardActions = KeyboardActions(onDone = { onLoginClicked() }),
         )
       }
 
@@ -101,7 +105,7 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
         modifier =
           Modifier.reportSnackBarPosition<LoginKey>()
             .fillMaxWidth()
-            .then(if (isLandscape) Modifier else Modifier.Companion.imePadding())
+            .then(if (isLandscape) Modifier else Modifier.imePadding())
             .padding(horizontal = 16.dp),
       ) {
         Text(text = stringResource(R.string.login_continue))

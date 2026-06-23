@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -43,7 +42,6 @@ class MainActivity : ComponentActivity() {
 
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
-    WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
     setContent { MainScreen(entryProviderScope) }
   }
 }

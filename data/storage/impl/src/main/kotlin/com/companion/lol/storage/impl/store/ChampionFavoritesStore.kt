@@ -14,8 +14,8 @@ class ChampionFavoritesStore
 @Inject
 constructor(database: LolAppDb, private val context: DatabaseContext) :
   SqldelightStore<ChampionFavoritesQueries>(database.championFavoritesQueries) {
-  suspend fun markFavorite(championId: ChampionId, isFavorite: Boolean) =
+  suspend fun markFavorite(championId: ChampionId, isFavorite: Boolean): Unit =
     withContext(context) { queries.updateIsFavorite(championId, isFavorite).await() }
 
-  suspend fun clearAll() = withContext(context) { queries.clearAll().await() }
+  suspend fun clearAll(): Unit = withContext(context) { queries.clearAll().await() }
 }

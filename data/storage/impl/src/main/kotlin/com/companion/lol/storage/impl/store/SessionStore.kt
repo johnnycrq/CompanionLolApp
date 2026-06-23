@@ -17,15 +17,15 @@ import kotlinx.coroutines.withContext
 class SessionStore @Inject constructor(database: LolAppDb, private val context: DatabaseContext) :
   SqldelightStore<SessionQueries>(database.sessionQueries) {
 
-  suspend fun insert(value: SessionTable) =
+  suspend fun insert(value: SessionTable): Unit =
     withContext(context) { queries.insert(value.toSingleton()).await() }
 
   fun observe(): Flow<SessionTable?> = queries.get().asFlow().mapToOneOrNull(context)
 
   fun observeEmailAddress(): Flow<String?> = queries.emailAddress().asFlow().mapToOneOrNull(context)
 
-  suspend fun updateAutoSync(autoSync: Boolean) =
+  suspend fun updateAutoSync(autoSync: Boolean): Unit =
     withContext(context) { queries.updateAutoSync(autoSync).await() }
 
-  suspend fun delete() = withContext(context) { queries.delete().await() }
+  suspend fun delete(): Unit = withContext(context) { queries.delete().await() }
 }

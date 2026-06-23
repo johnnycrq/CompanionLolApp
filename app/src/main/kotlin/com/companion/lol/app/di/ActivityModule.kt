@@ -1,6 +1,6 @@
 package com.companion.lol.app.di
 
-import com.companion.lol.app.navigation.BackstackImpl
+import com.companion.lol.app.navigation.BackStackImpl
 import com.companion.lol.app.navigation.NavigatorImpl
 import com.companion.lol.app.ui.SnackBarManager
 import com.companion.lol.app.ui.SnackBarManagerImpl
@@ -19,7 +19,7 @@ interface ActivityModule {
 
   @Binds @ActivityRetainedScoped fun messagePoster(impl: SnackBarManager): MessagePoster
 
-  @Binds @ActivityRetainedScoped fun backStack(backStack: BackstackImpl): BackStack
+  @Binds @ActivityRetainedScoped fun backStack(backStack: BackStackImpl): BackStack
 
   @Binds @ActivityRetainedScoped fun navigator(navigator: NavigatorImpl): Navigator
 

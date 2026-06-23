@@ -17,7 +17,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class BackstackImpl(private val initialValue: List<ScreenKey>) : BackStack {
+class BackStackImpl(private val initialValue: List<ScreenKey>) : BackStack {
 
   @Inject constructor() : this(listOf(EntryScreenKey))
 

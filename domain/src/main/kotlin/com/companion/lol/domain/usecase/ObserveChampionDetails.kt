@@ -4,6 +4,7 @@ import com.companion.lol.core.model.ChampionId
 import com.companion.lol.domain.mapper.model
 import com.companion.lol.domain.model.ChampionDetails
 import com.companion.lol.domain.model.ChampionWithDetails
+import com.companion.lol.domain.usecase.impl.ObserveChampionDetails
 import com.companion.lol.storage.impl.store.ChampionDetailsStore
 import com.companion.lol.storage.impl.store.ChampionStore
 import com.companion.lol.storage.impl.store.SkinStore
@@ -16,14 +17,14 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 @Suppress("OPT_IN_USAGE")
-class ObserveChampionDetails
+class ObserveChampionDetailsImpl
 @Inject
 constructor(
   private val championStore: ChampionStore,
   private val skinsStore: SkinStore,
   private val championDetailsStore: ChampionDetailsStore,
-) {
-  operator fun invoke(championId: ChampionId): Flow<ChampionWithDetails> {
+) : ObserveChampionDetails {
+  override operator fun invoke(championId: ChampionId): Flow<ChampionWithDetails> {
     return flow { emit(championStore.findKeyNameById(championId)) }
       .flatMapLatest { keyName ->
         combine(

@@ -1,6 +1,6 @@
 package com.companion.lol.app
 
-import com.companion.lol.app.navigation.BackstackImpl
+import com.companion.lol.app.navigation.BackStackImpl
 import com.companion.lol.core.model.ChampionId
 import com.companion.lol.core.ui.navigation.EntryScreenKey
 import com.companion.lol.core.ui.navigation.ScreenKey
@@ -19,7 +19,7 @@ class BackStackTest {
   private val bottomSheetScreen = ChampionDetailsKey(ChampionId(1))
 
   private fun createBackStack(initialHistory: List<ScreenKey>) =
-    BackstackImpl(initialValue = initialHistory)
+    BackStackImpl(initialValue = initialHistory)
 
   @Test
   fun `initial history is set correctly`() {
