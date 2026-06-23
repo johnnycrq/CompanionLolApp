@@ -8,7 +8,7 @@ plugins {
 
 android {
   namespace = "com.companion.lol.network"
-  compileSdk = 37
+  compileSdk = libs.versions.compileSdk.get().toInt()
 
   buildFeatures {
     buildConfig = true

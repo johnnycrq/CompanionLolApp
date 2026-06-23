@@ -12,13 +12,13 @@ plugins {
 android {
     namespace = "com.companion.lol.app"
     compileSdk {
-        version = release(37)
+        version = release(libs.versions.compileSdk.get().toInt())
     }
 
     defaultConfig {
         applicationId = "com.companion.lol.app"
-        minSdk = 33
-        targetSdk = 36
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
 

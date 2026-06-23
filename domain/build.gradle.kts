@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.companion.lol.domain"
-    compileSdk = 37
+    compileSdk = libs.versions.compileSdk.get().toInt()
 }
 
 dependencies {

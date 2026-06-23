@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -68,7 +69,12 @@ fun ChampionToolbar(
 
   TopAppBar(
     modifier = modifier.drawBehind { drawRect(brush = gradient, alpha = alpha.value) },
-    title = { Text(text = stringResource(id = R.string.champion)) },
+    title = {
+      Text(
+        modifier = Modifier.padding(start = 8.dp),
+        text = stringResource(id = R.string.champion),
+      )
+    },
     colors =
       TopAppBarDefaults.topAppBarColors(
         containerColor = Color.Transparent,
@@ -79,7 +85,8 @@ fun ChampionToolbar(
       ),
     navigationIcon = {
       Image(
-        painter = painterResource(id = CoreUiR.mipmap.ic_launcher_round),
+        modifier = Modifier.padding(start = 8.dp).size(32.dp),
+        painter = painterResource(id = CoreUiR.drawable.toolbar_icon),
         contentDescription = null,
       )
     },
