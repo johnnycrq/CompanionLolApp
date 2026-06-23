@@ -18,8 +18,13 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginViewModelTest {
 
-  private val viewModel = { updateSession: UpdateSessionFake ->
-    LoginViewModel(updateSession = updateSession, savedStateHandle = SavedStateHandle())
+  private class ViewModelContainer(
+    val updateSession: UpdateSessionFake = UpdateSessionFake(),
+    val savedStateHandle: SavedStateHandle = SavedStateHandle(),
+  ) {
+
+    val viewModel =
+      LoginViewModel(updateSession = updateSession, savedStateHandle = savedStateHandle)
   }
 
   @Before
@@ -34,8 +39,8 @@ class LoginViewModelTest {
 
   @Test
   fun `initial state is empty and invalid`() = runTest {
-    val updateSession = UpdateSessionFake()
-    val viewModel = viewModel(updateSession)
+    val container = ViewModelContainer()
+    val viewModel = container.viewModel
 
     assertEquals("", viewModel.state.value.email)
     assertFalse(viewModel.state.value.isEmailValid)
@@ -43,8 +48,8 @@ class LoginViewModelTest {
 
   @Test
   fun `onEmailChanged updates email state`() = runTest {
-    val updateSession = UpdateSessionFake()
-    val viewModel = viewModel(updateSession)
+    val container = ViewModelContainer()
+    val viewModel = container.viewModel
 
     val email = "test@example.com"
     viewModel.onEmailChanged(email)
@@ -55,28 +60,28 @@ class LoginViewModelTest {
 
   @Test
   fun `onLoginClicked does not update session if email is invalid`() = runTest {
-    val updateSession = UpdateSessionFake()
-    val viewModel = viewModel(updateSession)
+    val container = ViewModelContainer()
+    val viewModel = container.viewModel
 
     viewModel.onEmailChanged("invalid-email")
     viewModel.onLoginClicked()
     advanceUntilIdle()
 
-    assertEquals(0, updateSession.callCount)
+    assertEquals(0, container.updateSession.callCount)
   }
 
   @Test
   fun `onLoginClicked updates session if email is valid`() = runTest {
-    val updateSession = UpdateSessionFake()
-    val viewModel = viewModel(updateSession)
+    val container = ViewModelContainer()
+    val viewModel = container.viewModel
 
     val email = "test@example.com"
     viewModel.onEmailChanged(email)
     viewModel.onLoginClicked()
     advanceUntilIdle()
 
-    assertEquals(1, updateSession.callCount)
-    assertEquals(email, updateSession.lastEmailAddress)
-    assertFalse(updateSession.lastAutoSync ?: true)
+    assertEquals(1, container.updateSession.callCount)
+    assertEquals(email, container.updateSession.lastEmailAddress)
+    assertFalse(container.updateSession.lastAutoSync ?: true)
   }
 }

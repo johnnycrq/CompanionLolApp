@@ -1,5 +1,6 @@
 package com.companion.lol.ui.details
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.core.model.ChampionId
@@ -49,12 +50,15 @@ constructor(
     viewModelScope.launch {
       // refresh details
       val success =
-        refreshChampionDetails(retry = 3, retryDelay = 5.seconds, championId = championId)
+        refreshChampionDetails(retry = 2, retryDelay = 2.seconds, championId = championId)
 
       if (success) return@launch
 
       if (!state.value.hasData) {
-        messagePoster.postMessage(UiError(message = "Cannot load the details data"))
+        Log.i("uiError", "uiError: error")
+        messagePoster.postMessage(
+          UiError.Resource(resourceId = R.string.champion_details_error_load)
+        )
         backStack.goBack()
       }
     }

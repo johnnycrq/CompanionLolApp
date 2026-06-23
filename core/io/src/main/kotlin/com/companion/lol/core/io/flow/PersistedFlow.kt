@@ -17,8 +17,9 @@ class MutablePersistedStateFlow<T>(
   private val saver: (T) -> Unit,
 ) : PersistedFlow<T>, MutableStateFlow<T> by flow {
 
-  override fun update(current: (T) -> T) =
-    flow.update { current -> current(current).also { saver(it) } }
+  override fun update(current: (T) -> T) = flow.update { current ->
+    current(current).also { saver(it) }
+  }
 }
 
 @Suppress("AssignedValueIsNeverRead")

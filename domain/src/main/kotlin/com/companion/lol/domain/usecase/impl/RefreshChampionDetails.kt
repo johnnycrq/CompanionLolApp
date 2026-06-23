@@ -13,7 +13,6 @@ import com.companion.lol.storage.impl.util.DatabaseContext
 import com.companion.lol.storage.impl.util.DatabaseTransacter
 import javax.inject.Inject
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
@@ -32,7 +31,7 @@ constructor(
     retryDelay: Duration,
     championId: ChampionId,
   ): Boolean =
-    withRetry(times = 1, delayDuration = 1.seconds) { refresh(championId) }.getOrNull() != null
+    withRetry(times = retry, delayDuration = retryDelay) { refresh(championId) }.getOrNull() != null
 
   private suspend fun refresh(championId: ChampionId): Result<Unit> {
     val championKeyName = withContext(databaseContext) { championStore.findKeyNameById(championId) }

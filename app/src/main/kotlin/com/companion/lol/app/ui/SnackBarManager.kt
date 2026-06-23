@@ -21,10 +21,8 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 
 @Stable
@@ -47,7 +45,7 @@ class SnackBarManagerImpl @Inject constructor() : SnackBarManager {
   @Stable private val snackBarHostState: SnackbarHostState = SnackbarHostState()
   private val _message = MutableStateFlow(emptyList<UiError>())
   val message: Flow<UiError> =
-    _message.map { it.firstOrNull() }.distinctUntilChanged().filterNotNull()
+    _message.mapNotNull { it.firstOrNull() }.distinctUntilChangedBy { it.id }
 
   override fun postMessage(message: UiError) {
     _message.update { it + message }
@@ -71,10 +69,14 @@ class SnackBarManagerImpl @Inject constructor() : SnackBarManager {
       snackbar = snackBar,
     )
 
-    LaunchedEffect(Unit) {
-      message.collectLatest { error ->
-        snackBarHostState.showSnackbar(error.message, duration = SnackbarDuration.Short)
-        clearMessage(error.id)
+    val uiError: UiError? by message.collectAsState(initial = null)
+    uiError?.let { error ->
+      val id = error.id
+      val message = error.resolve()
+
+      LaunchedEffect(id) {
+        snackBarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
+        clearMessage(id)
       }
     }
   }
