@@ -1,6 +1,5 @@
 package com.companion.lol.ui.settings
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.core.io.SyncWorkerDispatcher
@@ -24,7 +23,6 @@ constructor(
   observeSession: ObserveSession,
   private val updateSession: UpdateSession,
   private val deleteSession: DeleteSession,
-  private val application: Application,
   private val syncWorkerDispatcher: SyncWorkerDispatcher,
 ) : ViewModel() {
 
@@ -39,15 +37,15 @@ constructor(
       updateSession.invoke(enabled)
 
       if (enabled) {
-        syncWorkerDispatcher.schedulePeriodicSync(context = application)
-      } else (syncWorkerDispatcher.cancelPeriodicSync(application))
+        syncWorkerDispatcher.schedulePeriodicSync()
+      } else (syncWorkerDispatcher.cancelPeriodicSync())
     }
   }
 
   fun onLogoutClicked() {
     viewModelScope.launch {
       deleteSession()
-      syncWorkerDispatcher.cancelPeriodicSync(application)
+      syncWorkerDispatcher.cancelPeriodicSync()
     }
   }
 }

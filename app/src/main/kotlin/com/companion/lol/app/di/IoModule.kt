@@ -6,7 +6,7 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
 import com.companion.lol.app.BuildConfig
-import com.companion.lol.app.io.worker.SyncWorker
+import com.companion.lol.app.io.worker.SyncWorkerDispatcherImpl
 import com.companion.lol.core.io.AppDispatchers
 import com.companion.lol.core.io.SyncWorkerDispatcher
 import com.companion.lol.core.ui.navigation.EntryProviderCollector
@@ -31,6 +31,10 @@ abstract class IoModule {
   abstract fun screenKeySerializerModule(
     collector: EntryProviderCollector
   ): ScreenKeySerializerModule
+
+  @Binds
+  @Singleton
+  abstract fun syncWorkerDispatcher(impl: SyncWorkerDispatcherImpl): SyncWorkerDispatcher
 
   @Binds
   @Singleton
@@ -61,9 +65,5 @@ abstract class IoModule {
         computation = Dispatchers.Default,
         main = Dispatchers.Main.immediate,
       )
-
-    @Provides
-    @Singleton
-    internal fun syncWorkerDispatcher(): SyncWorkerDispatcher = SyncWorker.Companion
   }
 }
