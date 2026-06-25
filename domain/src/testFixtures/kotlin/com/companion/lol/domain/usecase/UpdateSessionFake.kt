@@ -1,6 +1,4 @@
-package com.companion.lol.ui.settings
-
-import com.companion.lol.domain.usecase.UpdateSession
+package com.companion.lol.domain.usecase
 
 class UpdateSessionFake : UpdateSession {
   var callCount = 0

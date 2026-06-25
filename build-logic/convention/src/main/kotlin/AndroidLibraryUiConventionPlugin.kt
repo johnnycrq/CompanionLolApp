@@ -58,6 +58,8 @@ class AndroidLibraryUiConventionPlugin : Plugin<Project> {
                 add("testImplementation", libs.findLibrary("junit").get())
                 add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
                 add("testImplementation", libs.findLibrary("app-cash-turbine").get())
+
+                add("testImplementation", testFixtures(project(":domain")))
             }
         }
     }

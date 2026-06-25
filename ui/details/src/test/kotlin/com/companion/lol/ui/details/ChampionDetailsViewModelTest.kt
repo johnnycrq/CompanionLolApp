@@ -8,6 +8,9 @@ import com.companion.lol.core.model.PartyType
 import com.companion.lol.domain.model.Champion
 import com.companion.lol.domain.model.ChampionDetails
 import com.companion.lol.domain.model.ChampionWithDetails
+import com.companion.lol.domain.usecase.RefreshChampionDetailsFake
+import com.companion.lol.domain.usecase.UpdateFavoritesFake
+import com.companion.lol.domain.usecase.impl.ObserveChampionDetailsFake
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

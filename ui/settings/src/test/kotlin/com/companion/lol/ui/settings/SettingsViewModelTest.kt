@@ -2,6 +2,9 @@ package com.companion.lol.ui.settings
 
 import app.cash.turbine.test
 import com.companion.lol.domain.model.UserSession
+import com.companion.lol.domain.usecase.DeleteSessionFake
+import com.companion.lol.domain.usecase.ObserveSessionFake
+import com.companion.lol.domain.usecase.UpdateSessionFake
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

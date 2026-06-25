@@ -6,6 +6,10 @@ plugins {
 android {
     namespace = "com.companion.lol.domain"
     compileSdk = libs.versions.compileSdk.get().toInt()
+
+    testFixtures {
+        enable = true
+    }
 }
 
 dependencies {
@@ -18,4 +22,7 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
 
     compileOnly(libs.androidx.compose.runtime.annotation)
+
+    testFixturesImplementation(project(":core:model"))
+    testFixturesImplementation(libs.kotlinx.coroutines)
 }

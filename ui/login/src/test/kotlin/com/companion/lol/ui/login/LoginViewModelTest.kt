@@ -2,6 +2,7 @@ package com.companion.lol.ui.login
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.companion.lol.domain.usecase.UpdateSessionFake
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
