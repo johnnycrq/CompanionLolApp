@@ -43,6 +43,7 @@ kotlinx-serialization-json = "1.11.0"
 retrofit-adapter-result = '1.1.0'
 retrofit-logging = '5.4.0'
 
+app-cash-turbine = "1.2.0"
 spotless = "8.7.0"
 stability-analyzer = "0.10.0"
 material = "1.14.0"
@@ -109,6 +110,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 io-sqldelight-sqlite = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "io-sqldelight" }
 
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+app-cash-turbine = { module = "app.cash.turbine:turbine", version.ref = "app-cash-turbine" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

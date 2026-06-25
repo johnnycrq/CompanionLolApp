@@ -1,6 +1,5 @@
 package com.companion.lol.ui.details
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.companion.lol.core.model.ChampionId
@@ -55,7 +54,6 @@ constructor(
       if (success) return@launch
 
       if (!state.value.hasData) {
-        Log.i("uiError", "uiError: error")
         messagePoster.postMessage(
           UiError.Resource(resourceId = R.string.champion_details_error_load)
         )

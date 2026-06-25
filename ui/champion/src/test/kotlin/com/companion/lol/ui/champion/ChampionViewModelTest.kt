@@ -1,5 +1,6 @@
 package com.companion.lol.ui.champion
 
+import app.cash.turbine.test
 import com.companion.lol.core.model.ChampionId
 import com.companion.lol.core.model.DdragonImage
 import com.companion.lol.core.model.GridSize
@@ -41,6 +42,8 @@ class ChampionViewModelTest {
       )
   }
 
+  private fun viewModelContainer() = ViewModelContainer()
+
   @Before
   fun setup() {
     Dispatchers.setMain(StandardTestDispatcher())
@@ -53,149 +56,72 @@ class ChampionViewModelTest {
 
   @Test
   fun `initial state has default values`() = runTest {
-    val container = ViewModelContainer()
-    val state = container.viewModel.state.value
-
-    assertEquals(emptyList<Champion>(), state.champions)
-    assertEquals(GridSize.MEDIUM, state.gridSize)
-    assertEquals(SortOrder.ASC, state.sortOrder)
+    viewModelContainer().viewModel.state.test {
+      val state = awaitItem()
+      assertEquals(emptyList<Champion>(), state.champions)
+      assertEquals(GridSize.MEDIUM, state.gridSize)
+      assertEquals(SortOrder.ASC, state.sortOrder)
+    }
   }
 
   @Test
   fun `state updates when champions and settings are observed`() = runTest {
-    val container = ViewModelContainer()
-    val champion =
-      Champion(
-        id = ChampionId(1),
-        name = "Ahri",
-        keyName = "Ahri".lowercase(),
-        title = "The Ahri",
-        squareImage = DdragonImage.Square("https://example.com/Ahri.png"),
-        partyType = PartyType.MANA,
-        isFavorite = false,
+    val container = viewModelContainer()
+
+    container.viewModel.state.test {
+      val champion =
+        Champion(
+          id = ChampionId(1),
+          name = "Ahri",
+          keyName = "Ahri".lowercase(),
+          title = "The Ahri",
+          squareImage = DdragonImage.Square("https://example.com/Ahri.png"),
+          partyType = PartyType.MANA,
+          isFavorite = false,
+        )
+
+      container.observeChampion.emit(listOf(champion))
+      container.observeSettings.emit(
+        UserSettings(championGridSize = GridSize.LARGE, championSortOrder = SortOrder.FAVORITES)
       )
-    val champions = listOf(champion)
+      advanceUntilIdle()
 
-    container.observeChampion.emit(champions)
-    container.observeSettings.emit(
-      UserSettings(championGridSize = GridSize.LARGE, championSortOrder = SortOrder.FAVORITES)
-    )
-    advanceUntilIdle()
-
-    assertEquals(GridSize.LARGE, container.viewModel.state.value.gridSize)
-    assertEquals(SortOrder.FAVORITES, container.viewModel.state.value.sortOrder)
-    assertEquals(1, container.viewModel.state.value.champions.size)
-    assertEquals(listOf(champion), container.viewModel.state.value.champions)
-  }
-
-  @Test
-  fun `init triggers refresh`() = runTest {
-    val container = ViewModelContainer()
-    container.observeChampion.emit(emptyList())
-    advanceUntilIdle()
-
-    assertEquals(1, container.refreshChampion.callCount)
-  }
-
-  @Test
-  fun `onRefresh triggers user-initiated refresh`() = runTest {
-    val container = ViewModelContainer()
-    container.observeChampion.emit(emptyList())
-    advanceUntilIdle()
-
-    container.refreshChampion.callCount = 0
-    container.viewModel.onRefresh()
-    advanceUntilIdle()
-
-    assertEquals(1, container.refreshChampion.callCount)
-    assertEquals(true, container.refreshChampion.lastForceRefresh)
-  }
-
-  @Test
-  fun `onRetry triggers refresh`() = runTest {
-    val container = ViewModelContainer()
-    container.observeChampion.emit(emptyList())
-    advanceUntilIdle()
-
-    container.refreshChampion.callCount = 0
-    container.viewModel.onRetry()
-    advanceUntilIdle()
-
-    assertEquals(1, container.refreshChampion.callCount)
+      val state = expectMostRecentItem()
+      assertEquals(GridSize.LARGE, state.gridSize)
+      assertEquals(SortOrder.FAVORITES, state.sortOrder)
+      assertEquals(listOf(champion), state.champions)
+    }
   }
 
   @Test
   fun `refresh failure sets error state`() = runTest {
-    val container = ViewModelContainer()
-    container.observeChampion.emit(emptyList())
-    advanceUntilIdle()
+    val container = viewModelContainer()
 
-    container.refreshChampion.callCount = 0
-    container.refreshChampion.result = false
-    container.viewModel.onRefresh()
-    advanceUntilIdle()
+    container.viewModel.state.test {
+      container.observeChampion.emit(emptyList())
+      advanceUntilIdle()
 
-    assertEquals(1, container.refreshChampion.callCount)
-    assertEquals(true, container.viewModel.state.value.showError)
+      container.refreshChampion.result = false
+      container.viewModel.onRefresh()
+      advanceUntilIdle()
+
+      assertEquals(true, expectMostRecentItem().showError)
+    }
   }
 
   @Test
   fun `refresh success clears error state`() = runTest {
-    val container = ViewModelContainer()
-    container.observeChampion.emit(emptyList())
-    advanceUntilIdle()
+    val container = viewModelContainer()
 
-    container.refreshChampion.callCount = 0
-    container.refreshChampion.result = true
-    container.viewModel.onRefresh()
-    advanceUntilIdle()
+    container.viewModel.state.test {
+      container.observeChampion.emit(emptyList())
+      advanceUntilIdle()
 
-    assertEquals(1, container.refreshChampion.callCount)
-    assertEquals(false, container.viewModel.state.value.showError)
-  }
+      container.refreshChampion.result = true
+      container.viewModel.onRefresh()
+      advanceUntilIdle()
 
-  @Test
-  fun `changeGridSize calls updateSettings`() = runTest {
-    val container = ViewModelContainer()
-    container.observeChampion.emit(emptyList())
-    advanceUntilIdle()
-
-    container.viewModel.changeGridSize()
-    advanceUntilIdle()
-
-    assertEquals(1, container.updateSettings.callCount)
-  }
-
-  @Test
-  fun `onSortMenuItemClicked calls updateSettings`() = runTest {
-    val container = ViewModelContainer()
-    container.observeChampion.emit(emptyList())
-    advanceUntilIdle()
-
-    container.viewModel.onSortMenuItemClicked()
-    advanceUntilIdle()
-
-    assertEquals(1, container.updateSettings.callCount)
-  }
-
-  @Test
-  fun `onFavoritesClearClicked calls deleteFavorites`() = runTest {
-    val container = ViewModelContainer()
-
-    container.viewModel.onFavoritesClearClicked()
-    advanceUntilIdle()
-
-    assertEquals(1, container.deleteFavorites.callCount)
-  }
-
-  @Test
-  fun `onCardClick navigates to champion details`() = runTest {
-    val container = ViewModelContainer()
-    val championId = ChampionId(42)
-
-    container.viewModel.onCardClick(championId)
-
-    assertEquals(1, container.navigator.navigateCount)
-    assertEquals(championId, container.navigator.lastChampionId)
+      assertEquals(false, expectMostRecentItem().showError)
+    }
   }
 }

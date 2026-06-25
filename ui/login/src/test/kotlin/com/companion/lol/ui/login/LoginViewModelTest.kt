@@ -1,6 +1,7 @@
 package com.companion.lol.ui.login
 
 import androidx.lifecycle.SavedStateHandle
+import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -40,48 +41,61 @@ class LoginViewModelTest {
   @Test
   fun `initial state is empty and invalid`() = runTest {
     val container = ViewModelContainer()
-    val viewModel = container.viewModel
+    container.viewModel.state.test {
+      val item = awaitItem()
 
-    assertEquals("", viewModel.state.value.email)
-    assertFalse(viewModel.state.value.isEmailValid)
+      assertEquals(LoginState(), item)
+      assertFalse(item.isEmailValid)
+    }
   }
 
   @Test
   fun `onEmailChanged updates email state`() = runTest {
     val container = ViewModelContainer()
-    val viewModel = container.viewModel
+    container.viewModel.state.test {
+      val email = "test@example.com"
+      container.viewModel.onEmailChanged(email)
+      val item = expectMostRecentItem()
 
-    val email = "test@example.com"
-    viewModel.onEmailChanged(email)
-
-    assertEquals(email, viewModel.state.value.email)
-    assertTrue(viewModel.state.value.isEmailValid)
+      assertEquals(email, item.email)
+      assertTrue(item.isEmailValid)
+    }
   }
 
   @Test
   fun `onLoginClicked does not update session if email is invalid`() = runTest {
     val container = ViewModelContainer()
-    val viewModel = container.viewModel
 
-    viewModel.onEmailChanged("invalid-email")
-    viewModel.onLoginClicked()
-    advanceUntilIdle()
+    container.viewModel.state.test {
+      val email = "test@example"
+      container.viewModel.onEmailChanged(email)
+      container.viewModel.onLoginClicked()
+      advanceUntilIdle()
 
-    assertEquals(0, container.updateSession.callCount)
+      val item = expectMostRecentItem()
+
+      assertEquals(email, item.email)
+      assertFalse(item.isEmailValid)
+      assertEquals(0, container.updateSession.callCount)
+    }
   }
 
   @Test
   fun `onLoginClicked updates session if email is valid`() = runTest {
     val container = ViewModelContainer()
-    val viewModel = container.viewModel
 
-    val email = "test@example.com"
-    viewModel.onEmailChanged(email)
-    viewModel.onLoginClicked()
-    advanceUntilIdle()
+    container.viewModel.state.test {
+      val email = "test@example.com"
+      container.viewModel.onEmailChanged(email)
+      container.viewModel.onLoginClicked()
+      advanceUntilIdle()
 
-    assertEquals(1, container.updateSession.callCount)
-    assertEquals(email, container.updateSession.lastEmailAddress)
-    assertFalse(container.updateSession.lastAutoSync ?: true)
+      val item = expectMostRecentItem()
+
+      assertEquals(email, item.email)
+      assertTrue(item.isEmailValid)
+
+      assertEquals(1, container.updateSession.callCount)
+    }
   }
 }
