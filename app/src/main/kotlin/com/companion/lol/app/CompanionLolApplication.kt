@@ -2,6 +2,7 @@ package com.companion.lol.app
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.StrictMode
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
@@ -45,7 +46,11 @@ class CompanionLolApplication :
           .detectLeakedRegistrationObjects()
           .detectFileUriExposure()
           .detectCleartextNetwork()
-          .detectContentUriWithoutPermission()
+          .apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+              detectContentUriWithoutPermission()
+            }
+          }
           .build()
       )
     }

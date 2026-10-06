@@ -1,6 +1,6 @@
 [versions]
 
-kotlin = "2.4.0"
+kotlin = "2.4.20"
 agp = "9.2.1"
 ksp = "2.3.9"
 
@@ -12,27 +12,26 @@ detekt = "1.23.8"
 junit = "4.13.2"
 
 androidx-activity-compose = "1.13.0"
-androidx-appcompat = "1.7.1"
-androidx-compose-animation-core = "1.11.3"
-androidx-compose-bom = "2026.06.00"
-androidx-compose-runtime-annotation = "1.11.3"
-androidx-core-ktx = "1.19.0"
+androidx-compose-animation-core = "1.12.1"
+androidx-compose-bom = "2026.09.00"
+androidx-compose-runtime-annotation = "1.12.1"
+androidx-core-ktx = "1.19.1"
 androidx-core-splashscreen = "1.2.0"
 androidx-espresso-core = "3.7.0"
-androidx-hilt-navigation-compose = '1.3.0'
-androidx-hilt-work = "1.3.0"
+androidx-hilt-navigation-compose = '1.4.0'
+androidx-hilt-work = "1.4.0"
 androidx-junit = "1.3.0"
 androidx-lifecycle = "2.11.0"
 androidx-lifecycle-viewmodel-navigation3 = "2.11.0"
-androidx-navigation3 = "1.1.3"
+androidx-navigation3 = "1.2.0"
 androidx-palette = '1.0.0'
-androidx-workmanager = "2.11.2"
-dagger-hilt-android = '2.59.2'
+androidx-workmanager = "2.12.0"
+dagger-hilt-android = '2.60.1'
 
-io-coil = '3.5.0'
+io-coil = '3.6.3'
 io-lottie = '6.7.1'
 io-retrofit2 = '3.0.0'
-io-sqldelight = '2.3.2'
+io-sqldelight = '2.4.0'
 io-timber = '5.0.1'
 
 kotlin-metadata-jvm = "2.4.0"
@@ -40,20 +39,18 @@ kotlinx-datetime = '0.8.0'
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization-json = "1.11.0"
 
-retrofit-adapter-result = '1.1.0'
-retrofit-logging = '5.4.0'
+retrofit-adapter-result = '1.2.0'
+retrofit-logging = '5.5.0'
 
-app-cash-turbine = "1.2.0"
-spotless = "8.7.0"
-stability-analyzer = "0.10.0"
-material = "1.14.0"
+app-cash-turbine = "1.2.1"
+spotless = "8.10.3"
+stability-analyzer = "0.15.0"
 
-commons-validator = "1.10.1"
+commons-validator = "1.11.0"
 
 [libraries]
 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity-compose" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-core-splashscreen" }
 
@@ -69,13 +66,11 @@ androidx-hilt-work-compiler = { module = "androidx.hilt:hilt-compiler", version.
 
 androidx-compose-animation-core = { group = "androidx.compose.animation", name = "animation-core", version.ref = "androidx-compose-animation-core" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidx-compose-bom" }
-androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-runtime-annotation = { module = "androidx.compose.runtime:runtime-annotation", version.ref = "androidx-compose-runtime-annotation" }
 androidx-compose-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
@@ -113,7 +108,6 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 app-cash-turbine = { module = "app.cash.turbine:turbine", version.ref = "app-cash-turbine" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }

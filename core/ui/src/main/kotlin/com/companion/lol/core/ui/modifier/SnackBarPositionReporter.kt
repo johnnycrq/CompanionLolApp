@@ -37,14 +37,13 @@ class SnackBarPositionReporter(private val backStack: BackStack) {
     }
   }
 
-  val translationY =
-    snapshotFlow {
-        val current = backStack.current
-        val keyId = ScreenKey.id(current::class)
-        positions[keyId]?.toFloat()
-      }
-      .filterNotNull()
-      .map { -it }
+  val translationY = snapshotFlow {
+    val current = backStack.current
+    val keyId = ScreenKey.id(current::class)
+    positions[keyId]?.toFloat()
+  }
+    .filterNotNull()
+    .map { -it }
 }
 
 val LocalSnackBarPositionReporter = staticCompositionLocalOf<SnackBarPositionReporter?> { null }

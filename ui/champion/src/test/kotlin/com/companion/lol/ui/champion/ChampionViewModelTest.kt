@@ -43,7 +43,7 @@ class ChampionViewModelTest {
         deleteFavorites = deleteFavorites,
         observeChampions = observeChampion,
         navigator = navigator,
-        observeSession = observeSettings,
+        observeSettings = observeSettings,
       )
   }
 

@@ -32,14 +32,14 @@ constructor(
   private val deleteFavorites: DeleteFavorites,
   private val observeChampions: ObserveChampion,
   private val navigator: Navigator,
-  observeSession: ObserveSettings,
+  observeSettings: ObserveSettings,
 ) : ViewModel() {
   private val refreshState = MutableStateFlow(ChampionRefreshState())
 
   val state: StateFlow<ChampionState> =
     combine(
         flow = observeChampions(),
-        flow2 = observeSession(),
+        flow2 = observeSettings(),
         flow3 = refreshState,
         transform = { champion, settings, refreshState ->
           ChampionState(

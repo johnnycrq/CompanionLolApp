@@ -13,6 +13,7 @@
         <item name="windowSplashScreenBackground">@color/background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splashscreen</item>
         <item name="postSplashScreenTheme">@style/Theme.Companion.Lol.App</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 </resources>

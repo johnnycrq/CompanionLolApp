@@ -25,43 +25,40 @@ class BackStackImpl(private val initialValue: List<ScreenKey>) : BackStack {
   override val current: ScreenKey
     get() = history.last()
 
-  override fun setHistory(singleKey: ScreenKey) =
-    withSnapshot {
-        history.clear()
-        history.add(singleKey)
+  override fun setHistory(singleKey: ScreenKey) = withSnapshot {
+    history.clear()
+    history.add(singleKey)
+  }
+    .also { save() }
+
+  override fun setHistory(newHistory: List<ScreenKey>) = withSnapshot {
+    history.clear()
+    history.addAll(newHistory)
+  }
+    .also { save() }
+
+  override fun goTo(key: ScreenKey) = withSnapshot {
+    val last =
+      history.lastOrNull() ?: error("Cannot use goTo without having a valid non-empty history")
+
+    // no repeated keys allowed
+    if (last == key) return@withSnapshot
+
+    // cant navigate from bottom sheet
+    if (last.metadata[ScreenMetadata.BottomSheet] != null) {
+      return@withSnapshot
+    }
+
+    val index = history.indexOf(key)
+    if (index != -1) {
+      while (history.size > index + 1) {
+        history.removeAt(history.size - 1)
       }
-      .also { save() }
-
-  override fun setHistory(newHistory: List<ScreenKey>) =
-    withSnapshot {
-        history.clear()
-        history.addAll(newHistory)
-      }
-      .also { save() }
-
-  override fun goTo(key: ScreenKey) =
-    withSnapshot {
-        val last =
-          history.lastOrNull() ?: error("Cannot use goTo without having a valid non-empty history")
-
-        // no repeated keys allowed
-        if (last == key) return@withSnapshot
-
-        // cant navigate from bottom sheet
-        if (last.metadata[ScreenMetadata.BottomSheet] != null) {
-          return@withSnapshot
-        }
-
-        val index = history.indexOf(key)
-        if (index != -1) {
-          while (history.size > index + 1) {
-            history.removeAt(history.size - 1)
-          }
-        } else {
-          history.add(key)
-        }
-      }
-      .also { save() }
+    } else {
+      history.add(key)
+    }
+  }
+    .also { save() }
 
   override fun goBack(): Boolean {
     if (history.size > 1) {

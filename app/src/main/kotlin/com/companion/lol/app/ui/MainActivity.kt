@@ -3,8 +3,10 @@
 package com.companion.lol.app.ui
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.SharedTransitionLayout
@@ -16,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat.enableEdgeToEdge
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -33,16 +36,21 @@ import com.companion.lol.core.ui.theme.CompanionAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+private val DefaultLightScrim = Color.argb(0xe6, 0xFF, 0xFF, 0xFF)
+private val DefaultDarkScrim = Color.argb(0x80, 0x1b, 0x1b, 0x1b)
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   @Inject lateinit var entryProviderScope: ScreenEntryProviderScope
 
   override fun onCreate(savedInstanceState: Bundle?) {
     installSplashScreen()
-
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
-    setContent { MainScreen(entryProviderScope) }
+    CompanionLolEdgeToEdge()
+
+    setContent {
+      MainScreen(entryProviderScope)
+    }
   }
 }
 
@@ -108,7 +116,24 @@ private fun NavDisplay(entryProviderScope: ScreenEntryProviderScope, backStack: 
             sharedTransitionScope = this,
           )
         ),
-      entryProvider = entryProvider { entryScopes.forEach { builder -> this.builder() } },
+      entryProvider =
+        entryProvider {
+          entryScopes.forEach { builder -> this.builder() }
+        },
     )
   }
+}
+
+@Suppress("FunctionName")
+private fun ComponentActivity.CompanionLolEdgeToEdge() {
+  enableEdgeToEdge(
+    statusBarStyle =
+      SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) {
+        true // light icons
+      },
+    navigationBarStyle =
+      SystemBarStyle.auto(DefaultLightScrim, DefaultDarkScrim) {
+        true // light icons
+      },
+  )
 }
