@@ -10,9 +10,9 @@ import com.companion.lol.domain.model.Champion
 import com.companion.lol.domain.model.UserSettings
 import com.companion.lol.domain.usecase.DeleteFavoritesFake
 import com.companion.lol.domain.usecase.ObserveChampionFake
+import com.companion.lol.domain.usecase.ObserveSettingsFake
 import com.companion.lol.domain.usecase.RefreshChampionFake
 import com.companion.lol.domain.usecase.UpdateSettingsFake
-import com.companion.lol.domain.usecase.impl.ObserveSettingsFake
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

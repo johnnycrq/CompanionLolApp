@@ -11,7 +11,7 @@ import com.companion.lol.core.io.AppDispatchers
 import com.companion.lol.core.ui.navigation.EntryScreenKey
 import com.companion.lol.core.ui.navigation.ScreenKeySerializerModule
 import com.companion.lol.core.ui.theme.Gold1
-import com.companion.lol.domain.usecase.impl.ObserveAuthenticatedEmail
+import com.companion.lol.domain.usecase.ObserveAuthenticatedEmail
 import com.companion.lol.ui.champion.ChampionKey
 import com.companion.lol.ui.login.LoginKey
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -19,7 +19,7 @@ constructor(private val updateSession: UpdateSession, savedStateHandle: SavedSta
     field = savedStateHandle.persistedFlow(key = "LoginState", LoginState())
 
   fun onEmailChanged(newEmail: String) {
-    state.update { it.copy(email = newEmail) }
+    state.update { it.copy(email = newEmail.trim()) }
   }
 
   fun onLoginClicked() {

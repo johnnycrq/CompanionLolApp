@@ -2,7 +2,7 @@ package com.companion.lol.ui.details
 
 import com.companion.lol.core.model.ChampionId
 import com.companion.lol.domain.model.ChampionWithDetails
-import com.companion.lol.domain.usecase.impl.ObserveChampionDetails
+import com.companion.lol.domain.usecase.ObserveChampionDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 

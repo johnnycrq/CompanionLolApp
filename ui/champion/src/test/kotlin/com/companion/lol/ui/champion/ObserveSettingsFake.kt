@@ -1,7 +1,7 @@
 package com.companion.lol.ui.champion
 
 import com.companion.lol.domain.model.UserSettings
-import com.companion.lol.domain.usecase.impl.ObserveSettings
+import com.companion.lol.domain.usecase.ObserveSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 

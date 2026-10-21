@@ -82,7 +82,10 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
           value = state.email,
           onValueChange = onEmailChanged,
           label = {
-            Text("Email Address", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+            Text(
+              stringResource(R.string.login_email_address),
+              color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+            )
           },
           modifier = Modifier.padding(horizontal = 32.dp).fillMaxWidth(),
           singleLine = true,
@@ -116,15 +119,7 @@ fun LoginScreen(state: LoginState, onEmailChanged: (String) -> Unit, onLoginClic
 
 @Composable
 @CompanionAppPreview
-@LandscapePreview
 @PreviewWrapper(CompanionAppPreviewWrapperProvider::class)
 private fun LoginPreview() {
-  LoginScreen(state = LoginState(email = ""), onEmailChanged = {}, onLoginClicked = {})
-}
-
-@Composable
-@CompanionAppPreview
-@PreviewWrapper(CompanionAppPreviewWrapperProvider::class)
-private fun LoginPreview2() {
   LoginScreen(state = LoginState(), onEmailChanged = {}, onLoginClicked = {})
 }

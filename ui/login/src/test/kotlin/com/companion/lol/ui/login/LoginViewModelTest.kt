@@ -64,6 +64,18 @@ class LoginViewModelTest {
   }
 
   @Test
+  fun `onEmailChanged trims surrounding whitespace`() = runTest {
+    val container = ViewModelContainer()
+    container.viewModel.state.test {
+      container.viewModel.onEmailChanged("  test@example.com ")
+      val item = expectMostRecentItem()
+
+      assertEquals("test@example.com", item.email)
+      assertTrue(item.isEmailValid)
+    }
+  }
+
+  @Test
   fun `onLoginClicked does not update session if email is invalid`() = runTest {
     val container = ViewModelContainer()
 

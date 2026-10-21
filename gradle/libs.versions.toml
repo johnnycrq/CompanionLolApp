@@ -1,7 +1,7 @@
 [versions]
 
-kotlin = "2.4.20"
-agp = "9.2.1"
+kotlin = "2.4.21"
+agp = "9.4.1"
 ksp = "2.3.9"
 
 compileSdk = "37"
@@ -31,7 +31,7 @@ dagger-hilt-android = '2.60.1'
 io-coil = '3.6.3'
 io-lottie = '6.7.1'
 io-retrofit2 = '3.0.0'
-io-sqldelight = '2.4.0'
+io-sqldelight = '2.4.1'
 io-timber = '5.0.1'
 
 kotlin-metadata-jvm = "2.4.0"
@@ -43,7 +43,7 @@ retrofit-adapter-result = '1.2.0'
 retrofit-logging = '5.5.0'
 
 app-cash-turbine = "1.2.1"
-spotless = "8.10.3"
+spotless = "8.10.4"
 stability-analyzer = "0.15.0"
 
 commons-validator = "1.11.0"

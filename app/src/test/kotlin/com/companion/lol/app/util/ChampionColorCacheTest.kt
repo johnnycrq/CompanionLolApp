@@ -108,4 +108,38 @@ class ChampionColorCacheTest {
 
     assertEquals(1, callCount)
   }
+
+  @Test
+  fun `failed extraction resolves to default color and is not retried`() = runTest {
+    var callCount = 0
+    val cache = createCache {
+      callCount++
+      Result.failure(IllegalStateException("boom"))
+    }
+
+    cache.extractColor(fakeInput, championId)
+    runCurrent()
+    cache.extractColor(fakeInput, championId)
+    runCurrent()
+
+    assertEquals(defaultColor, cache.getColor(championId))
+    assertFalse(cache.isDefaultColor(championId))
+    assertEquals(1, callCount)
+  }
+
+  @Test
+  fun `extracted color equal to default is not re-extracted`() = runTest {
+    var callCount = 0
+    val cache = createCache {
+      callCount++
+      Result.success(defaultColor)
+    }
+
+    cache.extractColor(fakeInput, championId)
+    runCurrent()
+    cache.extractColor(fakeInput, championId)
+    runCurrent()
+
+    assertEquals(1, callCount)
+  }
 }

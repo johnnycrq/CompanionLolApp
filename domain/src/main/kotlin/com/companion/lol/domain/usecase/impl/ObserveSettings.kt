@@ -1,8 +1,15 @@
 package com.companion.lol.domain.usecase.impl
 
+import com.companion.lol.domain.mapper.model
 import com.companion.lol.domain.model.UserSettings
+import com.companion.lol.domain.usecase.ObserveSettings
+import com.companion.lol.storage.impl.store.SettingsStore
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-interface ObserveSettings {
-  operator fun invoke(): Flow<UserSettings>
+class ObserveSettingsImpl @Inject constructor(private val settingsStore: SettingsStore) :
+  ObserveSettings {
+  override operator fun invoke(): Flow<UserSettings> =
+    settingsStore.observe().map { it?.model() ?: UserSettings.DEFAULT }
 }
