@@ -72,8 +72,8 @@ fun PullRefreshBox(
               translationY = state.distanceFraction * maxDistance.toPx()
               clip = true
             }
-          } else Modifier
-        )
+          } else Modifier,
+        ),
     ) {
       content()
     }

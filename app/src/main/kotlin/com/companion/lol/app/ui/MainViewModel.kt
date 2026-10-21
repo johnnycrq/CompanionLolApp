@@ -66,7 +66,7 @@ constructor(
               currentHistory
                 .dropLastWhile { it.requiresAuth() }
                 .filterNot { it is EntryScreenKey }
-                .ifEmpty { listOf(LoginKey) }
+                .ifEmpty { listOf(LoginKey) },
             )
           } else {
             // if we are logged in and on a public-only stack, go to main content

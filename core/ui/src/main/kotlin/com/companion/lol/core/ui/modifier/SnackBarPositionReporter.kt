@@ -56,7 +56,7 @@ enum class SnackBarPosition {
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 inline fun <reified S : ScreenKey> Modifier.reportSnackBarPosition(
-  position: SnackBarPosition = SnackBarPosition.TOP
+  position: SnackBarPosition = SnackBarPosition.TOP,
 ): Modifier = reportSnackBarPosition(position = position, screenId = ScreenKey.id<S>())
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")

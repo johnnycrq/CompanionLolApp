@@ -62,7 +62,7 @@ import com.companion.lol.core.ui.window.isLandscape
 fun ChampionDetailsScreen(championId: ChampionId) {
   val viewModel =
     hiltViewModel<ChampionDetailsViewModel, ChampionDetailsViewModel.Factory>(
-      creationCallback = { factory -> factory.create(championId) }
+      creationCallback = { factory -> factory.create(championId) },
     )
   val state by viewModel.state.collectAsStateWithLifecycle()
   val championSkinsProvider =
@@ -141,7 +141,7 @@ fun ChampionDetailsScreen(
   if (!isLandscape) {
     Column(
       modifier =
-        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).systemBarsPadding()
+        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).systemBarsPadding(),
     ) {
       Box(modifier = Modifier.fillMaxWidth().aspectRatio(1215f / 717f)) { header() }
       content()
@@ -159,7 +159,7 @@ fun ChampionDetailsScreen(
             .background(
               color = MaterialTheme.colorScheme.surface.copy(0.75f),
               MaterialTheme.shapes.medium,
-            )
+            ),
       ) {
         content()
       }
@@ -230,7 +230,7 @@ private fun ImageHeader(
         Modifier.fillMaxWidth()
           .align(Alignment.BottomCenter)
           .drawBehind { drawRect(brush = textOverlapGradient) }
-          .padding(16.dp)
+          .padding(16.dp),
     ) {
       Row(
         modifier = Modifier.height(IntrinsicSize.Max),

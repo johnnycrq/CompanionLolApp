@@ -87,7 +87,7 @@ class ChampionViewModelTest {
 
       container.observeChampion.emit(listOf(champion))
       container.observeSettings.emit(
-        UserSettings(championGridSize = GridSize.LARGE, championSortOrder = SortOrder.FAVORITES)
+        UserSettings(championGridSize = GridSize.LARGE, championSortOrder = SortOrder.FAVORITES),
       )
       advanceUntilIdle()
 

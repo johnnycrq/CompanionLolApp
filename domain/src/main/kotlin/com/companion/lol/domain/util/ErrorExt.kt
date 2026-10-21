@@ -19,6 +19,6 @@ inline fun <R, T : R> Result<T>.getOrPropagate(
       } else {
         onFailure(e)
       }
-    }
+    },
   )
 }

@@ -51,9 +51,9 @@ fun DominantColorCoilImage(
                 championId = championId,
                 championColorCache = championColorCache,
                 shouldExtractColor = shouldExtractColor,
-              )
+              ),
             )
-            .build()
+            .build(),
       )
     }
 

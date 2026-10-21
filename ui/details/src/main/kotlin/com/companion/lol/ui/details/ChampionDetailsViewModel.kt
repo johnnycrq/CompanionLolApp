@@ -55,7 +55,7 @@ constructor(
 
       if (!state.value.hasData) {
         messagePoster.postMessage(
-          UiError.Resource(resourceId = R.string.champion_details_error_load)
+          UiError.Resource(resourceId = R.string.champion_details_error_load),
         )
         backStack.goBack()
       }

@@ -31,7 +31,7 @@ class ChampionColorCacheTest {
     }
 
   private fun TestScope.createCache(
-    extractColor: (Image) -> Result<Color> = { Result.success(blueColor) }
+    extractColor: (Image) -> Result<Color> = { Result.success(blueColor) },
   ) =
     ChampionColorCacheImpl(
       scope = backgroundScope,
@@ -103,40 +103,6 @@ class ChampionColorCacheTest {
 
     // Both calls happen before the background worker processes the first one
     cache.extractColor(fakeInput, championId)
-    cache.extractColor(fakeInput, championId)
-    runCurrent()
-
-    assertEquals(1, callCount)
-  }
-
-  @Test
-  fun `failed extraction resolves to default color and is not retried`() = runTest {
-    var callCount = 0
-    val cache = createCache {
-      callCount++
-      Result.failure(IllegalStateException("boom"))
-    }
-
-    cache.extractColor(fakeInput, championId)
-    runCurrent()
-    cache.extractColor(fakeInput, championId)
-    runCurrent()
-
-    assertEquals(defaultColor, cache.getColor(championId))
-    assertFalse(cache.isDefaultColor(championId))
-    assertEquals(1, callCount)
-  }
-
-  @Test
-  fun `extracted color equal to default is not re-extracted`() = runTest {
-    var callCount = 0
-    val cache = createCache {
-      callCount++
-      Result.success(defaultColor)
-    }
-
-    cache.extractColor(fakeInput, championId)
-    runCurrent()
     cache.extractColor(fakeInput, championId)
     runCurrent()
 

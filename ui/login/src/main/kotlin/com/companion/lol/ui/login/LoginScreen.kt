@@ -34,7 +34,6 @@ import com.companion.lol.core.ui.material3.CompanionAppSurface
 import com.companion.lol.core.ui.modifier.reportSnackBarPosition
 import com.companion.lol.core.ui.tooling.CompanionAppPreview
 import com.companion.lol.core.ui.tooling.CompanionAppPreviewWrapperProvider
-import com.companion.lol.core.ui.tooling.LandscapePreview
 import com.companion.lol.core.ui.window.isLandscape
 
 @Composable

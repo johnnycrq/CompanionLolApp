@@ -36,7 +36,7 @@ class SettingsStore @Inject constructor(database: LolAppDb, private val context:
             id = SingleId,
             championGridSize = championGridSize ?: current.championGridSize,
             championSortOrder = championSortOrder ?: current.championSortOrder,
-          )
+          ),
         )
       }
     }

@@ -13,7 +13,7 @@ internal class RiotDevPortalApiKeyInterceptor @Inject constructor(private val ap
   Interceptor {
   override fun intercept(chain: Interceptor.Chain): Response {
     return chain.proceed(
-      chain.request().newBuilder().addHeader(HEADER_NAME, apiKeys.riotDevPortalApiKey).build()
+      chain.request().newBuilder().addHeader(HEADER_NAME, apiKeys.riotDevPortalApiKey).build(),
     )
   }
 }

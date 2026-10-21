@@ -37,7 +37,7 @@ class CompanionLolApplication :
           }
           .penaltyDialog()
           .penaltyLog()
-          .build()
+          .build(),
       )
       StrictMode.setVmPolicy(
         StrictMode.VmPolicy.Builder()
@@ -51,7 +51,7 @@ class CompanionLolApplication :
               detectContentUriWithoutPermission()
             }
           }
-          .build()
+          .build(),
       )
     }
   }

@@ -114,7 +114,7 @@ private fun NavDisplay(entryProviderScope: ScreenEntryProviderScope, backStack: 
           rememberNavigationBarDecoratorStrategy(
             navBar = navigationBar,
             sharedTransitionScope = this,
-          )
+          ),
         ),
       entryProvider =
         entryProvider {

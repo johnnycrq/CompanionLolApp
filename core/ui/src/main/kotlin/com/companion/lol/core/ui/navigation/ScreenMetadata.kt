@@ -25,6 +25,6 @@ object ScreenMetadata {
         isAppearanceLightNavigationBars = false,
         shouldDismissOnBackPress = true,
         shouldDismissOnClickOutside = true,
-      )
+      ),
   ) = metadata { put(BottomSheet, properties) }
 }

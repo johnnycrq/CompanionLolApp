@@ -25,7 +25,7 @@ class ScreenKeySaverTest {
           com.companion.lol.ui.settings.SettingsEntryModule.provideEntry(),
           com.companion.lol.ui.champion.ChampionEntryModule.provideEntry(),
           com.companion.lol.ui.details.ChampionDetailsEntryModule.provideEntry(),
-        )
+        ),
     )
 
   private val json = IoModule.json(collector)

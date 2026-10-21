@@ -10,6 +10,6 @@ interface DDragonApi {
 
   @GET("champion/{championName}.json")
   suspend fun getChampionDetails(
-    @Path("championName") championName: String
+    @Path("championName") championName: String,
   ): Result<ChampionDetailsDto>
 }

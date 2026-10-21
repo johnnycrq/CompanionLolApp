@@ -29,7 +29,7 @@ abstract class IoModule {
   @Binds
   @Singleton
   abstract fun screenKeySerializerModule(
-    collector: EntryProviderCollector
+    collector: EntryProviderCollector,
   ): ScreenKeySerializerModule
 
   @Binds

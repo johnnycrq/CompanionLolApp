@@ -25,7 +25,7 @@ val companionAppGradient: Brush
   @Composable
   get() =
     Brush.verticalGradient(
-      colors = listOf(MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.tertiary)
+      colors = listOf(MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.tertiary),
     )
 
 val companionAppGradientInverted: Brush
@@ -33,7 +33,7 @@ val companionAppGradientInverted: Brush
   @Composable
   get() =
     Brush.verticalGradient(
-      colors = listOf(MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.secondary)
+      colors = listOf(MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.secondary),
     )
 
 @Composable

@@ -21,7 +21,7 @@ private val colorExtractor: (Image) -> Result<Color> = { input ->
     Color(
       Palette.from(input.toBitmap()).generate().let {
         it.getVibrantColor(0).takeIf { color -> color != 0 } ?: it.getDominantColor(0)
-      }
+      },
     )
   }
 }

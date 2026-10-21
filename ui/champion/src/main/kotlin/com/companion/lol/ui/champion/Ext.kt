@@ -16,7 +16,7 @@ fun List<Champion>.sortBy(order: SortOrder): List<Champion> {
             }
           },
           { it.name },
-        )
+        ),
       )
 
     SortOrder.ASC -> this.sortedBy { it.name }

@@ -76,7 +76,7 @@ fun ChampionCard(
         GridSize.SMALL -> 4.dp
         GridSize.MEDIUM -> 6.dp
         GridSize.LARGE -> 8.dp
-      }
+      },
     ) {
       RoundedCornerShape(bottomStart = this, bottomEnd = this)
     }
@@ -145,7 +145,7 @@ fun ChampionCard(
                 .then(
                   if (championIsFavorite)
                     Modifier.border(BorderStroke(2.dp, favoriteBorderBrush), RectangleShape)
-                  else Modifier
+                  else Modifier,
                 ),
             shouldExtractColor = true,
           )

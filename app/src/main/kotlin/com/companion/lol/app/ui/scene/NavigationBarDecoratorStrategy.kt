@@ -43,7 +43,7 @@ data class NavigationBarDecoratorScene<T : Any>(
           Box(
             modifier =
               Modifier.cacheSize(!isMovableContentCaller)
-                .sharedElement(rememberSharedContentState("nav-bar"), animatedContentScope)
+                .sharedElement(rememberSharedContentState("nav-bar"), animatedContentScope),
           ) {
             if (isMovableContentCaller) {
               navBarContent()
